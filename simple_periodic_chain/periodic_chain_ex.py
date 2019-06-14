@@ -35,7 +35,7 @@ end1=start
 for i in range(1000):
     end1=P1.dot(end1)
 print(end1)
-    
+   
 #stationary density for P2
 end2=start
 for i in range(1000):
@@ -57,6 +57,6 @@ eig[:,0]/endA #--> are multiplicatives of each other
 
 
 #irreducible (every state reachable form every other state) -> stationary density exists
-#but periodic, some states are only reachible in even times -> not every initial density converges to stationary density 
+#but periodic, some states are only reachible in even times -> not every initial density converges to stationary density
 #-> depends on where the mass lies
 #but how about the not augmented systems? does then every initial density converge?
