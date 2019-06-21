@@ -28,22 +28,29 @@ import numpy as np
 #    
 #    return count,traj
 
-def transitionmatrix_1D(forces,period, sigma, dt, Nstep, interval, dx_power):
+def transitionmatrix_1D(forces,period, sigma, dt, lag, Nstep, interval, dx_power):
     dx=1./(10**dx_power)
     xs = np.round(np.arange(interval[0], interval[1]+dx, dx),dx_power)
     count = np.zeros((len(xs),len(xs),period))
-    
     for j in range(Nstep):
         for p in range(period):
             for seed in range(len(xs)):
                 current_X = xs[seed]
-                new_X = current_X - forces[p](current_X)*dt + sigma* np.sqrt(dt)*np.random.randn()
+                for l in range(lag):
+                    new_X = current_X - (forces[p](current_X))*dt + sigma*np.sqrt(dt)*np.random.randn()
+                    if new_X <interval[0]: #reflective boundary conditions
+                        new_X = interval[0] + (interval[0]-new_X)
+                    if new_X >interval[1]:
+                        new_X = interval[1] - (new_X - interval[1])
+                    current_X=new_X
                 if new_X <interval[0]:
                     new_X = interval[0]
                 if new_X >interval[1]:
                     new_X = interval[1]
                 from_box = seed #np.where(xs==round(current_X, dx_power))[0][0]
                 to_box  = np.where(xs==round(new_X, dx_power))[0][0]
-                count[from_box,to_box,p] += 1
-    
-    return count
+                count[from_box,to_box,p] += 1.
+
+    return count/Nstep
+
+
