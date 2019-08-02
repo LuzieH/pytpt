@@ -50,10 +50,12 @@ from matplotlib import animation
 
 
 maxK=10
-
+xlimit=(interval[0],interval[1])
+ylimit=(-0.2,5)
+frameslen=maxK*period
 # First set up the figure, the axis, and the plot element we want to animate
 fig = plt.figure()
-ax = plt.axes(xlim=(interval[0],interval[1]), ylim=(-0.2,5))
+ax = plt.axes(xlim=xlimit, ylim=ylimit)
 line, = ax.plot([], [], lw=2)
 
 
@@ -65,26 +67,73 @@ xks[:,0]=x0
 for i in np.arange(maxK*period-1):
     Pk=np.transpose(C[:,:,np.mod(i,period)])
     xks[:,i+1]=Pk.dot(xks[:,i])
+        
+        
+def periodic_anim(xlimit, ylimit,frameslen,xks):
+
+
+        
+    # initialization function: plot the background of each frame
+    def init():
+        line.set_data([], [])
+        return line,
     
-# initialization function: plot the background of each frame
-def init():
-    line.set_data([], [])
-    return line,
+    # animation function.  This is called sequentially
+    def animate(i):
+        line.set_data(xs, xks[:,i])
+        return line,
+    
+    # call the animator.  blit=True means only re-draw the parts that have changed.
+    anim = animation.FuncAnimation(fig, animate, init_func=init,
+                                   frames=frameslen, interval=100, blit=True)
+    
+    # save the animation as an mp4.  This requires ffmpeg or mencoder to be
+    # installed.  The extra_args ensure that the x264 codec is used, so that
+    # the video can be embedded in html5.  You may need to adjust this for
+    # your system: for more information, see
+    # http://matplotlib.sourceforge.net/api/animation_api.html
+    anim.save('periodic_anim.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
+    
+    plt.show()
 
-# animation function.  This is called sequentially
-def animate(i):
-    line.set_data(xs, xks[:,i])
-    return line,
 
-# call the animator.  blit=True means only re-draw the parts that have changed.
-anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=maxK*period, interval=100, blit=True)
 
-# save the animation as an mp4.  This requires ffmpeg or mencoder to be
-# installed.  The extra_args ensure that the x264 codec is used, so that
-# the video can be embedded in html5.  You may need to adjust this for
-# your system: for more information, see
-# http://matplotlib.sourceforge.net/api/animation_api.html
-anim.save('periodic_anim.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
-
-plt.show()
+####################################################
+#
+#maxK=10
+#
+## First set up the figure, the axis, and the plot element we want to animate
+#fig = plt.figure()
+#ax = plt.axes(xlim=(interval[0],interval[1]), ylim=(-0.2,5))
+#line, = ax.plot([], [], lw=2)
+#
+#
+#xs = np.round(np.arange(interval[0], interval[1]+dx, dx),dx_power)
+#dim=np.shape(xs)[0]
+#x0=1./(dx*dim)*np.ones(dim)
+#xks=np.zeros((np.shape(x0)[0],maxK*period))
+#xks[:,0]=x0
+#for i in np.arange(maxK*period-1):
+#    Pk=np.transpose(C[:,:,np.mod(i,period)])
+#    xks[:,i+1]=Pk.dot(xks[:,i])
+#    
+## initialization function: plot the background of each frame
+#def init():
+#    line.set_data([], [])
+#    return line,
+#
+## animation function.  This is called sequentially
+#def animate(i):
+#    line.set_data(xs, xks[:,i])
+#    return line,
+#
+## call the animator.  blit=True means only re-draw the parts that have changed.
+#anim = animation.FuncAnimation(fig, animate, init_func=init,
+#                               frames=maxK*period, interval=100, blit=True)
+#
+## save the animation as an mp4.  This requires ffmpeg or mencoder to be
+## installed.  The extra_args ensure that the x264 codec is used, so that
+## the video can be embedded in html5.  You may need to adjust this for
+## your system: for more information, see
+## http://matplotlib.sourceforge.net/api/animation_api.html
+#anim.save('periodic_anim.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
