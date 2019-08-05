@@ -58,7 +58,7 @@ yn=np.reshape(yv,(xdim*ydim,1))
 grid = np.squeeze(np.array([xn,yn]))
 
 Nstep=100
-sigma=1 #0.1
+sigma=1.0 #0.1
 dt=0.01
 lag=10
 dim_st = xdim*ydim #dimension of the statespace
