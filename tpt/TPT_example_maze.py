@@ -1,19 +1,16 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Aug  9 10:57:51 2019
-
-@author: bzfhelfm
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 import transition_paths as tp
+import os.path
+
+
+my_path = os.path.abspath(os.path.dirname(__file__))
 
 #set up a transition matrix for a random walker in a maze
 
 S=40 
 
-create_new_example=True 
+create_new_example=False 
 
 if create_new_example ==True:
     #EITHER CREATE NEW EXAMPLE 
@@ -33,8 +30,8 @@ if create_new_example ==True:
    
 else: 
     #OR LOAD DATA
-    T=np.load('/nfs/numerik/bzfhelfm/Dokumente/PhD/code/transitions/TPT_MCs/Example_Maze/P_maze.npy') #transition matrix, row sum =1
-    pot=np.load('/nfs/numerik/bzfhelfm/Dokumente/PhD/code/transitions/TPT_MCs/Example_Maze/pot_maze.npy')  
+    T=np.load(os.path.join(my_path,'data/P_maze.npy')) #transition matrix, row sum =1
+    pot=np.load(os.path.join(my_path,'data/pot_maze.npy'))  
      
 
 plt.imshow(pot)

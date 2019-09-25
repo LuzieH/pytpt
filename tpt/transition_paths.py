@@ -1,10 +1,3 @@
-#!/usr/bin/env python2
-"""
-Created on Fri Aug  2 14:56:21 2019
-
-@author: Luzie Helfmann, luziehelfmann@gmail.com
-"""
-
 import numpy as np
 
 

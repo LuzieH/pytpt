@@ -1,16 +1,6 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Sep  3 15:59:08 2019
-
-@author: bzfhelfm
-"""
-
 import networkx as nx
 import numpy as np
 import os.path
-import stoch_networks as sn
-import transition_paths as tp
 
 
 my_path = os.path.abspath(os.path.dirname(__file__))
@@ -83,8 +73,8 @@ T_p[3,2] = - 0.2
  
 ############################################
 
-np.save(os.path.join(my_path,'networks_data/small_network_A.npy'), A)
-np.save(os.path.join(my_path,'networks_data/small_network_T.npy'), T)
-np.save(os.path.join(my_path,'networks_data/small_network_pos.npy'), pos)
-np.save(os.path.join(my_path,'networks_data/small_network_labels.npy'), labels)
-np.save(os.path.join(my_path,'networks_data/small_network_T_periodisch.npy'), T_p )
+np.save(os.path.join(my_path,'data/small_network_A.npy'), A)
+np.save(os.path.join(my_path,'data/small_network_T.npy'), T)
+np.save(os.path.join(my_path,'data/small_network_pos.npy'), pos)
+np.save(os.path.join(my_path,'data/small_network_labels.npy'), labels)
+np.save(os.path.join(my_path,'data/small_network_T_periodisch.npy'), T_p )

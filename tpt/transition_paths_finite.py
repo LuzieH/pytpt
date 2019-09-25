@@ -1,11 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Aug 26 14:48:25 2019
-
-@author: Luzie Helfmann, luziehelfmann@gmail.com
-"""
-
 import numpy as np
 from inspect import isfunction
 
@@ -38,7 +30,7 @@ class transitions_finite_time:
             initial density at time 0
         """
  
-        assert isfunction(P) == True, "The transition matrices need to inputted \
+        assert isfunction(P) == True, "The transition matrices need to be inputted \
         as a function mapping time to the corresponding transition matrix."
         
         self._init_dens = init_dens      
@@ -86,9 +78,9 @@ class transitions_finite_time:
         q_f = np.zeros((self._N,self._S))
         q_b = np.zeros((self._N,self._S))
         
-        #  forward committor is 1 on B, 0 on A, at time N, q_f is additionally 0 on C
+        # forward committor is 1 on B, 0 on A, at time N, q_f is additionally 0 on C
         q_f[self._N-1,self._ind_B] = 1
-        #  backward committor is 1 on A, 0 on B, at time 0, q_b is additionally 0 on C
+        # backward committor is 1 on A, 0 on B, at time 0, q_b is additionally 0 on C
         q_b[0,self._ind_A] = 1
         
         # density at time n-1
@@ -154,7 +146,7 @@ class transitions_finite_time:
         # density at time n, start with n=1        
         dens_n = self._init_dens.dot(self._P(0))
         
-        # at time 0 and N+1, the reactive density is zero, the event "to be reactive" is not possiböe
+        # at time 0 and N+1, the reactive density is zero, the event "to be reactive" is not possible
         for n in range(1,self._N-1):
             
             reac_dens[n,:] = np.multiply(self._q_b[n,:],np.multiply(dens_n,self._q_f[n,:]))

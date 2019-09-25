@@ -1,36 +1,25 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Sep  5 10:02:17 2019
-
-@author: bzfhelfm
-"""
-
-
-
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 import os.path
-import transition_paths_finite as tpf
 import transition_paths as tp
 import transition_paths_periodic as tpp
-
+import transition_paths_finite as tpf
 ################# TODO
 # plotting of directed weighted graphs 
 # take out current density -> instead plot effective current (directed network)
 # add colorbar to plots
 
 ###############################################################################
-# load data about small network
+## load data about small network
 my_path = os.path.abspath(os.path.dirname(__file__))
-A = np.load(os.path.join(my_path,'networks_data/small_network_A.npy'))
-T = np.load(os.path.join(my_path,'networks_data/small_network_T.npy'))
-T_p = np.load(os.path.join(my_path,'networks_data/small_network_T_periodisch.npy'))
-pos = np.load(os.path.join(my_path,'networks_data/small_network_pos.npy'))
-pos = pos.item()
-labels = np.load(os.path.join(my_path,'networks_data/small_network_labels.npy'))
-labels = labels.item()
+A = np.load(os.path.join(my_path,'data/small_network_A.npy'))
+T = np.load(os.path.join(my_path,'data/small_network_T.npy'))
+T_p = np.load(os.path.join(my_path,'data/small_network_T_periodisch.npy'))
+#pos = np.load(os.path.join(my_path,'data/small_network_pos.npy'))
+#pos = pos.item()
+#labels = np.load(os.path.join(my_path,'data/small_network_labels.npy'))
+#labels = labels.item()
 
 ######################################################## plotting
  

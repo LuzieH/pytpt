@@ -1,10 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Aug  2 16:25:01 2019
-
-@author: Luzie Helfmann, luziehelfmann@gmail.com
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 import transition_paths as tp
@@ -14,13 +7,13 @@ import os.path
 #load example data
 my_path = os.path.abspath(os.path.dirname(__file__))
 #row stochastic transition matrix
-P = np.load(os.path.join(my_path, 'Example_Triplewell/P.npy')) 
+P = np.load(os.path.join(my_path, 'data/P_3well.npy')) 
 #index set of A,B,C
-ind_A=np.load(os.path.join(my_path,'Example_Triplewell/ind_A.npy')) 
-ind_B=np.load(os.path.join(my_path,'Example_Triplewell/ind_B.npy'))
-ind_C=np.load(os.path.join(my_path,'Example_Triplewell/ind_C.npy'))
+ind_A=np.load(os.path.join(my_path,'data/ind_A_3well.npy')) 
+ind_B=np.load(os.path.join(my_path,'data/ind_B_3well.npy'))
+ind_C=np.load(os.path.join(my_path,'data/ind_C_3well.npy'))
 #dimension of the state space -> needed for plotting
-S_shape=np.load(os.path.join(my_path,'Example_Triplewell/S_shape.npy'))
+S_shape=np.load(os.path.join(my_path,'data/S_shape_3well.npy'))
 
 #instanciate
 #discretized triple well diffusion process
