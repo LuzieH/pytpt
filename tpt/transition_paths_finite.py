@@ -192,14 +192,16 @@ class transitions_finite_time:
     def transition_rate(self):
         
         """
-        The transition rate is the average flow of reactive trajectories out of A
+        The transition rate is the average flow of reactive trajectories out of A 
+        (first row), or into B (second row).
         """
        
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
+        self._rate = np.zeros((2,self._N))
+        self._rate[0,:] =  np.sum(self._current[:,self._ind_A,:],axis = (1,2))
+        self._rate[1,:] =  np.sum(self._current[:,:,self._ind_B],axis = (1,2))
         
-        self._rate =  np.sum(self._current[:,self._ind_A,:],axis = (1,2))
-
         return self._rate
     
     def current_density(self):

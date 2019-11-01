@@ -235,15 +235,17 @@ class transitions_periodic:
         
         """
         The transition rate is the average flow of reactive trajectories out of 
-        A at time m
+        A at time m (first row) or into B at time m (second row)
         """
        
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
         
         # for each time m, sum of all currents out of A into S
-        self._rate =  np.sum(self._current[:,self._ind_A,:],axis = (1,2))
-
+        self._rate = np.zeros((2,self._M))
+        self._rate[0,:] =  np.sum(self._current[:,self._ind_A,:],axis = (1,2))
+        self._rate[1,:] =  np.sum(self._current[:,:,self._ind_B],axis = (1,2))
+        
         return self._rate
     
     def current_density(self):

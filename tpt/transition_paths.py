@@ -144,7 +144,8 @@ class transitions_mcs:
     
     def transition_rate(self):
         """
-        The transition rate is the average flow of reactive trajectories out of A
+        The transition rate is the average flow of reactive trajectories out of A,
+        which is the same as the average rate into B
         """
        
         assert self._current.all() != None, "The reactive current first needs \

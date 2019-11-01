@@ -79,9 +79,9 @@ np.save(os.path.join(my_path,'data/small_network_pos.npy'), pos)
 np.save(os.path.join(my_path,'data/small_network_labels.npy'), labels)
 np.save(os.path.join(my_path,'data/small_network_T_periodisch.npy'), T_p )
 
-################slower transition matrix
-
-factor = 0.5
-T_new = factor*T + (1-factor)*np.diag(np.ones(5))
-
-T_p_new = factor*T_p
+#################slower transition matrix
+#
+#factor = 0.5
+#T_new = factor*T + (1-factor)*np.diag(np.ones(5))
+#
+#T_p_new = factor*T_p
