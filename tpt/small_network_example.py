@@ -119,7 +119,7 @@ def plot_subplot(data, graph, pos, timeframe, size, v_min ,v_max, title , subtit
         for i in range(timeframe):
             nx.draw(graph, pos=pos, labels=labels, node_color=data[i] ,ax=ax[i], vmin = v_min, vmax = v_max)
             if subtitles is not None: 
-                ax[i].set_title(subtitles[i], pad=0)
+                ax[i].set_title(subtitles[i])#, pad=0)
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)  
     return fig
@@ -165,7 +165,7 @@ def plot_subplot_directed(weights, graph, pos, timeframe, size, v_min ,v_max, ti
             #ax = plt.gca()
             ax[i].set_axis_off()
             if subtitles is not None: 
-                ax[i].set_title(subtitles[i], pad=0)
+                ax[i].set_title(subtitles[i])#, pad=0)
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
         
@@ -180,8 +180,8 @@ v_min_reac_dens = min([np.min(reac_dens),np.min(reac_dens_finite), np.min(reac_d
 v_max_reac_dens= max([np.max(reac_dens),np.max(reac_dens_finite), np.max(reac_dens_p)])
 
 
-v_min_current_dens  = min([np.min(current_dens),np.min(current_dens_finite), np.min(current_dens_p)])
-v_max_current_dens  = max([np.max(current_dens),np.max(current_dens_finite), np.max(current_dens_p)])
+#v_min_current_dens  = min([np.min(current_dens),np.min(current_dens_finite), np.min(current_dens_p)])
+#v_max_current_dens  = max([np.max(current_dens),np.max(current_dens_finite), np.max(current_dens_p)])
 
  
 
