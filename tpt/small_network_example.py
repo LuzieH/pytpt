@@ -9,10 +9,8 @@ import matplotlib.pyplot as plt
 import os.path
 
 # TODO
-# better arrows
 # add colorbar to plots
 # change enumeratoin of states
-# plot convergence results!
 
 
 # general
@@ -21,7 +19,7 @@ import os.path
 my_path = os.path.abspath(os.path.dirname(__file__))
 A = np.load(os.path.join(my_path, 'data/small_network_A.npy'))
 T = np.load(os.path.join(my_path, 'data/small_network_T.npy'))
-T_p = np.load(os.path.join(my_path, 'data/small_network_T_periodisch.npy'))
+T_p = np.load(os.path.join(my_path, 'data/small_network_T_periodic.npy'))
 pos = np.load(os.path.join(
     my_path, 'data/small_network_pos.npy'), allow_pickle=True)
 pos = pos.item()
@@ -138,8 +136,6 @@ def plot_subplot(data, graph, pos, timeframe, size, v_min, v_max, title, subtitl
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
     return fig
-
-# plotting
 
 
 def plot_subplot_directed(weights, graph, pos, timeframe, size, v_min, v_max, title, subtitles=None):

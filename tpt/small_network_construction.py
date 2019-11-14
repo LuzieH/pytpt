@@ -77,7 +77,7 @@ np.save(os.path.join(my_path, 'data/small_network_A.npy'), A)
 np.save(os.path.join(my_path, 'data/small_network_T.npy'), T)
 np.save(os.path.join(my_path, 'data/small_network_pos.npy'), pos)
 np.save(os.path.join(my_path, 'data/small_network_labels.npy'), labels)
-np.save(os.path.join(my_path, 'data/small_network_T_periodisch.npy'), T_p)
+np.save(os.path.join(my_path, 'data/small_network_T_periodic.npy'), T_p)
 
 # slower transition matrix
 #
