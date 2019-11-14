@@ -4,6 +4,11 @@
 # compiled pythonfiles
 *.pyc
 
+# data directory
+tpt/data/
+
+# charts directory
+tpt/charts/
+
 # virtual environment
 venv-transitions/
-
