@@ -1,3 +1,9 @@
+# pycharm framework
 .idea
+
+# compiled pythonfiles
+*.pyc
+
+# virtual environment
 venv-transitions/
 
