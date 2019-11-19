@@ -54,9 +54,13 @@ rate = well3.transition_rate()  # AB discrete transition rate
 
 #############################################################################
 # plots 
+plt.figure(1)
 plt.imshow(stat_dens.reshape((51,41)))
+plt.figure(2)
 plt.imshow(reac_dens.reshape((51,41)))
+plt.figure(3)
 plt.imshow(q_f.reshape((51,41)))
+plt.figure(4)
 plt.imshow(q_b.reshape((51,41)))
 
 

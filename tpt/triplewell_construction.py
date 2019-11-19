@@ -45,7 +45,7 @@ dt=0.01 #dt for Euler Maruyama discretization
 lag=10 #lag time of transition matrix is lag*dt
 
 #row stochastic transition matrix
-T=transitionmatrix_2D(dV3,sigma,dt, lag ,Nstep, interval, dx_power, x, y, dim)
+T=transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval, dx_power, x, y, dim)
 
 ############################################################################
 #transition matrix for triple well plus circular forcing
@@ -88,26 +88,26 @@ def set_C_triplewell(x,A_center, B_center, radius_setAB):
         return 0
 
 #indices of transition region C
-ind_C = np.array([set_C_triplewell(grid[:,i],A_center,B_center,radius_setAB) for i in np.arange(np.shape(xn)[0])])
+ind_C = np.argwhere(np.array([set_C_triplewell(grid[:,i],A_center,B_center,radius_setAB) for i in np.arange(np.shape(xn)[0])])==1).squeeze()#np.array([set_C_triplewell(grid[:,i],A_center,B_center,radius_setAB) for i in np.arange(np.shape(xn)[0])])
 
 #indices of B
-ind_B = np.array([set_B_triplewell(grid[:,i],B_center, radius_setAB) for i in np.arange(np.shape(xn)[0])])
+ind_B = np.argwhere(np.array([set_B_triplewell(grid[:,i],B_center, radius_setAB) for i in np.arange(np.shape(xn)[0])])==1).flatten()
 
 #indices of B
-ind_A = np.array([set_A_triplewell(grid[:,i],A_center, radius_setAB) for i in np.arange(np.shape(xn)[0])])
+ind_A = np.argwhere(np.array([set_A_triplewell(grid[:,i],A_center, radius_setAB) for i in np.arange(np.shape(xn)[0])])==1).flatten()
 
-##############################################################################
-
-#stat dens
-
-# compute stationary density
-eigv, eig = np.linalg.eig(np.transpose(T))
-# get index of eigenvector with eigenvalue 1 (up to small numerical error)
-index = np.where(np.isclose(eigv, 1))[0]
-# normalize
-stat_dens = (np.real(eig[:, index]) /
-             np.sum(np.real(eig[:, index]))).flatten()
-plt.imshow(np.real(stat_dens).reshape((51, 41)))
+###############################################################################
+#
+##stat dens
+#
+## compute stationary density
+#eigv, eig = np.linalg.eig(np.transpose(T))
+## get index of eigenvector with eigenvalue 1 (up to small numerical error)
+#index = np.where(np.isclose(eigv, 1))[0]
+## normalize
+#stat_dens = (np.real(eig[:, index]) /
+#             np.sum(np.real(eig[:, index]))).flatten()
+#plt.imshow(np.real(stat_dens).reshape((51, 41)))
 
 
 ##################################################################################
