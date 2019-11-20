@@ -82,6 +82,8 @@ class transitions_periodic:
         """
         Computes the transition matrix backwards in time. Returns a function 
         that for each time assigs the correct backward transition matrix modulo M.
+        When the stationary density in j is zero, the corresponding transition
+        matrix entries (row j) are set to 0.
         """
         P_back_m = np.zeros((self._M, self._S, self._S))
 
@@ -89,9 +91,10 @@ class transitions_periodic:
             # compute backward transition matrix
             for i in np.arange(self._S):
                 for j in np.arange(self._S):
-                    P_back_m[m, j, i] = self._P(m-1)[i, j] *\
-                        self._stat_dens[np.mod(
-                            m-1, self._M), i]/self._stat_dens[np.mod(m, self._M), j]
+                    if self._stat_dens[np.mod(m, self._M), j]>0:
+                        P_back_m[m, j, i] = self._P(m-1)[i, j] *\
+                            self._stat_dens[np.mod(
+                                m-1, self._M), i]/self._stat_dens[np.mod(m, self._M), j]
 
         # store backward matrix in a function that assigns each time point to the
         # corresponding transition matrix

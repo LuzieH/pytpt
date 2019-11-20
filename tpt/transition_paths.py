@@ -69,11 +69,13 @@ class transitions_mcs:
         (probability that the system last came from A rather than B).
         """
 
-        # compute backward transition matrix
+        # compute backward transition matrix (if stat dens in state j is 0, 
+        # the corresponding entries in the transition matrix are 0)
         P_back = np.zeros(np.shape(self._P))
         for i in np.arange(self._S):
             for j in np.arange(self._S):
-                P_back[j, i] = self._P[i, j] * \
+                if self._stat_dens[j]>0:
+                    P_back[j, i] = self._P[i, j] * \
                     self._stat_dens[i]/self._stat_dens[j]
         self._P_back = P_back
 

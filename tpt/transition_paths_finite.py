@@ -105,7 +105,7 @@ class transitions_finite_time:
             # density at time n
             dens_n = dens_nmin1.dot(self._P(n-1))
 
-            # ensure that when dividing by the distribution and it's negative,
+            # ensure that when dividing by the distribution and it's 0,
             # we don't divide by zero, there is no contribution, thus we can replace
             # the inverse by zero
             d_n_inv = dens_n[self._ind_C]

@@ -10,12 +10,12 @@ my_path = os.path.abspath(os.path.dirname(__file__))
 #triple well in 2D, energy landscape V and gradient dV
 
 factor=0.25
-V_param = lambda x,y,p: factor*(3*np.exp(-x**2-(y-(1./3))**2) - p*np.exp(-x**2-(y-(5./3))**2) - 5*np.exp(-(x-1)**2-y**2) - 5*np.exp(-(x+1)**2-y**2)  + 0.2*(x**4) + 0.2*(y-1./3)**4)
+V_param = lambda x,y,p: -1 * factor*(3*np.exp(-x**2-(y-(1./3))**2) - p*np.exp(-x**2-(y-(5./3))**2) - 5*np.exp(-(x-1)**2-y**2) - 5*np.exp(-(x+1)**2-y**2)  + 0.2*(x**4) + 0.2*(y-1./3)**4)
 
 V0 = lambda x,y: V_param(x,y,3)
 
-dV_param_x = lambda x,y,p: factor*((-2*3*x)*np.exp(-x**2-(y-(1./3))**2) +(p*2*x)*np.exp(-x**2-(y-(5./3))**2) + (10*(x-1))*np.exp(-(x-1)**2-y**2) + (10*(x+1))*np.exp(-(x+1)**2-y**2)  + 0.8*(x**3))
-dV_param_y = lambda x,y,p: factor*((-2*3*(y-1./3))*np.exp(-x**2-(y-(1./3))**2) + (p*2*(y-(5./3)))*np.exp(-x**2-(y-(5./3))**2) + (10*y)*np.exp(-(x-1)**2-y**2) + (10*y)*np.exp(-(x+1)**2-y**2)  + 0.8*(y-1./3)**3)
+dV_param_x = lambda x,y,p: -1 * factor*((-2*3*x)*np.exp(-x**2-(y-(1./3))**2) +(p*2*x)*np.exp(-x**2-(y-(5./3))**2) + (10*(x-1))*np.exp(-(x-1)**2-y**2) + (10*(x+1))*np.exp(-(x+1)**2-y**2)  + 0.8*(x**3))
+dV_param_y = lambda x,y,p: -1 * factor*((-2*3*(y-1./3))*np.exp(-x**2-(y-(1./3))**2) + (p*2*(y-(5./3)))*np.exp(-x**2-(y-(5./3))**2) + (10*y)*np.exp(-(x-1)**2-y**2) + (10*y)*np.exp(-(x+1)**2-y**2)  + 0.8*(y-1./3)**3)
 
 dV0 = lambda x,y: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)])
 
@@ -23,10 +23,11 @@ dV0 = lambda x,y: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)])
 ##############################################################################
 #count matrix (triple well, no extra forcing)
 
-interval = np.array([[-2,2],[-2,3]]) #size of state space
+interval = np.array([[-2,2],[-1,2]]) #size of state space
 dim=np.shape(interval)[0] #dimension of state space
 dx_power=1 
-dx=1./(10**dx_power) #discretization of state space into dx cells for transition matrix
+dx=2./(10**dx_power) #discretization of state space into dx cells for transition matrix
+#dx=2./10
 x = np.arange(interval[0,0],interval[0,1]+dx, dx) #box centers in x and y direction
 y = np.arange(interval[1,0],interval[1,1]+dx, dx)
 xv, yv = np.meshgrid(x, y)
@@ -39,25 +40,25 @@ yn=np.reshape(yv,(xdim*ydim,1))
 
 grid = np.squeeze(np.array([xn,yn]))
 
-Nstep=100 #number of seeds per box for count matrix
+Nstep=500 #number of seeds per box for count matrix
 sigma=1.0 
-dt=0.01 #dt for Euler Maruyama discretization
-lag=10 #lag time of transition matrix is lag*dt
+dt=0.02 #dt for Euler Maruyama discretization
+lag=15 #lag time of transition matrix is lag*dt
 
 #row stochastic transition matrix
-T=transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval, dx_power, x, y, dim)
+T=transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y, dim)
 
 ############################################################################
 #transition matrix for triple well plus circular forcing
-M=6 #length of period
+M=10 #length of period
 
 #forcing is the vector field sin(t)*f[(-y,x)], where f applies some convolution, such that 
-factor_forced=0.5
+factor_forced=1
 dV_forced = lambda x,y,m: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)]) +factor_forced*np.cos(m*2.*np.pi/M)* np.array([-y,x])
 
 T_m =np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
-    T_m[m,:,:]= transitionmatrix_2D(lambda x,y : dV_forced(x,y,m) ,sigma,dt, lag ,Nstep, interval, dx_power, x, y, dim)
+    T_m[m,:,:]= transitionmatrix_2D(lambda x,y : dV_forced(x,y,m) ,sigma,dt, lag ,Nstep, interval,x, y, dim)
 
 
 
@@ -96,23 +97,23 @@ ind_B = np.argwhere(np.array([set_B_triplewell(grid[:,i],B_center, radius_setAB)
 #indices of B
 ind_A = np.argwhere(np.array([set_A_triplewell(grid[:,i],A_center, radius_setAB) for i in np.arange(np.shape(xn)[0])])==1).flatten()
 
-###############################################################################
+################################################################################
+##
+###stat dens
+##
+### compute stationary density
+##eigv, eig = np.linalg.eig(np.transpose(T))
+### get index of eigenvector with eigenvalue 1 (up to small numerical error)
+##index = np.where(np.isclose(eigv, 1))[0]
+### normalize
+##stat_dens = (np.real(eig[:, index]) /
+##             np.sum(np.real(eig[:, index]))).flatten()
+##plt.imshow(np.real(stat_dens).reshape((51, 41)))
 #
-##stat dens
 #
-## compute stationary density
-#eigv, eig = np.linalg.eig(np.transpose(T))
-## get index of eigenvector with eigenvalue 1 (up to small numerical error)
-#index = np.where(np.isclose(eigv, 1))[0]
-## normalize
-#stat_dens = (np.real(eig[:, index]) /
-#             np.sum(np.real(eig[:, index]))).flatten()
-#plt.imshow(np.real(stat_dens).reshape((51, 41)))
-
-
-##################################################################################
-# save
-
+###################################################################################
+## save
+#
 np.save(os.path.join(my_path, 'data/triplewell_T.npy'), T)
 np.save(os.path.join(my_path, 'data/triplewell_T_m.npy'), T_m)
 np.save(os.path.join(my_path, 'data/triplewell_interval.npy'), interval)
