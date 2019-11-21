@@ -140,12 +140,17 @@ ax[3].set_title(subtitles[3])
 
 #calculation the effective vector for each state
 eff_vectors = np.zeros((dim_st, 2))
+eff_vectors_unit = np.zeros((dim_st, 2))
+colors = np.zeros(dim_st)
 for i in np.arange(dim_st):
     for j in np.arange(dim_st):
         eff_vectors[i,0] += eff_current[i,j] *  (xn[j] - xn[i])  
         eff_vectors[i,1] += eff_current[i,j] *  (yn[j] - yn[i])  
+    colors[i] = np.linalg.norm(eff_vectors[i,:])
+    if colors[i]>0:
+        eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i]
 
-ax[4].quiver(xn,yn,list(eff_vectors[:,0]),list(eff_vectors[:,1]))
+ax[4].quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm')
 ax[4].set_title(subtitles[4])
  
 fig.savefig(os.path.join(charts_path, 'triplewell_stat.png'), dpi=100)
