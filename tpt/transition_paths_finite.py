@@ -167,8 +167,9 @@ class transitions_finite_time:
 
     def reac_current(self):
         """
-        Computes the reactive current current[i,j] between nodes i and j, as the 
+        Computes the reactive current current[i,j] between nodes i at time n and j at time n+1, as the 
         flow of reactive trajectories from i to j during one time step. 
+        Only defined for n=0,..,N-2
         """
         assert self._q_f.all() != None, "The committor functions  need \
         first to be computed by using the method committor"
@@ -180,12 +181,12 @@ class transitions_finite_time:
 
         dens_n = self._init_dens
 
-        for n in range(self._N):
+        for n in range(self._N-1):
 
             for i in np.arange(self._S):
                 for j in np.arange(self._S):
                     current[n, i, j] = dens_n[i]*self._q_b[n, i] * \
-                        self._P(n)[i, j]*self._q_f[n, j]
+                        self._P(n)[i, j]*self._q_f[n+1, j]
 
                     if i+1 > j:
                         eff_current[n, i, j] = np.max(

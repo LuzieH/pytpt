@@ -228,7 +228,7 @@ class transitions_periodic:
             for i in np.arange(self._S):
                 for j in np.arange(self._S):
                     current[m, i, j] = self._stat_dens[m, i] * \
-                        self._q_b[m, i]*self._P(m)[i, j]*self._q_f[m, j]
+                        self._q_b[m, i]*self._P(m)[i, j]*self._q_f[np.mod(m+1,self._M), j]
 
                     if i+1 > j:
                         eff_current[m, i, j] = np.max(
