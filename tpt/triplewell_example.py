@@ -79,7 +79,7 @@ rate_p = well3_periodic.transition_rate()
 def Tn(n):  
     return T#T_m[np.mod(m,M),:,:].squeeze()
 
-N = 8 #time window
+N = 6 #time window
 
 # initial density
 init_dens_triple = stat_dens
@@ -121,25 +121,22 @@ def plot_subplot_3well(data, datashape, extent, timeframe, size, v_min, v_max, t
 
 #############################################################################
 # plots  infinite-time, ergodic
-plt.figure(1)
-plt.imshow(stat_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) )
-plt.title('Stationary density')
-plt.savefig(os.path.join(charts_path, 'triplewell_dens.png'), dpi=100)
+fig, ax = plt.subplots(1, 5, sharex='col',
+                           sharey='row', figsize=(5*3,3))
 
-plt.figure(2)
-plt.imshow(reac_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
-plt.title('Reactive density $\mu^{AB}$')
-plt.savefig(os.path.join(charts_path, 'triplewell_reac_dens.png'), dpi=100)
+subtitles = np.array(['$\mu$','$\mu^{AB}$', '$q^+$','$q^-$','$f^+$'])
+    
+ax[0].imshow(stat_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) )
+ax[0].set_title(subtitles[0])
 
-plt.figure(3)
-plt.imshow(q_f.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
-plt.title('$q^+$')
-plt.savefig(os.path.join(charts_path, 'triplewell_q_f.png'), dpi=100)
+ax[1].imshow(reac_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+ax[1].set_title(subtitles[1])
 
-plt.figure(4)
-plt.imshow(q_b.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
-plt.title('$q^-$')
-plt.savefig(os.path.join(charts_path, 'triplewell_q_b.png'), dpi=100)
+ax[2].imshow(q_f.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+ax[2].set_title(subtitles[2])
+
+ax[3].imshow(q_b.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+ax[3].set_title(subtitles[3])
 
 #calculation the effective vector for each state
 eff_vectors = np.zeros((dim_st, 2))
@@ -148,10 +145,11 @@ for i in np.arange(dim_st):
         eff_vectors[i,0] += eff_current[i,j] *  (xn[j] - xn[i])  
         eff_vectors[i,1] += eff_current[i,j] *  (yn[j] - yn[i])  
 
-plt.figure(5)
-plt.quiver(xn,yn,list(eff_vectors[:,0]),list(eff_vectors[:,1]))
-plt.title('$f^+$')
-plt.savefig(os.path.join(charts_path, 'triplewell_eff.png'), dpi=100)
+ax[4].quiver(xn,yn,list(eff_vectors[:,0]),list(eff_vectors[:,1]))
+ax[4].set_title(subtitles[4])
+ 
+fig.savefig(os.path.join(charts_path, 'triplewell_stat.png'), dpi=100)
+
 ######################################################## plots periodic
 
 subtitles_p = np.array(['m = ' + str(i) for i in np.arange(M)])
