@@ -5,16 +5,6 @@ import os.path
 
 my_path = os.path.abspath(os.path.dirname(__file__))
 
-# adjacency matrix
-A = np.zeros((5, 5))
-A[0, 1] = 1
-A[0, 3] = 1
-A[1, 2] = 1
-A[1, 4] = 1
-A[2, 3] = 1
-A[3, 4] = 1
-A = A + A.transpose() 
-
 # node positions
 pos = {}
 pos[0] = (0, -1)
@@ -32,12 +22,8 @@ labels = {
     4: r'$B$',
 }
 
-G = nx.from_numpy_matrix(A)
-
-# transition matrix
+# T: symmetric stochastic matrix
 T = np.zeros((5, 5))
-
-# symmetric
 T[0, 0] = 0.7
 T[0, 1] = 0.15
 T[0, 3] = 0.15
@@ -54,28 +40,43 @@ T[4, 1] = 0.15
 T[4, 3] = 0.15
 T[4, 4] = 0.7
 
-# for the periodic setting, add the following matrix with weights varying between 0 and 1
-T_p = np.zeros(np.shape(T))
+# L: 0-rowsum matrix
+# L+T does not have the 1-2 connection and L-T does not have the 2-3 connection 
+L = np.zeros(np.shape(T))
+L[0, 1] = -0.05
+L[0, 3] =  0.05
+L[1, 0] =  0.2
+L[1, 2] = -0.4
+L[1, 4] =  0.2
+L[2, 1] = -0.2
+L[2, 3] =  0.2
+L[3, 0] = -0.2
+L[3, 2] =  0.4
+L[3, 4] = -0.2
+L[4, 1] = -0.05
+L[4, 3] =  0.05
 
-# not symmetric, dynamic varies between T+T_p ....T-T_p
-T_p[0, 1] = -0.05
-T_p[0, 3] = 0.05
-T_p[1, 0] = 0.2
-T_p[1, 2] = - 0.4
-T_p[1, 4] = 0.2
-T_p[2, 1] = - 0.2
-T_p[2, 3] = 0.2
-T_p[3, 0] = - 0.2
-T_p[3, 2] = 0.4
-T_p[3, 4] = - 0.2
-T_p[4, 1] = - 0.05
-T_p[4, 3] = 0.05
+# K: 0-rowsum matrix
+# L+T+K transition matrix where A and B are less metastable
+K = np.zeros((5, 5))
+K[0, 0] = -0.2
+K[0, 1] =  0.1
+K[0, 3] =  0.1
+K[4, 1] =  0.1
+K[4, 3] =  0.1
+K[4, 4] = -0.2
 
-np.save(os.path.join(my_path, 'data/small_network_A.npy'), A)
-np.save(os.path.join(my_path, 'data/small_network_T.npy'), T)
+# T+L : transition matrix for the ergodic, infinite-time case
+# T+L .... T-L : transition matricec within a period for the periodic case
+# L+T : transition matrix for the finite-time, time-homogeneous case 
+# L+T+3K, L+T+2K, L+T+K, L+T, ..., L+T : transition matrices for the finite-time,
+# time-inhomogeneous case
+
 np.save(os.path.join(my_path, 'data/small_network_pos.npy'), pos)
 np.save(os.path.join(my_path, 'data/small_network_labels.npy'), labels)
-np.save(os.path.join(my_path, 'data/small_network_T_periodic.npy'), T_p)
+np.save(os.path.join(my_path, 'data/small_network_T.npy'), T)
+np.save(os.path.join(my_path, 'data/small_network_L.npy'), L)
+np.save(os.path.join(my_path, 'data/small_network_K.npy'), K)
 
 # slower transition matrix
 #
