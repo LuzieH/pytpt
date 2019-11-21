@@ -102,7 +102,7 @@ rate_f = well3_finite.transition_rate()
 
 ###########################################################################
 #plotting
-#colormap e.g. cmap  = 'PuBuGn'
+#colormap e.g. cmap  = 'PuBuGn' or 'CMRmap' or 'viridis_r'
 
 def plot_subplot_3well(data, datashape, extent, timeframe, size, v_min, v_max, title, subtitles=None):
     fig, ax = plt.subplots(1, timeframe, sharex='col',

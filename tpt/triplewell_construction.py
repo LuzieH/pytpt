@@ -23,7 +23,7 @@ dV0 = lambda x,y: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)])
 ##############################################################################
 #count matrix (triple well, no extra forcing)
 
-interval = np.array([[-2,2],[-1,2]]) #size of state space
+interval = np.array([[-2,2],[-1.2,2.2]]) #size of state space
 dim=np.shape(interval)[0] #dimension of state space
 dx_power=1 
 dx=2./(10**dx_power) #discretization of state space into dx cells for transition matrix

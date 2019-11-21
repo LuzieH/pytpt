@@ -139,6 +139,8 @@ class transitions_finite_time:
         i.e. the probability to be at x in S at time n, given the chain is reactive.
         The function returns an array of the reactive density for each time 
         (with time as the first index of the array).
+        At times n=0 and n=N-1, a zero vector is returned, but one should note
+        that actually the density is not defined then. 
         """
         assert self._q_f.all() != None, "The committor functions need \
         first to be computed by using the method committor"
@@ -148,7 +150,7 @@ class transitions_finite_time:
         # density at time n, start with n=1
         dens_n = self._init_dens.dot(self._P(0))
 
-        # at time 0 and N+1, the reactive density is zero, the event "to be reactive" is not possible
+        # at time 0 and N-1, the reactive density is zero, the event "to be reactive" is not possible
         for n in range(1, self._N-1):
 
             reac_dens[n, :] = np.multiply(
