@@ -35,6 +35,10 @@ ind_B = np.array([4])
 
 # TPT ergodic, infinite-time
 
+# transition matrix at time n
+def P(n):
+    return T + L
+
 # instantiate
 small = tp.transitions_mcs(T + L, ind_A, ind_B, ind_C)
 stat_dens = small.stationary_density()
@@ -81,8 +85,10 @@ rate_finite = small_finite.transition_rate()
 # transition matrix at time n
 def P_inhom(n):
     if n == 0: 
-        return T + L + 2*K
+        return T + L + 3*K
     elif n == 1: 
+        return T + L + 2*K
+    elif n == 2: 
         return T + L + K
     else:
         return T + L
@@ -151,24 +157,27 @@ rate_p = small_periodic.transition_rate()
 
 # plotting
 
-def plot_subplot(data, graph, pos, timeframe, size, v_min, v_max, title, subtitles=None):
+def plot_density(data, P, pos, timeframe, size,
+                 v_min, v_max, title, subtitles=None):
     fig, ax = plt.subplots(1, timeframe, sharex='col',
                            sharey='row', figsize=size)
     if timeframe == 1:
+        graph = nx.Graph(P(timeframe))
         nx.draw(graph, pos=pos, labels=labels,
                 node_color=data, ax=ax, vmin=v_min, vmax=v_max)
     else:
         for i in range(timeframe):
+            graph = nx.Graph(P(i))
             nx.draw(graph, pos=pos, labels=labels,
                     node_color=data[i], ax=ax[i], vmin=v_min, vmax=v_max)
             if subtitles is not None:
-                ax[i].set_title(subtitles[i])  # , pad=0)
+                ax[i].set_title(subtitles[i])
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
     return fig
 
 
-def plot_subplot_directed(weights, graph, pos, timeframe, size, v_min, v_max, title, subtitles=None):
+def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, title, subtitles=None):
     fig, ax = plt.subplots(1, timeframe, sharex='col',
                            sharey='row', figsize=size)
     if timeframe == 1:
@@ -253,140 +262,159 @@ G = nx.Graph(T+L)
 charts_path = os.path.join(my_path, 'charts')
 
 # plotting results for ergodic, infinite-time case
-fig = plot_subplot(stat_dens, G, pos, 1, (2*1, 2),
+fig = plot_density(stat_dens, P, pos, 1, (2*1, 2),
                    v_min_dens, v_max_dens, 'Stationary density')
+
 fig.savefig(os.path.join(charts_path, 'dens.png'), dpi=100)
 
-fig = plot_subplot(q_f, G, pos, 1, (2*1, 2), 0, 1, '$q^+$')
+fig = plot_density(q_f, P, pos, 1, (2*1, 2), 0, 1, '$q^+$')
 fig.savefig(os.path.join(charts_path, 'q_f.png'), dpi=100)
 
-fig = plot_subplot(q_b, G, pos, 1, (2*1, 2), 0, 1, '$q^-$')
+fig = plot_density(q_b, P, pos, 1, (2*1, 2), 0, 1, '$q^-$')
 fig.savefig(os.path.join(charts_path, 'q_b.png'), dpi=100)
 
-fig = plot_subplot(reac_dens, G, pos, 1, (2*1, 2),
+fig = plot_density(reac_dens, P, pos, 1, (2*1, 2),
                    v_min_reac_dens, v_max_reac_dens, '$\mu^\mathcal{AB}$')
 fig.savefig(os.path.join(charts_path, 'reac_dens.png'), dpi=100)
 
-fig = plot_subplot_directed(eff_current, G, pos, 1,
+#fig = plot(current, P, pos, 1, (2*1, 3),
+#                   v_min_current_dens, v_max_current_dens, 'Current density')
+#fig.savefig(os.path.join(charts_path, 'curr_dens.png'), dpi=100)
+
+fig = plot_effective_current(eff_current, G, pos, 1,
                             (2*1, 2), 0, 1, 'Effective current $f^+$')
 fig.savefig(os.path.join(charts_path, 'eff.png'), dpi=100)
 plt.close()
 
-#fig = plot_subplot(current_dens, G, pos, 1, (2*1, 3),v_min_current_dens,v_max_current_dens, 'Current density')
+
+# plotting results for periodic case
+subtitles_p = np.array(['m = ' + str(i) for i in np.arange(M)])
+fig = plot_density(stat_dens_p, P_p, pos, M, (2*M, 2), v_min_dens,
+                   v_max_dens, 'Periodic stationary density', subtitles_p)
+fig.savefig(os.path.join(charts_path, 'dens_p.png'), dpi=100)
+
+fig = plot_density(q_f_p, P_p, pos, M, (2*M, 2), 0, 1,
+                   'Periodic $q^+_m$', subtitles_p)
+fig.savefig(os.path.join(charts_path, 'q_f_p.png'), dpi=100)
+
+fig = plot_density(q_b_p, P_p, pos, M, (2*M, 2), 0, 1,
+                   'Periodic $q^-_m$', subtitles_p)
+fig.savefig(os.path.join(charts_path, 'q_b_p.png'), dpi=100)
+
+fig = plot_density(reac_dens_p, P_p, pos, M, (2*M, 2), v_min_reac_dens,
+                   v_max_reac_dens, 'Periodic $\mu_m^\mathcal{AB}$', subtitles_p)
+fig.savefig(os.path.join(charts_path, 'reac_dens_p.png'), dpi=100)
+
+#fig = plot(current_dens_p, P_p, pos, M, (2*M, 3),v_min_current_dens,v_max_current_dens, 'Periodic current density',subtitles_p)
+#fig.savefig(os.path.join(charts_path, 'curr_dens_p.png'), dpi=100)
+fig = plot_effective_current(eff_current_p, G, pos, M, (2*M, 2), v_min_dens,
+                            v_max_dens, 'Periodic effective current $f^+_m$', subtitles_p)
+fig.savefig(os.path.join(charts_path, 'eff_p.png'), dpi=100)
+plt.close()
 
 
-## plotting results for periodic case
-#subtitles_p = np.array(['m = ' + str(i) for i in np.arange(M)])
-#fig = plot_subplot(stat_dens_p, G, pos, M, (2*M, 2), v_min_dens,
-#                   v_max_dens, 'Periodic stationary density', subtitles_p)
-#fig.savefig(os.path.join(charts_path, 'dens_p.png'), dpi=100)
-#
-#fig = plot_subplot(q_f_p, G, pos, M, (2*M, 2), 0, 1,
-#                   'Periodic $q^+_m$', subtitles_p)
-#fig = plot_subplot(q_b_p, G, pos, M, (2*M, 2), 0, 1,
-#                   'Periodic $q^-_m$', subtitles_p)
-#fig = plot_subplot(reac_dens_p, G, pos, M, (2*M, 2), v_min_reac_dens,
-#                   v_max_reac_dens, 'Periodic $\mu_m^\mathcal{AB}$', subtitles_p)
-#fig.savefig(os.path.join(charts_path, 'reac_dens_p.png'), dpi=100)
-#
-##fig = plot_subplot(current_dens_p, G, pos, M, (2*M, 3),v_min_current_dens,v_max_current_dens, 'Periodic current density',subtitles_p)
-#fig = plot_subplot_directed(eff_current_p, G, pos, M, (2*M, 2), v_min_dens,
-#                            v_max_dens, 'Periodic effective current $f^+_m$', subtitles_p)
-#fig.savefig(os.path.join(charts_path, 'eff_p.png'), dpi=100)
-#
-#
 # plotting results for finite-time, time-homogeneous case
 subtitles_f = np.array(['n = ' + str(i) for i in np.arange(N)])
-fig = plot_subplot(stat_dens_finite, G, pos, N, (2*N, 2),
+fig = plot_density(stat_dens_finite, P_hom, pos, N, (2*N, 2),
                    v_min_dens, v_max_dens, 'Finite-time density', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'dens_f.png'), dpi=100)
 
-fig = plot_subplot(q_f_finite, G, pos, N, (2*N, 2), 0, 1,
+fig = plot_density(q_f_finite, P_hom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^+(n)$', subtitles_f)
-fig = plot_subplot(q_b_finite, G, pos, N, (2*N, 2), 0, 1,
+fig.savefig(os.path.join(charts_path, 'q_f_f.png'), dpi=100)
+
+fig = plot_density(q_b_finite, P_hom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^-(n)$', subtitles_f)
-fig = plot_subplot(reac_dens_finite, G, pos, N, (2*N, 2), v_min_reac_dens,
+fig.savefig(os.path.join(charts_path, 'q_b_f.png'), dpi=100)
+
+fig = plot_density(reac_dens_finite, P_hom, pos, N, (2*N, 2), v_min_reac_dens,
                    v_max_reac_dens, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'reac_dens_f.png'), dpi=100)
 
 #fig = plot_subplot(current_dens_finite, G, pos, N, (2*N, 3), v_min_current_dens,v_max_current_dens,'Finite-time current density',subtitles_f)
+#fig.savefig(os.path.join(charts_path, 'reac_dens_f.png'), dpi=100)
 
-fig = plot_subplot_directed(eff_current_finite, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
+fig = plot_effective_current(eff_current_finite, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'eff_f.png'), dpi=100)
 plt.close()
 
 
 # plotting results for finite-time, time-inhomogeneous case
 subtitles_f = np.array(['n = ' + str(i) for i in np.arange(N)])
-fig = plot_subplot(stat_dens_finite, G, pos, N, (2*N, 2),
+fig = plot_density(stat_dens_finite, P_inhom, pos, N, (2*N, 2),
                    v_min_dens, v_max_dens, 'Finite-time density', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'dens_f_inhom.png'), dpi=100)
 
-fig = plot_subplot(q_f_finite, G, pos, N, (2*N, 2), 0, 1,
+fig = plot_density(q_f_finite, P_inhom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^+(n)$', subtitles_f)
-fig = plot_subplot(q_b_finite, G, pos, N, (2*N, 2), 0, 1,
+fig.savefig(os.path.join(charts_path, 'q_f_inhom.png'), dpi=100)
+
+fig = plot_density(q_b_finite, P_inhom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^-(n)$', subtitles_f)
-fig = plot_subplot(reac_dens_finite, G, pos, N, (2*N, 2), v_min_reac_dens,
+fig.savefig(os.path.join(charts_path, 'q_b_inhom.png'), dpi=100)
+
+fig = plot_density(reac_dens_finite, P_inhom, pos, N, (2*N, 2), v_min_reac_dens,
                    v_max_reac_dens, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'reac_dens_f_inhom.png'), dpi=100)
 
 #fig = plot_subplot(current_dens_finite, G, pos, N, (2*N, 3), v_min_current_dens,v_max_current_dens,'Finite-time current density',subtitles_f)
+#fig.savefig(os.path.join(charts_path, '.png'), dpi=100)
 
-fig = plot_subplot_directed(eff_current_finite, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
+fig = plot_effective_current(eff_current_finite, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'eff_f_inhom.png'), dpi=100)
 plt.close()
 
 
-## extended finite-time -> large N=100
-#fig, ax = plt.subplots(1, 1, figsize=(2*M, 5))
-#convergence_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)
-#plt.plot(np.arange(1, N_ex), convergence_error)  # , s=5, marker='o')
-#plt.title(
-#    'Convergence of finite-time, stationary $q^+(n)$ on $\{-N,...,N\}$ for large $N$')
-#plt.xlabel('$N$')
-#plt.ylabel('$l_2$-Error $||q^+ - q^+(0)||$ ')
-## Hide the right and top spines
-#ax.spines['right'].set_visible(False)
-#ax.spines['top'].set_visible(False)
-#
-## Only show ticks on the left and bottom spines
-#ax.yaxis.set_ticks_position('left')
-#ax.xaxis.set_ticks_position('bottom')
-#fig.savefig(os.path.join(charts_path, 'conv_finite.png'), dpi=100)
-#
-## rates
-## periodic
-#
-#fig, ax = plt.subplots(1, 1, figsize=(2*M, 2))
-##fig = plt.figure(figsize=(2*M, 2))
-## $k^{A \rightarrow}(m)$
-#plt.scatter(np.arange(M), rate_p[0, :], label='$k^{A->}$', alpha=0.7)
-#plt.scatter(np.arange(M), rate_p[1, :], label='$k^{->B}$', alpha=0.7)
-#plt.legend()
-## Hide the right and top spines
-#ax.spines['right'].set_visible(False)
-#ax.spines['top'].set_visible(False)
-#
-## Only show ticks on the left and bottom spines
-#ax.yaxis.set_ticks_position('left')
-#ax.xaxis.set_ticks_position('bottom')
-#plt.title('Discrete M-periodic rates')
-#plt.xlabel('m')
-#plt.ylabel('Discrete rate')
-#fig.savefig(os.path.join(charts_path, 'rates_p.png'), dpi=100)
-#
-#fig, ax = plt.subplots(1, 1, figsize=(2*N, 2))
-#plt.scatter(np.arange(N), rate_finite[0, :], label='$k^{A->}$', alpha=0.7)
-#plt.scatter(np.arange(N), rate_finite[1, :], label='$k^{->B}$', alpha=0.7)
-#plt.legend()
-## Hide the right and top spines
-#ax.spines['right'].set_visible(False)
-#ax.spines['top'].set_visible(False)
-#
-## Only show ticks on the left and bottom spines
-#ax.yaxis.set_ticks_position('left')
-#ax.xaxis.set_ticks_position('bottom')
-#plt.title('Discrete finite-time rates')
-#plt.xlabel('n')
-#plt.ylabel('Discrete rate')
-#fig.savefig(os.path.join(charts_path, 'rates_finite.png'), dpi=100)
+# extended finite-time -> large N=100
+fig, ax = plt.subplots(1, 1, figsize=(2*M, 5))
+convergence_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)
+plt.plot(np.arange(1, N_ex), convergence_error)  # , s=5, marker='o')
+plt.title(
+    'Convergence of finite-time, stationary $q^+(n)$ on $\{-N,...,N\}$ for large $N$')
+plt.xlabel('$N$')
+plt.ylabel('$l_2$-Error $||q^+ - q^+(0)||$ ')
+# Hide the right and top spines
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+# Only show ticks on the left and bottom spines
+ax.yaxis.set_ticks_position('left')
+ax.xaxis.set_ticks_position('bottom')
+fig.savefig(os.path.join(charts_path, 'conv_finite.png'), dpi=100)
+
+# rates
+# periodic
+
+fig, ax = plt.subplots(1, 1, figsize=(2*M, 2))
+#fig = plt.figure(figsize=(2*M, 2))
+# $k^{A \rightarrow}(m)$
+plt.scatter(np.arange(M), rate_p[0, :], label='$k^{A->}$', alpha=0.7)
+plt.scatter(np.arange(M), rate_p[1, :], label='$k^{->B}$', alpha=0.7)
+plt.legend()
+# Hide the right and top spines
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+# Only show ticks on the left and bottom spines
+ax.yaxis.set_ticks_position('left')
+ax.xaxis.set_ticks_position('bottom')
+plt.title('Discrete M-periodic rates')
+plt.xlabel('m')
+plt.ylabel('Discrete rate')
+fig.savefig(os.path.join(charts_path, 'rates_p.png'), dpi=100)
+
+fig, ax = plt.subplots(1, 1, figsize=(2*N, 2))
+plt.scatter(np.arange(N), rate_finite[0, :], label='$k^{A->}$', alpha=0.7)
+plt.scatter(np.arange(N), rate_finite[1, :], label='$k^{->B}$', alpha=0.7)
+plt.legend()
+# Hide the right and top spines
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+# Only show ticks on the left and bottom spines
+ax.yaxis.set_ticks_position('left')
+ax.xaxis.set_ticks_position('bottom')
+plt.title('Discrete finite-time rates')
+plt.xlabel('n')
+plt.ylabel('Discrete rate')
+fig.savefig(os.path.join(charts_path, 'rates_finite.png'), dpi=100)
