@@ -46,8 +46,8 @@ stat_dens = small.stationary_density()
 # compute committor probabilities
 [q_f, q_b] = small.committor()
 
-# therof compute the reactive density
-reac_dens = small.reac_density()
+# therof compute the normalized reactive density
+norm_reac_dens = small.norm_reac_density()
 
 # and reactive currents
 [current, eff_current] = small.reac_current()
@@ -71,7 +71,7 @@ small_finite = tpf.transitions_finite_time(
 
 stat_dens_finite = small_finite.density()
 # reactive density (zero at time 0 and N)
-reac_dens_finite = small_finite.reac_density()
+norm_reac_dens_finite = small_finite.norm_reac_density()
 
 # and reactive currents
 [current_finite, eff_current_finite] = small_finite.reac_current()
@@ -104,7 +104,7 @@ small_finite_inhom = tpf.transitions_finite_time(
 
 stat_dens_finite_inhom = small_finite_inhom.density()
 # reactive density (zero at time 0 and N)
-reac_dens_finite_inhom = small_finite_inhom.reac_density()
+norm_reac_dens_finite_inhom = small_finite_inhom.norm_reac_density()
 
 # and reactive currents
 [current_finite_inhom, eff_current_finite_inhom] = small_finite_inhom.reac_current()
@@ -146,8 +146,8 @@ stat_dens_p = small_periodic.stationary_density()
 
 [q_f_p, q_b_p] = small_periodic.committor()
 P_back_m = small_periodic.backward_transitions()
-# reactive density
-reac_dens_p = small_periodic.reac_density()
+# normalized reactive density
+norm_reac_dens_p = small_periodic.norm_reac_density()
 
 # and reactive currents
 [current_p, eff_current_p] = small_periodic.reac_current()
@@ -231,15 +231,26 @@ def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, t
 #########################################################
 
 
-v_min_dens = min([np.min(stat_dens), np.min(
-    stat_dens_finite), np.min(stat_dens_p)])
-v_max_dens = max([np.max(stat_dens), np.max(
-    stat_dens_finite), np.max(stat_dens_p)])
-
-v_min_reac_dens = min([np.min(reac_dens), np.min(
-    reac_dens_finite), np.min(reac_dens_p)])
-v_max_reac_dens = max([np.max(reac_dens), np.max(
-    reac_dens_finite), np.max(reac_dens_p)])
+v_min_dens = min([
+    np.min(stat_dens),
+    np.min(stat_dens_finite),
+    np.min(stat_dens_p),
+])
+v_max_dens = max([
+    np.max(stat_dens),
+    np.max(stat_dens_finite),
+    np.max(stat_dens_p),
+])
+v_min_reac_dens = min([
+    np.min(norm_reac_dens),
+    np.min(norm_reac_dens_finite),
+    np.min(norm_reac_dens_p),
+])
+v_max_reac_dens = max([
+    np.max(norm_reac_dens),
+    np.max(norm_reac_dens_finite),
+    np.max(norm_reac_dens_p)],
+)
 
 #v_min_current_dens  = min([np.min(current_dens),np.min(current_dens_finite), np.min(current_dens_p)])
 #v_max_current_dens  = max([np.max(current_dens),np.max(current_dens_finite), np.max(current_dens_p)])
@@ -273,7 +284,7 @@ fig.savefig(os.path.join(charts_path, 'q_f.png'), dpi=100)
 fig = plot_density(q_b, P, pos, 1, (2*1, 2), 0, 1, '$q^-$')
 fig.savefig(os.path.join(charts_path, 'q_b.png'), dpi=100)
 
-fig = plot_density(reac_dens, P, pos, 1, (2*1, 2),
+fig = plot_density(norm_reac_dens, P, pos, 1, (2*1, 2),
                    v_min_reac_dens, v_max_reac_dens, '$\mu^\mathcal{AB}$')
 fig.savefig(os.path.join(charts_path, 'reac_dens.png'), dpi=100)
 
@@ -301,7 +312,7 @@ fig = plot_density(q_b_p, P_p, pos, M, (2*M, 2), 0, 1,
                    'Periodic $q^-_m$', subtitles_p)
 fig.savefig(os.path.join(charts_path, 'q_b_p.png'), dpi=100)
 
-fig = plot_density(reac_dens_p, P_p, pos, M, (2*M, 2), v_min_reac_dens,
+fig = plot_density(norm_reac_dens_p, P_p, pos, M, (2*M, 2), v_min_reac_dens,
                    v_max_reac_dens, 'Periodic $\mu_m^\mathcal{AB}$', subtitles_p)
 fig.savefig(os.path.join(charts_path, 'reac_dens_p.png'), dpi=100)
 
@@ -327,7 +338,7 @@ fig = plot_density(q_b_finite, P_hom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^-(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'q_b_f.png'), dpi=100)
 
-fig = plot_density(reac_dens_finite, P_hom, pos, N, (2*N, 2), v_min_reac_dens,
+fig = plot_density(norm_reac_dens_finite, P_hom, pos, N, (2*N, 2), v_min_reac_dens,
                    v_max_reac_dens, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'reac_dens_f.png'), dpi=100)
 
@@ -353,7 +364,7 @@ fig = plot_density(q_b_finite, P_inhom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^-(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'q_b_inhom.png'), dpi=100)
 
-fig = plot_density(reac_dens_finite, P_inhom, pos, N, (2*N, 2), v_min_reac_dens,
+fig = plot_density(norm_reac_dens_finite, P_inhom, pos, N, (2*N, 2), v_min_reac_dens,
                    v_max_reac_dens, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'reac_dens_f_inhom.png'), dpi=100)
 

@@ -43,8 +43,8 @@ stat_dens = well3.stationary_density()
 # compute committor probabilities
 [q_f, q_b] = well3.committor()
 
-# therof compute the reactive density
-reac_dens = well3.reac_density()
+# therof compute the normalized reactive density
+norm_reac_dens = well3.norm_reac_density()
 
 # and reactive currents
 [current, eff_current] = well3.reac_current()
@@ -64,8 +64,9 @@ stat_dens_p = well3_periodic.stationary_density()
 
 [q_f_p, q_b_p] = well3_periodic.committor()
 P_back_m = well3_periodic.backward_transitions()
-# reactive density
-reac_dens_p = well3_periodic.reac_density()
+
+# normalized reactive density
+norm_reac_dens_p = well3_periodic.norm_reac_density()
 
 # and reactive currents
 [current_p, eff_current_p] = well3_periodic.reac_current()
@@ -90,8 +91,8 @@ well3_finite = tpf.transitions_finite_time(Tn, N, ind_A, ind_B,  ind_C, init_den
 dens_f = well3_finite.density()
 [q_f_f, q_b_f] = well3_finite.committor()
  
-# reactive density
-reac_dens_f = well3_finite.reac_density()
+# normalized reactive density
+norm_reac_dens_f = well3_finite.norm_reac_density()
 
 # and reactive currents
 [current_f, eff_current_f] = well3_finite.reac_current()
@@ -129,7 +130,7 @@ subtitles = np.array(['$\mu$','$\mu^{AB}$', '$q^+$','$q^-$','$f^+$'])
 ax[0].imshow(stat_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) )
 ax[0].set_title(subtitles[0])
 
-ax[1].imshow(reac_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+ax[1].imshow(norm_reac_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
 ax[1].set_title(subtitles[1])
 
 ax[2].imshow(q_f.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
@@ -178,7 +179,7 @@ v_max = np.max(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic backward committor', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p.png'), dpi=100)
 
-data = reac_dens_p
+data = norm_reac_dens_p
 v_min = np.min(data)
 v_max = np.max(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Reactive periodic density', subtitles = subtitles_p)
@@ -208,7 +209,7 @@ v_max = np.max(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time backward committor', subtitles = subtitles_f)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100)
 
-data = reac_dens_f
+data = norm_reac_dens_f
 v_min = np.min(data)
 v_max = np.max(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time periodic density', subtitles = subtitles_f)
