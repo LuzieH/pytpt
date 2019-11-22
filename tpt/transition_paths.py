@@ -37,6 +37,8 @@ class transitions_mcs:
         self._q_b = None  # backward committor
         self._q_f = None  # forward committor
         self._reac_dens = None  # reactive density
+        self._reac_norm_factor = None  # normalization factor 
+        self._norm_reac_dens = None  # normalized reactive density
         self._current = None  # reactive current
         self._eff_current = None  # effective reactive current
         self._rate = None  # rate of transitions from A to B
@@ -114,16 +116,31 @@ class transitions_mcs:
     def reac_density(self):
         """
         Given the forward and backward committor and the stationary density, 
-        we can compute the normalized density of reactive trajectories, 
-        i.e. the probability to be at x in St, given the chain is reactive.
+        we can compute the density of reactive trajectories, i.e. the probability
+        to be at x in St and to be reactive.
         """
-        assert self._q_f.all() != None, "The committor functions need \
+        assert self._q_f.all() != None , "The committor functions need \
         first to be computed by using the method committor"
 
-        reac_dens = np.multiply(
-            self._q_b, np.multiply(self._stat_dens, self._q_f))
-        self._reac_dens = reac_dens/np.sum(reac_dens)  # normalization
+        self._reac_dens = np.multiply(
+            self._q_b, np.multiply(self._stat_dens, self._q_f)
+        )
         return self._reac_dens
+
+    def reac_norm_factor(self):
+        """
+        """
+        self._reac_dens = self.reac_density()
+        self._reac_norm_factor = np.sum(self._reac_dens)
+        return self._reac_norm_factor
+
+    def norm_reac_density(self):
+        """
+        """
+        self._reac_dens = self.reac_density()
+        self._reac_norm_factor = self.reac_norm_factor()
+        self._norm_reac_dens = self._reac_dens/self._reac_norm_factor
+        return self._norm_reac_dens
 
     def reac_current(self):
         """

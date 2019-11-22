@@ -187,14 +187,9 @@ class transitions_periodic:
         self._q_b = q_b
 
         return self._q_f, self._q_b
-
+    
     def reac_density(self):
         """
-        Given the forward and backward committor and the density, 
-        we can compute the normalized density of reactive trajectories, 
-        i.e. the probability to be at x in S at time m, given the chain is reactive.
-        The function returns an array of the reactive density for each time 
-        (with time as the first index of the array).
         """
         assert self._q_f.all() != None, "The committor functions need \
         first to be computed by using the method committor"
@@ -202,15 +197,41 @@ class transitions_periodic:
         reac_dens = np.zeros((self._M, self._S))
 
         for m in range(self._M):
-
-            reac_dens[m, :] = np.multiply(self._q_b[m, :], np.multiply(
-                self._stat_dens[m, :], self._q_f[m, :]))
-            reac_dens[m, :] = reac_dens[m, :] / \
-                np.sum(reac_dens[m, :])  # normalization
-
+            reac_dens[m, :] = np.multiply(
+                self._q_b[m, :],
+                np.multiply(self._stat_dens[m, :], self._q_f[m, :]),
+            )
         self._reac_dens = reac_dens
-
         return self._reac_dens
+    
+    def reac_norm_factor(self):
+        """
+        """
+        reac_dens = self.reac_density()
+        reac_norm_factor = np.zeros(self._M)
+        for m in range(0, self._M):
+            reac_norm_factor[m] = np.sum(reac_dens[m, :])
+        self._reac_norm_factor = reac_norm_factor
+        return self._reac_norm_factor
+
+    def norm_reac_density(self):
+        """
+        Given the forward and backward committor and the density, 
+        we can compute the normalized density of reactive trajectories, 
+        i.e. the probability to be at x in S at time m, given the chain is reactive.
+        The function returns an array of the reactive density for each time 
+        (with time as the first index of the array).
+        """
+
+        reac_dens = self.reac_density()
+        reac_norm_factor = self.reac_norm_factor()
+
+        norm_reac_dens = np.zeros((self._M, self._S))
+        for m in range(self._M):
+            norm_reac_dens[m, :] = reac_dens[m, :] / reac_norm_factor[m]
+
+        self._norm_reac_dens = reac_dens
+        return self._norm_reac_dens
 
     def reac_current(self):
         """

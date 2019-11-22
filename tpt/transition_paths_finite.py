@@ -45,6 +45,8 @@ class transitions_finite_time:
         self._q_b = None  # backward committor
         self._q_f = None  # forward committor
         self._reac_dens = None  # reactive density
+        self._reac_norm_factor = None  # normalization factor 
+        self._norm_reac_dens = None  # normalized reactive density
         self._current = None  # reactive current
         self._eff_current = None  # effective reactive current
         self._rate = None  # rate of transitions from A to B
@@ -134,36 +136,62 @@ class transitions_finite_time:
 
     def reac_density(self):
         """
-        Given the forward and backward committor and the density, 
-        we can compute the normalized density of reactive trajectories, 
-        i.e. the probability to be at x in S at time n, given the chain is reactive.
-        The function returns an array of the reactive density for each time 
-        (with time as the first index of the array).
-        At times n=0 and n=N-1, a zero vector is returned, but one should note
-        that actually the density is not defined then. 
         """
         assert self._q_f.all() != None, "The committor functions need \
         first to be computed by using the method committor"
 
         reac_dens = np.zeros((self._N, self._S))
 
-        # density at time n, start with n=1
+        # density at time n
         dens_n = self._init_dens.dot(self._P(0))
 
-        # at time 0 and N-1, the reactive density is zero, the event "to be reactive" is not possible
-        for n in range(1, self._N-1):
-
+        for n in range(0, self._N):
             reac_dens[n, :] = np.multiply(
-                self._q_b[n, :], np.multiply(dens_n, self._q_f[n, :]))
-            reac_dens[n, :] = reac_dens[n, :] / \
-                np.sum(reac_dens[n, :])  # normalization
-
+                self._q_b[n, :],
+                np.multiply(dens_n, self._q_f[n, :]),
+            )
             # update density for next time point
             dens_n = dens_n.dot(self._P(n-1))
 
         self._reac_dens = reac_dens
-
         return self._reac_dens
+
+    def reac_norm_factor(self):
+        """
+        """
+        reac_dens = self.reac_density()
+        reac_norm_factor = np.zeros(self._N)
+        for n in range(0, self._N):
+            reac_norm_factor[n] = np.sum(reac_dens[n, :])
+
+        self._reac_norm_factor = reac_norm_factor
+        return self._reac_norm_factor
+
+
+    def norm_reac_density(self):
+        """
+        Given the forward and backward committor and the density, 
+        we can compute the normalized density of reactive trajectories, 
+        i.e. the probability to be at x in S at time n, given the chain is reactive.
+        The function returns an array of the reactive density for each time 
+        (with time as the first index of the array).
+        At times n=0 and n=N-1 the method returns None because the normalized density is not
+        defined for these times. 
+        """
+
+        reac_dens = self.reac_density()
+        reac_norm_factor = self.reac_norm_factor()
+
+        norm_reac_dens = np.zeros((self._N, self._S))
+
+        # at time 0 and N-1, the reactive density is zero, the event "to be reactive" is not possible
+        norm_reac_dens[0] = None
+        norm_reac_dens[self._N-1] = None
+        for n in range(1, self._N-1):
+            norm_reac_dens[n, :] = reac_dens[n, :] / reac_norm_factor[n] 
+
+        self._norm_reac_dens = norm_reac_dens
+        return self._norm_reac_dens
 
     def reac_current(self):
         """
