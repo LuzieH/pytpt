@@ -106,18 +106,18 @@ rate_f = well3_finite.transition_rate()
 fig, ax = plt.subplots(1, 5, sharex='col',
                            sharey='row', figsize=(5*3,3))
 
-subtitles = np.array(['$\mu$','$\mu^{AB}$', '$q^+$','$q^-$','$f^+$'])
+subtitles = np.array(['$\mu$', '$q^+$','$q^-$','$\mu^{AB}$','$f^+$'])
     
 ax[0].imshow(stat_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) )
 ax[0].set_title(subtitles[0])
 
-ax[1].imshow(norm_reac_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+ax[1].imshow(q_f.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
 ax[1].set_title(subtitles[1])
 
-ax[2].imshow(q_f.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+ax[2].imshow(q_b.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
 ax[2].set_title(subtitles[2])
 
-ax[3].imshow(q_b.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+ax[3].imshow(norm_reac_dens.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
 ax[3].set_title(subtitles[3])
 
 #define AB sets
@@ -137,7 +137,7 @@ for i in np.arange(dim_st):
     if colors[i]>0:
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i]
 ax[4].imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.4,origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) )
-ax[4].quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm', width=0.029)
+ax[4].quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm', width=0.029, scale=25)
 ax[4].set_title(subtitles[4])
  
 fig.savefig(os.path.join(charts_path, 'triplewell_stat.png'), dpi=100)
@@ -229,7 +229,7 @@ for m in np.arange(M):
             eff_vectors_p[m,i,1] += eff_current_p[m,i,j] *  (yn[j] - yn[i])  
         colors_p[m,i] = np.linalg.norm(eff_vectors_p[m,i,:])
         if colors_p[m,i]>0:
-            eff_vectors_unit_p[m,i,:] = eff_vectors_p[m,i,:]/colors[m,i]
+            eff_vectors_unit_p[m,i,:] = eff_vectors_p[m,i,:]/colors_p[m,i]
             
 fig = plot_subplot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), M, (3*M,3),'Periodic $f^+_m$', subtitles=subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_p.png'), dpi=100)
