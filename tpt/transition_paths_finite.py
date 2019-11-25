@@ -163,7 +163,11 @@ class transitions_finite_time:
     def reac_norm_factor(self):
         """
         """
-        reac_dens = self.reac_density()
+        if type(self._reac_dens) != None:
+            reac_dens = self.reac_density()
+        else:
+            reac_dens = self._reac_dens
+
         reac_norm_factor = np.zeros(self._N)
         for n in range(0, self._N):
             reac_norm_factor[n] = np.sum(reac_dens[n, :])
@@ -183,8 +187,15 @@ class transitions_finite_time:
         defined for these times. 
         """
 
-        reac_dens = self.reac_density()
-        reac_norm_factor = self.reac_norm_factor()
+        if type(self._reac_dens) != None:
+            reac_dens = self.reac_density()
+        else:
+            reac_dens = self._reac_dens
+
+        if type(self._reac_norm_factor) != None:
+            reac_norm_factor = self.reac_norm_factor()
+        else:
+            reac_norm_factor = self._reac_norm_factor
 
         norm_reac_dens = np.zeros((self._N, self._S))
         for n in range(0, self._N):
