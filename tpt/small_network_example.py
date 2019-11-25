@@ -186,7 +186,6 @@ def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, t
         nbr_edges = int(np.sum(A_eff))
         edge_colors = np.zeros(nbr_edges)
         widths = np.zeros(nbr_edges)
-
         for j in np.arange(nbr_edges):
             edge_colors[j] = 200 * \
                 weights[np.array(G_eff.edges())[j, 0],
@@ -201,28 +200,32 @@ def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, t
         nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax)
         ax.set_axis_off()
     else:
-        for i in range(timeframe):
-            A_eff = (weights[i, :, :] > 0)*1
-            G_eff = nx.DiGraph(A_eff)
-            nbr_edges = int(np.sum(A_eff))
-            edge_colors = np.zeros(nbr_edges)
-            widths = np.zeros(nbr_edges)
+        for n in range(timeframe):
+            if not np.isnan(weights[n]).any():
+                A_eff = (weights[n, :, :] > 0)*1
+                G_eff = nx.DiGraph(A_eff)
+                nbr_edges = int(np.sum(A_eff))
+                edge_colors = np.zeros(nbr_edges)
+                widths = np.zeros(nbr_edges)
 
-            for j in np.arange(nbr_edges):
-                edge_colors[j] = weights[i, np.array(
-                    G_eff.edges())[j, 0], np.array(G_eff.edges())[j, 1]]
-                # weights[i,np.array(G_eff.edges())[j,0], np.array(G_eff.edges())[j,1]]
-                widths[j] = 150*edge_colors[j]
+                for j in np.arange(nbr_edges):
+                    edge_colors[j] = weights[
+                        n,
+                        np.array(G_eff.edges())[j, 0],
+                        np.array(G_eff.edges())[j, 1],
+                    ]
+                    # weights[n,np.array(G_eff.edges())[j,0], np.array(G_eff.edges())[j,1]]
+                    widths[j] = 150*edge_colors[j]
 
-            nx.draw_networkx_nodes(G_eff, pos, ax=ax[i])
-            nx.draw_networkx_edges(G_eff, pos, ax=ax[i], arrowsize=10, edge_color=edge_colors, width=widths,
+                nx.draw_networkx_nodes(G_eff, pos, ax=ax[n])
+                nx.draw_networkx_edges(G_eff, pos, ax=ax[n], arrowsize=10, edge_color=edge_colors, width=widths,
                                    edge_cmap=plt.cm.Blues)
-            # labels
-            nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[i])
-            #ax = plt.gca()
-            ax[i].set_axis_off()
-            if subtitles is not None:
-                ax[i].set_title(subtitles[i])  # , pad=0)
+                # labels
+                nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
+                #ax = plt.gca()
+                ax[n].set_axis_off()
+                if subtitles is not None:
+                    ax[n].set_title(subtitles[n])  # , pad=0)
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
 

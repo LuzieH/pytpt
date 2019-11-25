@@ -52,6 +52,7 @@ class transitions_finite_time:
         self._rate = None  # rate of transitions from A to B
         self._current_dens = None  # density of the effective current
 
+
     def density(self):
         """
         Function that computes and returns an array containing the probability
@@ -68,6 +69,7 @@ class transitions_finite_time:
             dens_n[n+1, :] = dens_n[n, :].dot(self._P(n))
 
         return dens_n
+
 
     def committor(self):
         """
@@ -134,6 +136,7 @@ class transitions_finite_time:
 
         return self._q_f, self._q_b
 
+
     def reac_density(self):
         """
         """
@@ -155,6 +158,7 @@ class transitions_finite_time:
 
         self._reac_dens = reac_dens
         return self._reac_dens
+
 
     def reac_norm_factor(self):
         """
@@ -183,15 +187,16 @@ class transitions_finite_time:
         reac_norm_factor = self.reac_norm_factor()
 
         norm_reac_dens = np.zeros((self._N, self._S))
+        for n in range(0, self._N):
+            if reac_norm_factor[n] != 0:
+                norm_reac_dens[n, :] = reac_dens[n, :] / reac_norm_factor[n] 
+            else:
+                norm_reac_dens[n] = np.nan 
 
-        # at time 0 and N-1, the reactive density is zero, the event "to be reactive" is not possible
-        norm_reac_dens[0] = None
-        norm_reac_dens[self._N-1] = None
-        for n in range(1, self._N-1):
-            norm_reac_dens[n, :] = reac_dens[n, :] / reac_norm_factor[n] 
-
+        # obs: at time 0 and N-1, the reactive density is zero, the event "to be reactive" is not possible
         self._norm_reac_dens = norm_reac_dens
         return self._norm_reac_dens
+
 
     def reac_current(self):
         """
@@ -202,15 +207,18 @@ class transitions_finite_time:
         assert self._q_f.all() != None, "The committor functions  need \
         first to be computed by using the method committor"
 
-        current = np.zeros((self._N, np.shape(self._P(0))
-                            [0], np.shape(self._P(0))[0]))
-        eff_current = np.zeros(
-            (self._N, np.shape(self._P(0))[0], np.shape(self._P(0))[0]))
+        current = np.zeros((
+            self._N, np.shape(self._P(0))[0],
+            np.shape(self._P(0))[0],
+        ))
+        eff_current = np.zeros((
+            self._N, np.shape(self._P(0))[0],
+            np.shape(self._P(0))[0],
+        ))
 
         dens_n = self._init_dens
 
         for n in range(self._N-1):
-
             for i in np.arange(self._S):
                 for j in np.arange(self._S):
                     current[n, i, j] = dens_n[i]*self._q_b[n, i] * \
@@ -224,10 +232,14 @@ class transitions_finite_time:
 
             dens_n = dens_n.dot(self._P(n))
 
+        current[self._N-1] = np.nan
+        eff_current[self._N-1] = np.nan
+
         self._current = current
         self._eff_current = eff_current
 
         return self._current, self._eff_current
+
 
     def transition_rate(self):
         """
@@ -237,13 +249,17 @@ class transitions_finite_time:
 
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
+
         self._rate = np.zeros((2, self._N))
         self._rate[0, :] = np.sum(
-            self._current[:, self._ind_A, :], axis=(1, 2))
+            self._current[:, self._ind_A, :], axis=(1, 2)
+        )
         self._rate[1, :] = np.sum(
-            self._current[:, :, self._ind_B], axis=(1, 2))
+            self._current[:, :, self._ind_B], axis=(1, 2)
+        )
 
         return self._rate
+
 
     def current_density(self):
         """
@@ -255,10 +271,12 @@ class transitions_finite_time:
         to be computed by using the method reac_current"
 
         current_dens = np.zeros((self._N, self._S))
-
         for n in range(self._N):
-            for i in self._ind_C:
-                current_dens[n, i] = np.sum(self._eff_current[n, i, :])
-            self._current_dens = current_dens
+            if np.isnan(self._eff_current[n]).any():
+                current_dens[n] = np.nan 
+            else:
+                for i in self._ind_C:
+                    current_dens[n, i] = np.sum(self._eff_current[n, i, :])
 
+        self._current_dens = current_dens
         return self._current_dens
