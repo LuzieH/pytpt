@@ -252,9 +252,6 @@ v_max_reac_dens = max([
     np.max(norm_reac_dens_p)],
 )
 
-#v_min_current_dens  = min([np.min(current_dens),np.min(current_dens_finite), np.min(current_dens_p)])
-#v_max_current_dens  = max([np.max(current_dens),np.max(current_dens_finite), np.max(current_dens_p)])
-
 # collect computed statistics for plotting
 #C = 5
 #data_coll = np.zeros((5,np.shape(stat_dens)[0]))
@@ -262,7 +259,6 @@ v_max_reac_dens = max([
 #data_coll[1,:] = q_f
 #data_coll[2,:] = q_b
 #data_coll[3,:] = reac_dens
-#data_coll[4,:] = current_dens
 #subtitles_coll = np.array(['Stationary density','$q^+$','$q^-$','Reactive density','Current density'])
 #
 #fig = plot_subplot(data_coll, G, pos, C, (2*C, 3),'Stationary system',subtitles_coll)
@@ -288,14 +284,11 @@ fig = plot_density(norm_reac_dens, P, pos, 1, (2*1, 2),
                    v_min_reac_dens, v_max_reac_dens, '$\mu^\mathcal{AB}$')
 fig.savefig(os.path.join(charts_path, 'reac_dens.png'), dpi=100)
 
-#fig = plot(current, P, pos, 1, (2*1, 3),
-#                   v_min_current_dens, v_max_current_dens, 'Current density')
-#fig.savefig(os.path.join(charts_path, 'curr_dens.png'), dpi=100)
 
 fig = plot_effective_current(eff_current, G, pos, 1,
                             (2*1, 2), 0, 1, 'Effective current $f^+$')
 fig.savefig(os.path.join(charts_path, 'eff.png'), dpi=100)
-plt.close()
+#plt.close()
 
 
 # plotting results for periodic case
@@ -316,12 +309,10 @@ fig = plot_density(norm_reac_dens_p, P_p, pos, M, (2*M, 2), v_min_reac_dens,
                    v_max_reac_dens, 'Periodic $\mu_m^\mathcal{AB}$', subtitles_p)
 fig.savefig(os.path.join(charts_path, 'reac_dens_p.png'), dpi=100)
 
-#fig = plot(current_dens_p, P_p, pos, M, (2*M, 3),v_min_current_dens,v_max_current_dens, 'Periodic current density',subtitles_p)
-#fig.savefig(os.path.join(charts_path, 'curr_dens_p.png'), dpi=100)
 fig = plot_effective_current(eff_current_p, G, pos, M, (2*M, 2), v_min_dens,
                             v_max_dens, 'Periodic effective current $f^+_m$', subtitles_p)
 fig.savefig(os.path.join(charts_path, 'eff_p.png'), dpi=100)
-plt.close()
+#plt.close()
 
 
 # plotting results for finite-time, time-homogeneous case
@@ -342,12 +333,11 @@ fig = plot_density(norm_reac_dens_finite, P_hom, pos, N, (2*N, 2), v_min_reac_de
                    v_max_reac_dens, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'reac_dens_f.png'), dpi=100)
 
-#fig = plot_subplot(current_dens_finite, G, pos, N, (2*N, 3), v_min_current_dens,v_max_current_dens,'Finite-time current density',subtitles_f)
-#fig.savefig(os.path.join(charts_path, 'reac_dens_f.png'), dpi=100)
+
 
 fig = plot_effective_current(eff_current_finite, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'eff_f.png'), dpi=100)
-plt.close()
+#plt.close()
 
 
 # plotting results for finite-time, time-inhomogeneous case
@@ -368,12 +358,9 @@ fig = plot_density(norm_reac_dens_finite, P_inhom, pos, N, (2*N, 2), v_min_reac_
                    v_max_reac_dens, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'reac_dens_f_inhom.png'), dpi=100)
 
-#fig = plot_subplot(current_dens_finite, G, pos, N, (2*N, 3), v_min_current_dens,v_max_current_dens,'Finite-time current density',subtitles_f)
-#fig.savefig(os.path.join(charts_path, '.png'), dpi=100)
-
 fig = plot_effective_current(eff_current_finite, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'eff_f_inhom.png'), dpi=100)
-plt.close()
+#plt.close()
 
 
 # extended finite-time -> large N=100

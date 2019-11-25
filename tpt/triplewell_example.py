@@ -157,8 +157,8 @@ for i in np.arange(dim_st):
     colors[i] = np.linalg.norm(eff_vectors[i,:])
     if colors[i]>0:
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i]
-ax[4].imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.5,origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) )
-ax[4].quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm', width=0.02)
+ax[4].imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.4,origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) )
+ax[4].quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm', width=0.029)
 ax[4].set_title(subtitles[4])
  
 fig.savefig(os.path.join(charts_path, 'triplewell_stat.png'), dpi=100)
@@ -177,19 +177,19 @@ fig.savefig(os.path.join(charts_path, 'triplewell_dens_p.png'), dpi=100)
 data = q_f_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic forward committor', subtitles = subtitles_p)
+fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic $q^+_m$', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_f_p.png'), dpi=100)
 
 data = q_b_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic backward committor', subtitles = subtitles_p)
+fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic $q^-_m$', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p.png'), dpi=100)
 
 data = norm_reac_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Reactive periodic density', subtitles = subtitles_p)
+fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic $\mu_m^\mathcal{AB}$', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100)
 
 
@@ -207,17 +207,17 @@ fig.savefig(os.path.join(charts_path, 'triplewell_dens_f.png'), dpi=100)
 data = q_f_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time forward committor', subtitles = subtitles_f)
+fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time $q^+(n)$', subtitles = subtitles_f)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f.png'), dpi=100)
 
 data = q_b_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time backward committor', subtitles = subtitles_f)
+fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time $q^-(n)$', subtitles = subtitles_f)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100)
 
 data = norm_reac_dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time reactive density', subtitles = subtitles_f)
+fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles = subtitles_f)
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f.png'), dpi=100)

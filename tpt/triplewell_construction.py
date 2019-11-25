@@ -1,6 +1,6 @@
 import numpy as np
 import os.path
-
+import transition_matrix_from_samples
 
 my_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -68,7 +68,7 @@ for m in np.arange(M):
 #define by center and radius!
 A_center = np.array([-1,0])  
 B_center = np.array([1,0])
-radius_setAB = 0.4
+radius_setAB = 0.425 #0.425 0.35
 
 def set_A_triplewell(x,A_center, radius_setAB):
     if np.linalg.norm(x-A_center) <=radius_setAB:
