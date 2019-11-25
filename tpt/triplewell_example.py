@@ -109,10 +109,12 @@ def plot_subplot_3well(data, datashape, extent, timeframe, size, v_min, v_max, t
     fig, ax = plt.subplots(1, timeframe, sharex='col',
                            sharey='row', figsize=size)
     if timeframe == 1:
-        plt.imshow(data.reshape(datashape), ax=ax, vmin=v_min, vmax=v_max, origin='lower', extent=extent)
+        if np.isnan(data).all()==False: #if not all values are nan
+            plt.imshow(data.reshape(datashape), ax=ax, vmin=v_min, vmax=v_max, origin='lower', extent=extent)
     else:
         for i in range(timeframe):
-            ax[i].imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', extent=extent)
+            if np.isnan(data[i,:]).all()==False: #if not all values are nan
+                ax[i].imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', extent=extent)
             if subtitles is not None:
                 ax[i].set_title(subtitles[i])  # , pad=0)
     fig.suptitle(title)
@@ -139,6 +141,11 @@ ax[2].set_title(subtitles[2])
 ax[3].imshow(q_b.reshape((xdim,ydim)), origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
 ax[3].set_title(subtitles[3])
 
+#define AB sets
+densAB = np.zeros(dim_st)
+densAB[ind_A]=1
+densAB[ind_B]=1
+
 #calculation the effective vector for each state
 eff_vectors = np.zeros((dim_st, 2))
 eff_vectors_unit = np.zeros((dim_st, 2))
@@ -150,8 +157,8 @@ for i in np.arange(dim_st):
     colors[i] = np.linalg.norm(eff_vectors[i,:])
     if colors[i]>0:
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i]
-
-ax[4].quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm')
+ax[4].imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.5,origin='lower', extent = (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) )
+ax[4].quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm', width=0.02)
 ax[4].set_title(subtitles[4])
  
 fig.savefig(os.path.join(charts_path, 'triplewell_stat.png'), dpi=100)
@@ -161,27 +168,27 @@ fig.savefig(os.path.join(charts_path, 'triplewell_stat.png'), dpi=100)
 subtitles_p = np.array(['m = ' + str(i) for i in np.arange(M)])
 
 data = stat_dens_p
-v_min = np.min(data)
-v_max = np.max(data)
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic stationary density', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_dens_p.png'), dpi=100)
 
 
 data = q_f_p
-v_min = np.min(data)
-v_max = np.max(data)
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic forward committor', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_f_p.png'), dpi=100)
 
 data = q_b_p
-v_min = np.min(data)
-v_max = np.max(data)
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic backward committor', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p.png'), dpi=100)
 
 data = norm_reac_dens_p
-v_min = np.min(data)
-v_max = np.max(data)
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Reactive periodic density', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100)
 
@@ -191,26 +198,26 @@ fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100)
 subtitles_f = np.array(['n = ' + str(i) for i in np.arange(N)])
 
 data = dens_f
-v_min = np.min(data)
-v_max = np.max(data)
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time density', subtitles = subtitles_f)
 fig.savefig(os.path.join(charts_path, 'triplewell_dens_f.png'), dpi=100)
 
 
 data = q_f_f
-v_min = np.min(data)
-v_max = np.max(data)
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time forward committor', subtitles = subtitles_f)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f.png'), dpi=100)
 
 data = q_b_f
-v_min = np.min(data)
-v_max = np.max(data)
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
 fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time backward committor', subtitles = subtitles_f)
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100)
 
 data = norm_reac_dens_f
-v_min = np.min(data)
-v_max = np.max(data)
-fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time periodic density', subtitles = subtitles_f)
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
+fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time reactive density', subtitles = subtitles_f)
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f.png'), dpi=100)
