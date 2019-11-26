@@ -50,10 +50,10 @@ T=transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y, dim)
 
 ############################################################################
 #transition matrix for triple well plus circular forcing
-M=10 #length of period
+M=8 #length of period
 
 #forcing is the vector field sin(t)*f[(-y,x)], where f applies some convolution, such that 
-factor_forced=1
+factor_forced=1.2
 dV_forced = lambda x,y,m: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)]) +factor_forced*np.cos(m*2.*np.pi/M)* np.array([-y,x])
 
 T_m =np.zeros((M, dim_st, dim_st))
