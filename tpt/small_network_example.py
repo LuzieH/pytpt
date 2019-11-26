@@ -54,6 +54,36 @@ norm_reac_dens = small.norm_reac_density()
 rate = small.transition_rate()  # AB discrete transition rate
 
 
+# TPT periodisch
+# use as transition matrix T + wL, where w varies from 1..0..-1...0
+# either faster switching or slower dynamics
+
+M = 6  # 6 size of period
+
+# transition matrix at time k
+
+def P_p(k):
+    # varies the transition matrices periodically, by weighting the added
+    # matrix L with weights 1..0..-1.. over one period
+    return T + np.cos(k*2.*np.pi/M)*L
+
+
+# instantiate
+small_periodic = tpp.transitions_periodic(P_p, M, ind_A, ind_B, ind_C)
+stat_dens_p = small_periodic.stationary_density()
+
+[q_f_p, q_b_p] = small_periodic.committor()
+P_back_m = small_periodic.backward_transitions()
+
+# normalized reactive density
+norm_reac_dens_p = small_periodic.norm_reac_density()
+
+# and reactive currents
+[current_p, eff_current_p] = small_periodic.reac_current()
+
+rate_p = small_periodic.transition_rate()
+
+
 # TPT finite time, time-homogeneous
 
 # transition matrix at time n
@@ -127,34 +157,6 @@ for ne in np.arange(1, N_ex):
     [q_f_ex, q_b_ex] = small_finite_ex.committor()
     q_f_conv[ne-1, :] = q_f_ex[ne, :]
 
-
-# TPT periodisch
-# use as transition matrix T + wL, where w varies from 1..0..-1...0
-# either faster switching or slower dynamics
-
-M = 6  # 6 size of period
-
-# transition matrix at time k
-
-def P_p(k):
-    # varies the transition matrices periodically, by weighting the added
-    # matrix L with weights 1..0..-1.. over one period
-    return T + np.cos(k*2.*np.pi/M)*L
-
-
-# instantiate
-small_periodic = tpp.transitions_periodic(P_p, M, ind_A, ind_B, ind_C)
-stat_dens_p = small_periodic.stationary_density()
-
-[q_f_p, q_b_p] = small_periodic.committor()
-P_back_m = small_periodic.backward_transitions()
-# normalized reactive density
-norm_reac_dens_p = small_periodic.norm_reac_density()
-
-# and reactive currents
-[current_p, eff_current_p] = small_periodic.reac_current()
-
-rate_p = small_periodic.transition_rate()
 
 
 # plotting
@@ -240,25 +242,25 @@ v_min_dens = min([
     np.min(stat_dens),
     np.min(stat_dens_p),
     np.min(stat_dens_f),
-    np.min(stat_dens_f_inhom),
+    #np.min(stat_dens_f_inhom),
 ])
 v_max_dens = max([
     np.max(stat_dens),
     np.max(stat_dens_p),
     np.max(stat_dens_f),
-    np.max(stat_dens_f_inhom),
+    #np.max(stat_dens_f_inhom),
 ])
 v_min_reac_dens = min([
     np.min(norm_reac_dens),
     np.min(norm_reac_dens_p),
     np.min(norm_reac_dens_f),
-    np.min(norm_reac_dens_f_inhom),
+    #np.min(norm_reac_dens_f_inhom),
 ])
 v_max_reac_dens = max([
     np.max(norm_reac_dens),
     np.max(norm_reac_dens_p),
     np.max(norm_reac_dens_f),
-    np.max(norm_reac_dens_f_inhom),
+    #np.max(norm_reac_dens_f_inhom),
 ])
 
 # collect computed statistics for plotting
