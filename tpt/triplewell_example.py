@@ -97,7 +97,8 @@ norm_reac_dens_f = well3_finite.norm_reac_density()
 # and reactive currents
 [current_f, eff_current_f] = well3_finite.reac_current()
 
-rate_f = well3_finite.transition_rate()
+[rate_f, time_av_rate_f] = well3_finite.transition_rate()
+
 
 
 

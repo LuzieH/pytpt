@@ -67,17 +67,19 @@ N = 6  # size of time interval
 # instantiate
 small_finite = tpf.transitions_finite_time(
     P_hom, N, ind_A, ind_B,  ind_C, init_dens_small)
-[q_f_finite, q_b_finite] = small_finite.committor()
+[q_f_f, q_b_f] = small_finite.committor()
 
-stat_dens_finite = small_finite.density()
+stat_dens_f = small_finite.density()
+
 # reactive density (zero at time 0 and N)
-norm_reac_dens_finite = small_finite.norm_reac_density()
+reac_norm_factor_f = small_finite.reac_norm_factor()
+norm_reac_dens_f = small_finite.norm_reac_density()
 
 # and reactive currents
-[current_finite, eff_current_finite] = small_finite.reac_current()
+[current_f, eff_current_f] = small_finite.reac_current()
 
 # first row, out rate of A, second row in rate for B
-rate_finite = small_finite.transition_rate()
+[rate_f, time_av_rate_f] = small_finite.transition_rate()
 
 
 # TPT finite time, time-inhomogeneous
@@ -100,17 +102,17 @@ N = 6  # size of time interval
 # instantiate
 small_finite_inhom = tpf.transitions_finite_time(
     P_inhom, N, ind_A, ind_B,  ind_C, init_dens_small_inhom)
-[q_f_finite_inhom, q_b_finite_inhom] = small_finite_inhom.committor()
+[q_f_f_inhom, q_b_f_inhom] = small_finite_inhom.committor()
 
-stat_dens_finite_inhom = small_finite_inhom.density()
+stat_dens_f_inhom = small_finite_inhom.density()
 # reactive density (zero at time 0 and N)
-norm_reac_dens_finite_inhom = small_finite_inhom.norm_reac_density()
+norm_reac_dens_f_inhom = small_finite_inhom.norm_reac_density()
 
 # and reactive currents
-[current_finite_inhom, eff_current_finite_inhom] = small_finite_inhom.reac_current()
+[current_f_inhom, eff_current_f_inhom] = small_finite_inhom.reac_current()
 
 # first row, out rate of A, second row in rate for B
-rate_finite_inhom = small_finite_inhom.transition_rate()
+[rate_f_inhom, time_av_rate_f_inhom] = small_finite.transition_rate()
 
 
 
@@ -236,24 +238,28 @@ def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, t
 
 v_min_dens = min([
     np.min(stat_dens),
-    np.min(stat_dens_finite),
     np.min(stat_dens_p),
+    np.min(stat_dens_f),
+    np.min(stat_dens_f_inhom),
 ])
 v_max_dens = max([
     np.max(stat_dens),
-    np.max(stat_dens_finite),
     np.max(stat_dens_p),
+    np.max(stat_dens_f),
+    np.max(stat_dens_f_inhom),
 ])
 v_min_reac_dens = min([
     np.min(norm_reac_dens),
-    np.min(norm_reac_dens_finite),
     np.min(norm_reac_dens_p),
+    np.min(norm_reac_dens_f),
+    np.min(norm_reac_dens_f_inhom),
 ])
 v_max_reac_dens = max([
     np.max(norm_reac_dens),
-    np.max(norm_reac_dens_finite),
-    np.max(norm_reac_dens_p)],
-)
+    np.max(norm_reac_dens_p),
+    np.max(norm_reac_dens_f),
+    np.max(norm_reac_dens_f_inhom),
+])
 
 # collect computed statistics for plotting
 #C = 5
@@ -320,48 +326,48 @@ fig.savefig(os.path.join(charts_path, 'eff_p.png'), dpi=100)
 
 # plotting results for finite-time, time-homogeneous case
 subtitles_f = np.array(['n = ' + str(i) for i in np.arange(N)])
-fig = plot_density(stat_dens_finite, P_hom, pos, N, (2*N, 2),
+fig = plot_density(stat_dens_f, P_hom, pos, N, (2*N, 2),
                    v_min_dens, v_max_dens, 'Finite-time density', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'dens_f.png'), dpi=100)
 
-fig = plot_density(q_f_finite, P_hom, pos, N, (2*N, 2), 0, 1,
+fig = plot_density(q_f_f, P_hom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'q_f_f.png'), dpi=100)
 
-fig = plot_density(q_b_finite, P_hom, pos, N, (2*N, 2), 0, 1,
+fig = plot_density(q_b_f, P_hom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^-(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'q_b_f.png'), dpi=100)
 
-fig = plot_density(norm_reac_dens_finite, P_hom, pos, N, (2*N, 2), v_min_reac_dens,
+fig = plot_density(norm_reac_dens_f, P_hom, pos, N, (2*N, 2), v_min_reac_dens,
                    v_max_reac_dens, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'reac_dens_f.png'), dpi=100)
 
 
 
-fig = plot_effective_current(eff_current_finite, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
+fig = plot_effective_current(eff_current_f, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'eff_f.png'), dpi=100)
 #plt.close()
 
 
 # plotting results for finite-time, time-inhomogeneous case
 subtitles_f = np.array(['n = ' + str(i) for i in np.arange(N)])
-fig = plot_density(stat_dens_finite, P_inhom, pos, N, (2*N, 2),
+fig = plot_density(stat_dens_f, P_inhom, pos, N, (2*N, 2),
                    v_min_dens, v_max_dens, 'Finite-time density', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'dens_f_inhom.png'), dpi=100)
 
-fig = plot_density(q_f_finite, P_inhom, pos, N, (2*N, 2), 0, 1,
+fig = plot_density(q_f_f, P_inhom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'q_f_inhom.png'), dpi=100)
 
-fig = plot_density(q_b_finite, P_inhom, pos, N, (2*N, 2), 0, 1,
+fig = plot_density(q_b_f, P_inhom, pos, N, (2*N, 2), 0, 1,
                    'Finite-time $q^-(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'q_b_inhom.png'), dpi=100)
 
-fig = plot_density(norm_reac_dens_finite, P_inhom, pos, N, (2*N, 2), v_min_reac_dens,
+fig = plot_density(norm_reac_dens_f, P_inhom, pos, N, (2*N, 2), v_min_reac_dens,
                    v_max_reac_dens, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'reac_dens_f_inhom.png'), dpi=100)
 
-fig = plot_effective_current(eff_current_finite, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
+fig = plot_effective_current(eff_current_f, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'eff_f_inhom.png'), dpi=100)
 #plt.close()
 
@@ -404,9 +410,12 @@ plt.xlabel('m')
 plt.ylabel('Discrete rate')
 fig.savefig(os.path.join(charts_path, 'rates_p.png'), dpi=100)
 
+# finite-time
 fig, ax = plt.subplots(1, 1, figsize=(2*N, 2))
-plt.scatter(np.arange(N), rate_finite[0, :], label='$k^{A->}$', alpha=0.7)
-plt.scatter(np.arange(N), rate_finite[1, :], label='$k^{->B}$', alpha=0.7)
+plt.scatter(np.arange(N-1), rate_f[0, :N-1], label='$k^{A->}$', alpha=0.7)
+plt.scatter(np.arange(1, N), rate_f[1, 1:], label='$k^{->B}$', alpha=0.7)
+ax.hlines(y=time_av_rate_f[0], xmin=0.0, xmax=5.0, label='$\hat{k}^{AB}_N$', color='r', linestyles='dashed')
+#plt.scatter(np.arange(N), time_av_rate_finite[0], label='$\hat{k}_N^{AB}$', alpha=0.7)
 plt.legend()
 # Hide the right and top spines
 ax.spines['right'].set_visible(False)
@@ -419,3 +428,23 @@ plt.title('Discrete finite-time rates')
 plt.xlabel('n')
 plt.ylabel('Discrete rate')
 fig.savefig(os.path.join(charts_path, 'rates_finite.png'), dpi=100)
+
+# reactivity
+# finite-time
+fig, ax = plt.subplots(1, 1)#, figsize=(2*N, 2))
+plt.scatter(
+    np.arange(N),
+    reac_norm_factor_f[:],
+    #alpha=0.7, 
+)
+plt.legend()
+# Hide the right and top spines
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+# Only show ticks on the left and bottom spines
+ax.yaxis.set_ticks_position('left')
+ax.xaxis.set_ticks_position('bottom')
+plt.title('Discrete reactiveness')
+plt.xlabel('n')
+plt.ylabel('$\sum\limits_{j \in C} \mu_j^{R}(n)$')
+fig.savefig(os.path.join(charts_path, 'reactiveness_finite.png'), dpi=100)
