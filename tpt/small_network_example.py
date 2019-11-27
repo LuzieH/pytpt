@@ -262,6 +262,50 @@ def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, t
 
     return fig
 
+def plot_rate(rate, time_av_rate, file_path, title):
+    
+    timeframes = len(rate[0])
+    fig, ax = plt.subplots(1, 1, figsize=(2*timeframes, 2))
+
+    plt.scatter(
+        x=np.arange(timeframes),
+        y=rate[0, :],
+        alpha=0.7,
+        label='$k^{A->}$',
+    )
+    plt.scatter(
+        x=np.arange(timeframes),
+        y=rate[1, :],
+        alpha=0.7,
+        label='$k^{->B}$',
+    )
+    ax.hlines(
+        y=time_av_rate[0],
+        xmin=0.0,
+        xmax=5.0,
+        color='r',
+        linestyles='dashed',
+        label='$\hat{k}^{AB}_N$',
+    )
+    
+    # Hide the right and top spines
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+    # Only show ticks on the left and bottom spines
+    ax.yaxis.set_ticks_position('left')
+    ax.xaxis.set_ticks_position('bottom')
+    
+    # add title and legend
+    plt.title(title)
+    plt.xlabel('n')
+    plt.ylabel('Discrete rate')
+    plt.legend()
+
+    fig.savefig(file_path, dpi=100)
+
+
+
 #########################################################
 
 
@@ -412,6 +456,12 @@ plot_density(
 fig = plot_effective_current(eff_current_p, G, pos, M, (2*M, 2), v_min_dens,
                             v_max_dens, 'Periodic effective current $f^+_m$', subtitles_p)
 fig.savefig(os.path.join(charts_path, 'eff_p.png'), dpi=100)
+#plot_rate(
+#    rate=rate_p,
+#    time_av_rate=time_av_rate_p,
+#    file_path=os.path.join(charts_path, 'rates_p.png'),
+#    title='Discrete M-periodic rates',
+#)
 
 
 # plotting results for finite-time, time-homogeneous case
@@ -458,9 +508,14 @@ plot_density(
     title='Finite-time $\mu^\mathcal{AB}(n)$',
     subtitles=subtitles_f[1:N-1],
 )
-
 fig = plot_effective_current(eff_current_f, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
 fig.savefig(os.path.join(charts_path, 'eff_f.png'), dpi=100)
+plot_rate(
+    rate=rate_f,
+    time_av_rate=time_av_rate_f,
+    file_path=os.path.join(charts_path, 'rates_finite.png'),
+    title='Discrete finite-time rates',
+)
 
 
 # plotting results for finite-time, time-inhomogeneous case
@@ -552,23 +607,6 @@ plt.ylabel('Discrete rate')
 fig.savefig(os.path.join(charts_path, 'rates_p.png'), dpi=100)
 
 # finite-time
-fig, ax = plt.subplots(1, 1, figsize=(2*N, 2))
-plt.scatter(np.arange(N-1), rate_f[0, :N-1], label='$k^{A->}$', alpha=0.7)
-plt.scatter(np.arange(1, N), rate_f[1, 1:], label='$k^{->B}$', alpha=0.7)
-ax.hlines(y=time_av_rate_f[0], xmin=0.0, xmax=5.0, label='$\hat{k}^{AB}_N$', color='r', linestyles='dashed')
-#plt.scatter(np.arange(N), time_av_rate_finite[0], label='$\hat{k}_N^{AB}$', alpha=0.7)
-plt.legend()
-# Hide the right and top spines
-ax.spines['right'].set_visible(False)
-ax.spines['top'].set_visible(False)
-
-# Only show ticks on the left and bottom spines
-ax.yaxis.set_ticks_position('left')
-ax.xaxis.set_ticks_position('bottom')
-plt.title('Discrete finite-time rates')
-plt.xlabel('n')
-plt.ylabel('Discrete rate')
-fig.savefig(os.path.join(charts_path, 'rates_finite.png'), dpi=100)
 
 # reactivity
 # finite-time
