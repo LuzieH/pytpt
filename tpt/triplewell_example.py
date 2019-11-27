@@ -259,7 +259,7 @@ fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100)
 data = norm_reac_dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_subplot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles = subtitles_f)
+fig = plot_subplot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N-2, (3*(N-2),3), v_min, v_max, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles = subtitles_f[1:N-1])
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f.png'), dpi=100)
 
 #calculation the effective vector for each state
@@ -276,5 +276,5 @@ for n in np.arange(N):
         if colors_f[n,i]>0:
             eff_vectors_unit_f[n,i,:] = eff_vectors_f[n,i,:]/colors_f[n,i]
             
-fig = plot_subplot_3well_effcurrent(eff_vectors_unit_f, colors_f, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N, (3*N,3),'Finite-time $f^+(n)$', subtitles=subtitles_f)
+fig = plot_subplot_3well_effcurrent(eff_vectors_unit_f[:N-1,:,:], colors_f[:N-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N-1, (3*(N-1),3),'Finite-time $f^+(n)$', subtitles=subtitles_f[:N-1])
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_f.png'), dpi=100)
