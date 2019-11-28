@@ -59,12 +59,12 @@ L[4, 3] =  0.05
 # K: 0-rowsum matrix
 # L+T+K transition matrix where A and B are less metastable
 K = np.zeros((5, 5))
-K[0, 0] = -0.3
-K[0, 1] =  0.15
-K[0, 3] =  0.15
-K[4, 1] =  0.15
-K[4, 3] =  0.15
-K[4, 4] = -0.3
+K[0, 0] = -0.6
+K[0, 1] =  0.3
+K[0, 3] =  0.3
+K[4, 1] =  0.3
+K[4, 3] =  0.3
+K[4, 4] = -0.6
 
 np.save(os.path.join(my_path, 'data/small_network_pos.npy'), pos)
 np.save(os.path.join(my_path, 'data/small_network_labels.npy'), labels)

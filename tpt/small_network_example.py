@@ -116,10 +116,8 @@ norm_reac_dens_f = small_finite.norm_reac_density()
 
 # transition matrix at time n
 def P_inhom(n):
-    if (n == 3 or n == 6): 
+    if (n == 4 or n == 5): 
         return T + L + K
-    elif (n == 4 or n == 5): 
-        return T + L + 2*K
     else:
         return T + L
 
