@@ -97,7 +97,8 @@ norm_reac_dens_f = well3_finite.norm_reac_density()
 # and reactive currents
 [current_f, eff_current_f] = well3_finite.reac_current()
 
-rate_f = well3_finite.transition_rate()
+[rate_f, time_av_rate_f] = well3_finite.transition_rate()
+
 
 
 
@@ -276,5 +277,7 @@ for n in np.arange(N):
         if colors_f[n,i]>0:
             eff_vectors_unit_f[n,i,:] = eff_vectors_f[n,i,:]/colors_f[n,i]
             
+
 fig = plot_subplot_3well_effcurrent(eff_vectors_unit_f[:N-1,:,:], colors_f[:N-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N-1, (3*(N-1),3),'Finite-time $f^+(n)$', subtitles=subtitles_f[:N-1])
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_f.png'), dpi=100)
+

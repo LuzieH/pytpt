@@ -46,6 +46,8 @@ class transitions_periodic:
         self._q_b = None  # backward committor
         self._q_f = None  # forward committor
         self._reac_dens = None  # reactive density
+        self._reac_norm_factor = None  # reactive normalization factor 
+        self._norm_reac_dens = None  # normalized reactive density
         self._current = None  # reactive current
         self._eff_current = None  # effective reactive current
         self._rate = None  # rate of transitions from A to B
@@ -195,7 +197,6 @@ class transitions_periodic:
         first to be computed by using the method committor"
 
         reac_dens = np.zeros((self._M, self._S))
-
         for m in range(self._M):
             reac_dens[m, :] = np.multiply(
                 self._q_b[m, :],
@@ -207,10 +208,15 @@ class transitions_periodic:
     def reac_norm_factor(self):
         """
         """
-        reac_dens = self.reac_density()
+        if type(self._reac_dens) != None:                                                          
+            reac_dens = self.reac_density()                                                        
+        else:                                                                                      
+            reac_dens = self._reac_dens                                                            
+
         reac_norm_factor = np.zeros(self._M)
         for m in range(0, self._M):
             reac_norm_factor[m] = np.sum(reac_dens[m, :])
+
         self._reac_norm_factor = reac_norm_factor
         return self._reac_norm_factor
 
@@ -222,15 +228,25 @@ class transitions_periodic:
         The function returns an array of the reactive density for each time 
         (with time as the first index of the array).
         """
-
-        reac_dens = self.reac_density()
-        reac_norm_factor = self.reac_norm_factor()
+        
+        if type(self._reac_dens) != None:                                                          
+            reac_dens = self.reac_density()                                                        
+        else:                                                                                      
+            reac_dens = self._reac_dens                                                            
+        
+        if type(self._reac_norm_factor) != None:                                                   
+            reac_norm_factor = self.reac_norm_factor()                                             
+        else:                                                                                      
+            reac_norm_factor = self._reac_norm_factor
 
         norm_reac_dens = np.zeros((self._M, self._S))
         for m in range(self._M):
-            norm_reac_dens[m, :] = reac_dens[m, :] / reac_norm_factor[m]
+            if reac_norm_factor[m] != 0:
+                norm_reac_dens[m, :] = reac_dens[m, :] / reac_norm_factor[m]
+            else:
+                norm_reac_dens[m, :] = np.nan
 
-        self._norm_reac_dens = reac_dens
+        self._norm_reac_dens = norm_reac_dens
         return self._norm_reac_dens
 
     def reac_current(self):

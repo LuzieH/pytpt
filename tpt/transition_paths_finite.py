@@ -50,6 +50,7 @@ class transitions_finite_time:
         self._current = None  # reactive current
         self._eff_current = None  # effective reactive current
         self._rate = None  # rate of transitions from A to B
+        self._time_av_rate = None  # time-averaged rate of transitions from A to B
         self._current_dens = None  # density of the effective current
 
 
@@ -163,7 +164,11 @@ class transitions_finite_time:
     def reac_norm_factor(self):
         """
         """
-        reac_dens = self.reac_density()
+        if type(self._reac_dens) != None:
+            reac_dens = self.reac_density()
+        else:
+            reac_dens = self._reac_dens
+
         reac_norm_factor = np.zeros(self._N)
         for n in range(0, self._N):
             reac_norm_factor[n] = np.sum(reac_dens[n, :])
@@ -183,8 +188,15 @@ class transitions_finite_time:
         defined for these times. 
         """
 
-        reac_dens = self.reac_density()
-        reac_norm_factor = self.reac_norm_factor()
+        if type(self._reac_dens) != None:
+            reac_dens = self.reac_density()
+        else:
+            reac_dens = self._reac_dens
+
+        if type(self._reac_norm_factor) != None:
+            reac_norm_factor = self.reac_norm_factor()
+        else:
+            reac_norm_factor = self._reac_norm_factor
 
         norm_reac_dens = np.zeros((self._N, self._S))
         for n in range(0, self._N):
@@ -245,20 +257,32 @@ class transitions_finite_time:
         """
         The transition rate is the average flow of reactive trajectories out of A 
         (first row), or into B (second row).
+        The time-averaged transition rate is the averaged transition rate over
+        {0, ..., N-1}.
+        This method returns a tuple with the transition rate array and the 
+        time averaged transition rate array
         """
 
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
-        self._rate = np.zeros((2, self._N))
-        self._rate[0, :] = np.sum(
-            self._current[:, self._ind_A, :], axis=(1, 2)
+        rate = np.zeros((2, self._N))
+        rate[0, :self._N-1] = np.sum(
+            self._current[:self._N-1, self._ind_A, :], axis=(1, 2)
         )
-        self._rate[1, :] = np.sum(
-            self._current[:, :, self._ind_B], axis=(1, 2)
+        rate[0, self._N-1] = np.nan
+        rate[1, 1:] = np.sum(
+            self._current[:self._N-1, :, self._ind_B], axis=(1, 2)
         )
-
-        return self._rate
+        rate[1, 0] = np.nan
+        
+        time_av_rate = np.zeros(2)
+        time_av_rate[0] = sum(rate[0][:self._N-1])/(self._N-1)
+        time_av_rate[1] = sum(rate[1][1:])/(self._N-1)
+       
+        self._rate = rate
+        self._time_av_rate = time_av_rate
+        return self._rate, self._time_av_rate
 
 
     def current_density(self):
