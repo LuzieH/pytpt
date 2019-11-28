@@ -209,18 +209,21 @@ def plot_density(data, graphs, pos, v_min, v_max, file_path, title, subtitles=No
     fig.savefig(file_path, dpi=100)
 
 
-def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, title, subtitles=None):
-    fig, ax = plt.subplots(1, timeframe, sharex='col',
+def plot_effective_current(weights, pos, v_min, v_max, file_path, title, subtitles=None):
+
+    timeframes = len(weights)
+    size = (2*timeframes, 2)
+    fig, ax = plt.subplots(1, timeframes, sharex='col',
                            sharey='row', figsize=size)
-    if timeframe == 1:
-        A_eff = (weights > 0)*1
+    if timeframes == 1:
+        A_eff = (weights[0] > 0)*1
         G_eff = nx.DiGraph(A_eff)
         nbr_edges = int(np.sum(A_eff))
         edge_colors = np.zeros(nbr_edges)
         widths = np.zeros(nbr_edges)
         for j in np.arange(nbr_edges):
             edge_colors[j] = 200 * \
-                weights[np.array(G_eff.edges())[j, 0],
+                weights[0,np.array(G_eff.edges())[j, 0],
                         np.array(G_eff.edges())[j, 1]]
             # weights[i,np.array(G_eff.edges())[j,0], np.array(G_eff.edges())[j,1]]
             widths[j] = edge_colors[j]
@@ -232,7 +235,7 @@ def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, t
         nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax)
         ax.set_axis_off()
     else:
-        for n in range(timeframe):
+        for n in range(timeframes):
             if not np.isnan(weights[n]).any():
                 A_eff = (weights[n, :, :] > 0)*1
                 G_eff = nx.DiGraph(A_eff)
@@ -258,10 +261,11 @@ def plot_effective_current(weights, graph, pos, timeframe, size, v_min, v_max, t
                 ax[n].set_axis_off()
                 if subtitles is not None:
                     ax[n].set_title(subtitles[n])  # , pad=0)
+
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
+    fig.savefig(file_path, dpi=100)
 
-    return fig
 
 def plot_rate(rate, file_path, title, time_av_rate=None):
     ncol = 2 
@@ -399,6 +403,19 @@ v_max_reac_dens = max([
     np.max(norm_reac_dens_f),
     np.max(norm_reac_dens_inhom),
 ])
+v_min_eff_curr = min([
+    np.min(eff_current),
+    np.min(eff_current_p),
+    np.min(eff_current_f),
+    np.min(eff_current_inhom),
+])
+v_max_eff_curr = max([
+    np.max(eff_current),
+    np.max(eff_current_p),
+    np.max(eff_current_f),
+    np.max(eff_current_inhom),
+])
+
 
 
 # define directory path to save the plots
@@ -443,11 +460,14 @@ plot_density(
     file_path=os.path.join(charts_path, 'reac_dens.png'),
     title='$\mu^\mathcal{AB}$',
 )
-
-G = nx.Graph(T+L)
-fig = plot_effective_current(eff_current, G, pos, 1,
-                            (2*1, 2), 0, 1, 'Effective current $f^+$')
-fig.savefig(os.path.join(charts_path, 'eff.png'), dpi=100)
+plot_effective_current(
+    weights=np.array([eff_current]),
+    pos=pos,
+    v_min=v_min_eff_curr,
+    v_max=v_max_eff_curr,
+    file_path=os.path.join(charts_path, 'eff.png'),
+    title='Effective current $f^+$',
+)
 
 
 # plotting results for periodic case
@@ -494,10 +514,15 @@ plot_density(
     title='Periodic $\mu_m^\mathcal{AB}$',
     subtitles=subtitles_p,
 )
-
-fig = plot_effective_current(eff_current_p, G, pos, M, (2*M, 2), v_min_dens,
-                            v_max_dens, 'Periodic effective current $f^+_m$', subtitles_p)
-fig.savefig(os.path.join(charts_path, 'eff_p.png'), dpi=100)
+plot_effective_current(
+    weights=eff_current_p,
+    pos=pos,
+    v_min=v_min_eff_curr,
+    v_max=v_max_eff_curr,
+    file_path=os.path.join(charts_path, 'eff_p.png'),
+    title='Periodic effective current $f^+_m$',
+    subtitles=subtitles_p,
+)
 plot_rate(
     rate=rate_p,
     file_path=os.path.join(charts_path, 'rates_p.png'),
@@ -549,8 +574,15 @@ plot_density(
     title='Finite-time $\mu^\mathcal{AB}(n)$',
     subtitles=subtitles_f[1:N-1],
 )
-fig = plot_effective_current(eff_current_f, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
-fig.savefig(os.path.join(charts_path, 'eff_f.png'), dpi=100)
+plot_effective_current(
+    weights=eff_current_f[:N-1],
+    pos=pos,
+    v_min=v_min_eff_curr,
+    v_max=v_max_eff_curr,
+    file_path=os.path.join(charts_path, 'eff_f.png'),
+    title='Finite-time effective current $f^+_m$',
+    subtitles=subtitles_f[:N-1],
+)
 plot_rate(
     rate=rate_f,
     time_av_rate=time_av_rate_f,
@@ -608,8 +640,15 @@ plot_density(
     title='Finite-time $\mu^\mathcal{AB}(n)$',
     subtitles=subtitles_inhom[1:N-1],
 )
-fig = plot_effective_current(eff_current_inhom, G, pos, N, (2*N, 2), v_min_dens, v_max_dens, 'Finite-time $f^+(n)$', subtitles_f)
-fig.savefig(os.path.join(charts_path, 'eff_inhom.png'), dpi=100)
+plot_effective_current(
+    weights=eff_current_inhom[:N-1],
+    pos=pos,
+    v_min=v_min_eff_curr,
+    v_max=v_max_eff_curr,
+    file_path=os.path.join(charts_path, 'eff_inhom.png'),
+    title='Finite-time effective current $f^+_m$',
+    subtitles=subtitles_f[:N-1],
+)
 plot_rate(
     rate=rate_inhom,
     time_av_rate=time_av_rate_inhom,
