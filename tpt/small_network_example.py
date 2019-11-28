@@ -423,6 +423,7 @@ v_max_eff_curr = max([
 
 # define directory path to save the plots
 charts_path = os.path.join(my_path, 'charts')
+example_name = 'small_network'
 
 # plotting results for ergodic, infinite-time case
 graphs = [nx.Graph(T+L)]
@@ -433,7 +434,7 @@ plot_density(
     pos=pos,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, 'dens.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
     title='Stationary density',
 )
 plot_density(
@@ -442,7 +443,7 @@ plot_density(
     pos=pos,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, 'q_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
     title='$q^+$',
 )
 plot_density(
@@ -451,7 +452,7 @@ plot_density(
     pos=pos,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, 'q_b.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
     title='$q^-$',
 )
 plot_density(
@@ -460,7 +461,7 @@ plot_density(
     pos=pos,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, 'reac_dens.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
     title='$\mu^\mathcal{AB}$',
 )
 plot_effective_current(
@@ -468,7 +469,7 @@ plot_effective_current(
     pos=pos,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, 'eff.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
     title='Effective current $f^+$',
 )
 
@@ -483,7 +484,7 @@ plot_density(
     pos=pos,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, 'dens_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'dens_p.png'),
     title='Periodic stationary density',
     subtitles=subtitles_p,
 )
@@ -493,7 +494,7 @@ plot_density(
     pos=pos,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, 'q_f_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_f_p.png'),
     title='Periodic $q^+_m$',
     subtitles=subtitles_p,
 )
@@ -503,7 +504,7 @@ plot_density(
     pos=pos,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, 'q_b_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_b_p.png'),
     title='Periodic $q^-_m$',
     subtitles=subtitles_p,
 )
@@ -513,7 +514,7 @@ plot_density(
     pos=pos,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, 'reac_dens_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_p.png'),
     title='Periodic $\mu_m^\mathcal{AB}$',
     subtitles=subtitles_p,
 )
@@ -522,13 +523,13 @@ plot_effective_current(
     pos=pos,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, 'eff_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'eff_p.png'),
     title='Periodic effective current $f^+_m$',
     subtitles=subtitles_p,
 )
 plot_rate(
     rate=rate_p,
-    file_path=os.path.join(charts_path, 'rates_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.png'),
     title='Discrete M-periodic rates',
 )
 
@@ -543,7 +544,7 @@ plot_density(
     pos=pos,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, 'dens_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'dens_f.png'),
     title='Finite-time density',
     subtitles=subtitles_f,
 )
@@ -553,7 +554,7 @@ plot_density(
     pos=pos,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, 'q_f_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_f_f.png'),
     title='Finite-time $q^+(n)$',
     subtitles=subtitles_f,
 )
@@ -563,7 +564,7 @@ plot_density(
     pos=pos,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, 'q_b_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_b_f.png'),
     title='Finite-time $q^-(n)$',
     subtitles=subtitles_f,
 )
@@ -573,7 +574,7 @@ plot_density(
     pos=pos,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, 'reac_dens_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_f.png'),
     title='Finite-time $\mu^\mathcal{AB}(n)$',
     subtitles=subtitles_f[1:N-1],
 )
@@ -582,19 +583,19 @@ plot_effective_current(
     pos=pos,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, 'eff_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'eff_f.png'),
     title='Finite-time effective current $f^+_m$',
     subtitles=subtitles_f[:N-1],
 )
 plot_rate(
     rate=rate_f,
     time_av_rate=time_av_rate_f,
-    file_path=os.path.join(charts_path, 'rates_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates_f.png'),
     title='Discrete finite-time rates',
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_f,
-    file_path=os.path.join(charts_path, 'reactiveness_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_f.png'),
     title='Discrete finite-time reactiveness',
 )
 
@@ -609,7 +610,7 @@ plot_density(
     pos=pos,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, 'dens_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'dens_inhom.png'),
     title='Finite-time density',
     subtitles=subtitles_inhom,
 )
@@ -619,7 +620,7 @@ plot_density(
     pos=pos,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, 'q_f_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_f_inhom.png'),
     title='Finite-time $q^+(n)$',
     subtitles=subtitles_inhom,
 )
@@ -629,7 +630,7 @@ plot_density(
     pos=pos,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, 'q_b_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_b_inhom.png'),
     title='Finite-time $q^-(n)$',
     subtitles=subtitles_inhom,
 )
@@ -639,7 +640,7 @@ plot_density(
     pos=pos,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, 'reac_dens_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_inhom.png'),
     title='Finite-time $\mu^\mathcal{AB}(n)$',
     subtitles=subtitles_inhom[1:N_inhom-1],
 )
@@ -648,24 +649,25 @@ plot_effective_current(
     pos=pos,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, 'eff_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'eff_inhom.png'),
     title='Finite-time effective current $f^+_m$',
     subtitles=subtitles_inhom[:N_inhom-1],
 )
 plot_rate(
     rate=rate_inhom,
     time_av_rate=time_av_rate_inhom,
-    file_path=os.path.join(charts_path, 'rates_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates_inhom.png'),
     title='Discrete finite-time, time-inhomogeneous rates',
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_inhom,
-    file_path=os.path.join(charts_path, 'reactiveness_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_inhom.png'),
     title='Discrete finite-time, time-inhomogeneous reactiveness',
 )
 
 
 # extended finite-time -> large N=100
+file_path = os.path.join(charts_path, example_name + '_' + 'conv_finite.png')
 fig, ax = plt.subplots(1, 1, figsize=(2*M, 5))
 convergence_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)
 plt.plot(np.arange(1, N_ex), convergence_error)  # , s=5, marker='o')
@@ -680,9 +682,7 @@ ax.spines['top'].set_visible(False)
 # Only show ticks on the left and bottom spines
 ax.yaxis.set_ticks_position('left')
 ax.xaxis.set_ticks_position('bottom')
-fig.savefig(os.path.join(charts_path, 'conv_finite.png'), dpi=100)
-
-exit()
+fig.savefig(file_path, dpi=100)
 
 
 # collect computed statistics for plotting
