@@ -313,9 +313,10 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
         np.nanmax(rate[0]),
         np.nanmax(rate[1]),
     ])
-    #plt.ylim(min_rate - 0.005, max_rate + 0.005)
-    plt.ylim(min_rate - min_rate/10, max_rate + max_rate/50)
-    #plt.ylim(-max_rate/50, max_rate + max_rate/50)
+    plt.ylim(
+        min_rate - (max_rate-min_rate)/4,
+        max_rate + (max_rate-min_rate)/4,
+    )
     plt.xlabel('n')
     plt.ylabel('Discrete rate')
     plt.legend(ncol=ncol)
@@ -346,7 +347,11 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     plt.title(title)
     min_norm_factor = np.nanmin(reac_norm_factor)
     max_norm_factor = np.nanmax(reac_norm_factor)
-    plt.ylim(-0.002, max_norm_factor*(1+1/10))
+    plt.ylim(
+        min_norm_factor - (max_norm_factor - min_norm_factor)/4,
+        max_norm_factor + (max_norm_factor - min_norm_factor)/4,
+    )
+    #plt.ylim(-0.002, max_norm_factor*(1+1/10))
     plt.xlabel('n')
     plt.legend()
 
