@@ -116,23 +116,21 @@ norm_reac_dens_f = small_finite.norm_reac_density()
 
 # transition matrix at time n
 def P_inhom(n):
-    if n == 0: 
-        return T + L + 3*K
-    elif n == 1: 
-        return T + L + 2*K
-    elif n == 2: 
+    if (n == 3 or n == 6): 
         return T + L + K
+    elif (n == 4 or n == 5): 
+        return T + L + 2*K
     else:
         return T + L
 
 # initial density
 init_dens_small_inhom = stat_dens
-N = 6  # size of time interval
+N_inhom = 10  # size of time interval
 
 # instantiate
 small_inhom = tpf.transitions_finite_time(
     P_inhom,
-    N,
+    N_inhom,
     ind_A,
     ind_B,
     ind_C,
@@ -288,8 +286,8 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
         ncol = 3 
         ax.hlines(
             y=time_av_rate[0],
-            xmin=0.0,
-            xmax=5.0,
+            xmin=np.arange(timeframes)[0],
+            xmax=np.arange(timeframes)[-1],
             color='r',
             linestyles='dashed',
             label='$\hat{k}^{AB}_N$',
@@ -327,10 +325,10 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
 def plot_reactiveness(reac_norm_factor, file_path, title):
     timeframes = len(reac_norm_factor)
 
-    fig, ax = plt.subplots(1, 1, figsize=(2*N, 2))
+    fig, ax = plt.subplots(1, 1, figsize=(2*timeframes, 2))
 
     plt.scatter(
-        np.arange(N),
+        np.arange(timeframes),
         reac_norm_factor[:],
         alpha=0.7, 
         label='$\sum_{j \in C} \mu_j^{R}(n)$',
@@ -602,8 +600,8 @@ plot_reactiveness(
 
 
 # plotting results for finite-time, time-inhomogeneous case
-graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N)] 
-subtitles_inhom = subtitles_f
+graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)] 
+subtitles_inhom = np.array(['n = ' + str(n) for n in np.arange(N_inhom)])
 
 plot_density(
     data=stat_dens_inhom,
@@ -636,23 +634,23 @@ plot_density(
     subtitles=subtitles_inhom,
 )
 plot_density(
-    data=norm_reac_dens_inhom[1:N-1],
-    graphs=graphs_inhom[1:N-1],
+    data=norm_reac_dens_inhom[1:N_inhom-1],
+    graphs=graphs_inhom[1:N_inhom-1],
     pos=pos,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, 'reac_dens_inhom.png'),
     title='Finite-time $\mu^\mathcal{AB}(n)$',
-    subtitles=subtitles_inhom[1:N-1],
+    subtitles=subtitles_inhom[1:N_inhom-1],
 )
 plot_effective_current(
-    weights=eff_current_inhom[:N-1],
+    weights=eff_current_inhom[:N_inhom-1],
     pos=pos,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, 'eff_inhom.png'),
     title='Finite-time effective current $f^+_m$',
-    subtitles=subtitles_f[:N-1],
+    subtitles=subtitles_inhom[:N_inhom-1],
 )
 plot_rate(
     rate=rate_inhom,

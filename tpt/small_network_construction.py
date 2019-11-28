@@ -59,18 +59,12 @@ L[4, 3] =  0.05
 # K: 0-rowsum matrix
 # L+T+K transition matrix where A and B are less metastable
 K = np.zeros((5, 5))
-K[0, 0] = -0.2
-K[0, 1] =  0.1
-K[0, 3] =  0.1
-K[4, 1] =  0.1
-K[4, 3] =  0.1
-K[4, 4] = -0.2
-
-# T+L : transition matrix for the ergodic, infinite-time case
-# T+L .... T-L : transition matricec within a period for the periodic case
-# L+T : transition matrix for the finite-time, time-homogeneous case 
-# L+T+3K, L+T+2K, L+T+K, L+T, ..., L+T : transition matrices for the finite-time,
-# time-inhomogeneous case
+K[0, 0] = -0.3
+K[0, 1] =  0.15
+K[0, 3] =  0.15
+K[4, 1] =  0.15
+K[4, 3] =  0.15
+K[4, 4] = -0.3
 
 np.save(os.path.join(my_path, 'data/small_network_pos.npy'), pos)
 np.save(os.path.join(my_path, 'data/small_network_labels.npy'), labels)
