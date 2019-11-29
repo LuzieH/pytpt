@@ -165,6 +165,7 @@ for ne in np.arange(1, N_ex):
 # plotting
 
 def plot_density(data, graphs, pos, v_min, v_max, file_path, title, subtitles=None):
+    # TODO document method
     """
     plots bla bla
 
@@ -206,57 +207,47 @@ def plot_density(data, graphs, pos, v_min, v_max, file_path, title, subtitles=No
 
 
 def plot_effective_current(weights, pos, v_min, v_max, file_path, title, subtitles=None):
+    # TODO document method
 
     timeframes = len(weights)
     size = (2*timeframes, 2)
     fig, ax = plt.subplots(1, timeframes, sharex='col',
                            sharey='row', figsize=size)
     if timeframes == 1:
-        A_eff = (weights[0] > 0)*1
-        G_eff = nx.DiGraph(A_eff)
-        nbr_edges = int(np.sum(A_eff))
-        edge_colors = np.zeros(nbr_edges)
-        widths = np.zeros(nbr_edges)
-        for j in np.arange(nbr_edges):
-            edge_colors[j] = 200 * \
-                weights[0,np.array(G_eff.edges())[j, 0],
-                        np.array(G_eff.edges())[j, 1]]
-            # weights[i,np.array(G_eff.edges())[j,0], np.array(G_eff.edges())[j,1]]
-            widths[j] = edge_colors[j]
+        ax = [ax]
+    for n in range(timeframes):
+        if not np.isnan(weights[n]).any():
+            A_eff = (weights[n, :, :] > 0)*1
+            G_eff = nx.DiGraph(A_eff)
+            nbr_edges = int(np.sum(A_eff))
+            edge_colors = np.zeros(nbr_edges)
+            widths = np.zeros(nbr_edges)
 
-        nx.draw_networkx_nodes(G_eff, pos, ax=ax)
-        nx.draw_networkx_edges(G_eff, pos, ax=ax, arrowsize=10, edge_color=edge_colors, width=widths,
-                               edge_cmap=plt.cm.Blues)
-        # labels
-        nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax)
-        ax.set_axis_off()
-    else:
-        for n in range(timeframes):
-            if not np.isnan(weights[n]).any():
-                A_eff = (weights[n, :, :] > 0)*1
-                G_eff = nx.DiGraph(A_eff)
-                nbr_edges = int(np.sum(A_eff))
-                edge_colors = np.zeros(nbr_edges)
-                widths = np.zeros(nbr_edges)
+            for j in np.arange(nbr_edges):
+                edge_colors[j] = weights[
+                    n,
+                    np.array(G_eff.edges())[j, 0],
+                    np.array(G_eff.edges())[j, 1],
+                ]
+                widths[j] = 150*edge_colors[j]
 
-                for j in np.arange(nbr_edges):
-                    edge_colors[j] = weights[
-                        n,
-                        np.array(G_eff.edges())[j, 0],
-                        np.array(G_eff.edges())[j, 1],
-                    ]
-                    # weights[n,np.array(G_eff.edges())[j,0], np.array(G_eff.edges())[j,1]]
-                    widths[j] = 150*edge_colors[j]
+            nx.draw_networkx_nodes(G_eff, pos, ax=ax[n])
+            nx.draw_networkx_edges(
+                G_eff,
+                pos,
+                ax=ax[n],
+                arrowsize=10,
+                edge_color=edge_colors,
+                width=widths,
+                edge_cmap=plt.cm.Blues,
+            )
 
-                nx.draw_networkx_nodes(G_eff, pos, ax=ax[n])
-                nx.draw_networkx_edges(G_eff, pos, ax=ax[n], arrowsize=10, edge_color=edge_colors, width=widths,
-                                   edge_cmap=plt.cm.Blues)
-                # labels
-                nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
-                #ax = plt.gca()
-                ax[n].set_axis_off()
-                if subtitles is not None:
-                    ax[n].set_title(subtitles[n])  # , pad=0)
+            # labels
+            nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
+            #ax = plt.gca()
+            ax[n].set_axis_off()
+            if subtitles is not None:
+                ax[n].set_title(subtitles[n])  # , pad=0)
 
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
@@ -264,6 +255,7 @@ def plot_effective_current(weights, pos, v_min, v_max, file_path, title, subtitl
 
 
 def plot_rate(rate, file_path, title, time_av_rate=None):
+    # TODO document method
     ncol = 2 
     timeframes = len(rate[0])
     fig, ax = plt.subplots(1, 1, figsize=(2*timeframes, 2))
@@ -321,6 +313,7 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
 
 
 def plot_reactiveness(reac_norm_factor, file_path, title):
+    # TODO document method
     timeframes = len(reac_norm_factor)
 
     fig, ax = plt.subplots(1, 1, figsize=(2*timeframes, 2))
