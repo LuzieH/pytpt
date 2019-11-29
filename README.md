@@ -19,4 +19,4 @@ pip install -r requirements
 mkdir tpt/data
 mkdir tpt/charts
 ```
-Rem: The above mention folders are ignored. 
+Rem: The above mentioned folders are ignored. 
