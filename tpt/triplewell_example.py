@@ -101,7 +101,7 @@ norm_reac_dens_f = well3_finite.norm_reac_density()
 
 
 
-
+charts_path = os.path.join(my_path, 'charts')
 #############################################################################
 # plots  infinite-time, ergodic
 fig, ax = plt.subplots(1, 5, sharex='col',

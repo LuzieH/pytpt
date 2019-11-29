@@ -1,9 +1,9 @@
 import numpy as np
+import transition_matrix_from_samples as tms
+
 import os.path
-import transition_matrix_from_samples
 
 my_path = os.path.abspath(os.path.dirname(__file__))
-
 
 
 ##############################################################################
@@ -46,7 +46,7 @@ dt=0.02 #dt for Euler Maruyama discretization
 lag=15 #lag time of transition matrix is lag*dt
 
 #row stochastic transition matrix
-T=transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y, dim)
+T=tms.transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y, dim)
 
 ############################################################################
 #transition matrix for triple well plus circular forcing
@@ -58,7 +58,7 @@ dV_forced = lambda x,y,m: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)]) +facto
 
 T_m =np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
-    T_m[m,:,:]= transitionmatrix_2D(lambda x,y : dV_forced(x,y,m) ,sigma,dt, lag ,Nstep, interval,x, y, dim)
+    T_m[m,:,:]= tms.transitionmatrix_2D(lambda x,y : dV_forced(x,y,m) ,sigma,dt, lag ,Nstep, interval,x, y, dim)
 
 
 
