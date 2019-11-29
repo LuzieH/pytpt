@@ -2,9 +2,14 @@ import transition_paths as tp
 import transition_paths_periodic as tpp
 import transition_paths_finite as tpf
 
-import networkx as nx
+from plotting import plot_network_density as plot_density, \
+                     plot_network_effective_current as plot_effective_current, \
+                     plot_rate, \
+                     plot_reactiveness, \
+                     plot_convergence
+
 import numpy as np
-import matplotlib.pyplot as plt
+import networkx as nx
 
 import os.path
 
@@ -153,200 +158,12 @@ norm_reac_dens_inhom = small_inhom.norm_reac_density()
 
 N_ex = 150  # size of time interval
 q_f_conv = np.zeros((N_ex-1, np.shape(T)[0]))
-for ne in np.arange(1, N_ex):
+for n in np.arange(1, N_ex):
     # instantiate
     small_finite_ex = tpf.transitions_finite_time(
-        P_hom, ne*2+1, ind_A, ind_B,  ind_C, init_dens_small)
+        P_hom, n*2+1, ind_A, ind_B,  ind_C, init_dens_small)
     [q_f_ex, q_b_ex] = small_finite_ex.committor()
-    q_f_conv[ne-1, :] = q_f_ex[ne, :]
-
-
-
-# plotting
-
-def plot_density(data, graphs, pos, v_min, v_max, file_path, title, subtitles=None):
-    # TODO document method
-    """
-    plots bla bla
-
-    parameters
-    data : ndarray
-        bla
-    graphs : list
-        bla
-    pos : 
-        bla
-    vmin : 
-        bla
-    vmax : 
-        bla
-    title :
-        bla
-    subtitles : 
-        bla
-    file_path:
-        bla
-    """
-
-    num_plots = len(graphs)
-    size = (2*num_plots, 2)
-
-    fig, ax = plt.subplots(1, num_plots, sharex='col',
-                           sharey='row', figsize=size)
-    if num_plots == 1:
-        ax = [ax]
-    for i in range(num_plots):
-        nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i],
-                ax=ax[i], vmin=v_min, vmax=v_max)
-        if subtitles is not None:
-            ax[i].set_title(subtitles[i])
-
-    fig.suptitle(title)
-    fig.subplots_adjust(top=0.8)
-    fig.savefig(file_path, dpi=100)
-
-
-def plot_effective_current(weights, pos, v_min, v_max, file_path, title, subtitles=None):
-    # TODO document method
-
-    timeframes = len(weights)
-    size = (2*timeframes, 2)
-    fig, ax = plt.subplots(1, timeframes, sharex='col',
-                           sharey='row', figsize=size)
-    if timeframes == 1:
-        ax = [ax]
-    for n in range(timeframes):
-        if not np.isnan(weights[n]).any():
-            A_eff = (weights[n, :, :] > 0)*1
-            G_eff = nx.DiGraph(A_eff)
-            nbr_edges = int(np.sum(A_eff))
-            edge_colors = np.zeros(nbr_edges)
-            widths = np.zeros(nbr_edges)
-
-            for j in np.arange(nbr_edges):
-                edge_colors[j] = weights[
-                    n,
-                    np.array(G_eff.edges())[j, 0],
-                    np.array(G_eff.edges())[j, 1],
-                ]
-                widths[j] = 150*edge_colors[j]
-
-            nx.draw_networkx_nodes(G_eff, pos, ax=ax[n])
-            nx.draw_networkx_edges(
-                G_eff,
-                pos,
-                ax=ax[n],
-                arrowsize=10,
-                edge_color=edge_colors,
-                width=widths,
-                edge_cmap=plt.cm.Blues,
-            )
-
-            # labels
-            nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
-            #ax = plt.gca()
-            ax[n].set_axis_off()
-            if subtitles is not None:
-                ax[n].set_title(subtitles[n])  # , pad=0)
-
-    fig.suptitle(title)
-    fig.subplots_adjust(top=0.8)
-    fig.savefig(file_path, dpi=100)
-
-
-def plot_rate(rate, file_path, title, time_av_rate=None):
-    # TODO document method
-    ncol = 2 
-    timeframes = len(rate[0])
-    fig, ax = plt.subplots(1, 1, figsize=(2*timeframes, 2))
-
-    plt.scatter(
-        x=np.arange(timeframes),
-        y=rate[0, :],
-        alpha=0.7,
-        label='$k^{A->}$',
-    )
-    plt.scatter(
-        x=np.arange(timeframes),
-        y=rate[1, :],
-        alpha=0.7,
-        label='$k^{->B}$',
-    )
-    if type(time_av_rate) != type(None):
-        ncol = 3 
-        ax.hlines(
-            y=time_av_rate[0],
-            xmin=np.arange(timeframes)[0],
-            xmax=np.arange(timeframes)[-1],
-            color='r',
-            linestyles='dashed',
-            label='$\hat{k}^{AB}_N$',
-        )
-    
-    # Hide the right and top spines
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-
-    # Only show ticks on the left and bottom spines
-    ax.yaxis.set_ticks_position('left')
-    ax.xaxis.set_ticks_position('bottom')
-    
-    # add title and legend
-    plt.title(title)
-    min_rate = np.nanmin([
-        np.nanmin(rate[0]),
-        np.nanmin(rate[1]),
-    ])
-    max_rate = np.nanmax([
-        np.nanmax(rate[0]),
-        np.nanmax(rate[1]),
-    ])
-    plt.ylim(
-        min_rate - (max_rate-min_rate)/4,
-        max_rate + (max_rate-min_rate)/4,
-    )
-    plt.xlabel('n')
-    plt.ylabel('Discrete rate')
-    plt.legend(ncol=ncol)
-
-    fig.savefig(file_path, dpi=100)
-
-
-def plot_reactiveness(reac_norm_factor, file_path, title):
-    # TODO document method
-    timeframes = len(reac_norm_factor)
-
-    fig, ax = plt.subplots(1, 1, figsize=(2*timeframes, 2))
-
-    plt.scatter(
-        np.arange(timeframes),
-        reac_norm_factor[:],
-        alpha=0.7, 
-        label='$\sum_{j \in C} \mu_j^{R}(n)$',
-    )
-
-    # Hide the right and top spines
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-
-    # Only show ticks on the left and bottom spines
-    ax.yaxis.set_ticks_position('left')
-    ax.xaxis.set_ticks_position('bottom')
-
-    plt.title(title)
-    min_norm_factor = np.nanmin(reac_norm_factor)
-    max_norm_factor = np.nanmax(reac_norm_factor)
-    plt.ylim(
-        min_norm_factor - (max_norm_factor - min_norm_factor)/4,
-        max_norm_factor + (max_norm_factor - min_norm_factor)/4,
-    )
-    #plt.ylim(-0.002, max_norm_factor*(1+1/10))
-    plt.xlabel('n')
-    plt.legend()
-
-    fig.savefig(file_path, dpi=100)
-
-#########################################################
+    q_f_conv[n-1, :] = q_f_ex[n, :]
 
 
 v_min_dens = min([
@@ -411,7 +228,6 @@ v_max_eff_curr = max([
 ])
 
 
-
 # define directory path to save the plots
 charts_path = os.path.join(my_path, 'charts')
 example_name = 'small_network'
@@ -423,6 +239,7 @@ plot_density(
     data=np.array([stat_dens]),
     graphs=graphs,
     pos=pos,
+    labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
@@ -432,6 +249,7 @@ plot_density(
     data=np.array([q_f]),
     graphs=graphs,
     pos=pos,
+    labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
@@ -441,6 +259,7 @@ plot_density(
     data=np.array([q_b]),
     graphs=graphs,
     pos=pos,
+    labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
@@ -450,6 +269,7 @@ plot_density(
     data=np.array([norm_reac_dens]),
     graphs=graphs,
     pos=pos,
+    labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
@@ -458,6 +278,7 @@ plot_density(
 plot_effective_current(
     weights=np.array([eff_current]),
     pos=pos,
+    labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
@@ -473,6 +294,7 @@ plot_density(
     data=stat_dens_p,
     graphs=graphs_p,
     pos=pos,
+    labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'dens_p.png'),
@@ -483,6 +305,7 @@ plot_density(
     data=q_f_p,
     graphs=graphs_p,
     pos=pos,
+    labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_f_p.png'),
@@ -493,6 +316,7 @@ plot_density(
     data=q_b_p,
     graphs=graphs_p,
     pos=pos,
+    labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_b_p.png'),
@@ -503,6 +327,7 @@ plot_density(
     data=norm_reac_dens_p,
     graphs=graphs_p,
     pos=pos,
+    labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_p.png'),
@@ -512,6 +337,7 @@ plot_density(
 plot_effective_current(
     weights=eff_current_p,
     pos=pos,
+    labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, example_name + '_' + 'eff_p.png'),
@@ -533,6 +359,7 @@ plot_density(
     data=stat_dens_f,
     graphs=graphs_f,
     pos=pos,
+    labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'dens_f.png'),
@@ -543,6 +370,7 @@ plot_density(
     data=q_f_f,
     graphs=graphs_f,
     pos=pos,
+    labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_f_f.png'),
@@ -553,6 +381,7 @@ plot_density(
     data=q_b_f,
     graphs=graphs_f,
     pos=pos,
+    labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_b_f.png'),
@@ -563,6 +392,7 @@ plot_density(
     data=norm_reac_dens_f[1:N-1],
     graphs=graphs_f[1:N-1],
     pos=pos,
+    labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_f.png'),
@@ -572,6 +402,7 @@ plot_density(
 plot_effective_current(
     weights=eff_current_f[:N-1],
     pos=pos,
+    labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, example_name + '_' + 'eff_f.png'),
@@ -599,6 +430,7 @@ plot_density(
     data=stat_dens_inhom,
     graphs=graphs_inhom,
     pos=pos,
+    labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'dens_inhom.png'),
@@ -609,6 +441,7 @@ plot_density(
     data=q_f_inhom,
     graphs=graphs_inhom,
     pos=pos,
+    labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_f_inhom.png'),
@@ -619,6 +452,7 @@ plot_density(
     data=q_b_inhom,
     graphs=graphs_inhom,
     pos=pos,
+    labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_b_inhom.png'),
@@ -629,6 +463,7 @@ plot_density(
     data=norm_reac_dens_inhom[1:N_inhom-1],
     graphs=graphs_inhom[1:N_inhom-1],
     pos=pos,
+    labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_inhom.png'),
@@ -638,6 +473,7 @@ plot_density(
 plot_effective_current(
     weights=eff_current_inhom[:N_inhom-1],
     pos=pos,
+    labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, example_name + '_' + 'eff_inhom.png'),
@@ -656,25 +492,14 @@ plot_reactiveness(
     title='Discrete finite-time, time-inhomogeneous reactiveness',
 )
 
-
 # extended finite-time -> large N=100
-file_path = os.path.join(charts_path, example_name + '_' + 'conv_finite.png')
-fig, ax = plt.subplots(1, 1, figsize=(2*M, 5))
-convergence_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)
-plt.plot(np.arange(1, N_ex), convergence_error)  # , s=5, marker='o')
-plt.title(
-    'Convergence of finite-time, stationary $q^+(n)$ on $\{-N,...,N\}$ for large $N$')
-plt.xlabel('$N$')
-plt.ylabel('$l_2$-Error $||q^+ - q^+(0)||$ ')
-# Hide the right and top spines
-ax.spines['right'].set_visible(False)
-ax.spines['top'].set_visible(False)
-
-# Only show ticks on the left and bottom spines
-ax.yaxis.set_ticks_position('left')
-ax.xaxis.set_ticks_position('bottom')
-fig.savefig(file_path, dpi=100)
-
+plot_convergence(
+    N_ex=N_ex,
+    q_f=q_f,
+    q_f_conv=q_f_conv,
+    file_path=os.path.join(charts_path, example_name + '_' + 'conv_finite.png'),
+    title='Convergence of finite-time, stationary $q^+(n)$ on $\{-N,...,N\}$ for large $N$',
+)
 
 # collect computed statistics for plotting
 #C = 5
