@@ -1,7 +1,7 @@
 import transition_paths as tp
 import transition_paths_periodic as tpp
 import transition_paths_finite as tpf
- 
+import plotting 
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -143,47 +143,9 @@ ax[4].set_title(subtitles[4])
  
 fig.savefig(os.path.join(charts_path, 'triplewell_stat.png'), dpi=100)
 
-###########################################################################
-#plotting
-#colormap e.g. cmap  = 'PuBuGn' or 'CMRmap' or 'viridis_r' or 'inferno_r'
+ 
 
 
-
-def plot_subplot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashape, extent, timeframe, size,title, subtitles=None):
-    fig, ax = plt.subplots(1, timeframe, sharex='col',
-                           sharey='row', figsize=size)
-    if timeframe == 1:
-        if np.isnan(eff_vectors_unit).all()==False: #if not all values are nan
-            plt.imshow(background.reshape(datashape), cmap='Greys', alpha=.4, ax=ax, origin='lower', extent=extent)
-            plt.quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm', width=0.02, scale=25)    
-    else:
-        for i in range(timeframe):
-            if np.isnan(eff_vectors_unit[i,:,:]).all()==False: #if not all values are nan
-                ax[i].imshow(background.reshape(datashape), cmap='Greys', alpha=.4, origin='lower', extent=extent)
-                ax[i].quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap='coolwarm', width=0.02, scale=25)             
-            if subtitles is not None:
-                ax[i].set_title(subtitles[i])  # , pad=0)
-    fig.suptitle(title)
-    fig.subplots_adjust(top=0.8)
-    return fig
-
-
-
-def plot_subplot_3well( data,datashape, extent, timeframe, size, v_min, v_max, title, subtitles=None):
-    fig, ax = plt.subplots(1, timeframe, sharex='col',
-                           sharey='row', figsize=size)
-    if timeframe == 1:
-        if np.isnan(data).all()==False: #if not all values are nan
-            plt.imshow(data.reshape(datashape), ax=ax, vmin=v_min, vmax=v_max, origin='lower', extent=extent)
-    else:
-        for i in range(timeframe):
-            if np.isnan(data[i,:]).all()==False: #if not all values are nan
-                ax[i].imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', extent=extent)
-            if subtitles is not None:
-                ax[i].set_title(subtitles[i])  # , pad=0)
-    fig.suptitle(title)
-    fig.subplots_adjust(top=0.8)
-    return fig
 ######################################################## plots periodic
 
 subtitles_p = np.array(['m = ' + str(i) for i in np.arange(M)])
