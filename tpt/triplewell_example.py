@@ -1,7 +1,11 @@
 import transition_paths as tp
 import transition_paths_periodic as tpp
 import transition_paths_finite as tpf
-import plotting 
+
+from plotting import plot_3well, \
+                     plot_3well_effcurrent, \
+                     plot_rate, \
+                     plot_reactiveness
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -92,6 +96,7 @@ dens_f = well3_finite.density()
 [q_f_f, q_b_f] = well3_finite.committor()
  
 # normalized reactive density
+reac_norm_factor_f = well3_finite.reac_norm_factor()
 norm_reac_dens_f = well3_finite.norm_reac_density()
 
 # and reactive currents
@@ -102,6 +107,7 @@ norm_reac_dens_f = well3_finite.norm_reac_density()
 
 
 charts_path = os.path.join(my_path, 'charts')
+example_name = 'triplewell'
 #############################https://de.overleaf.com/project/5d555a6bdfb42d0001a9dac6################################################
 ## plots  infinite-time, ergodic
 
@@ -250,3 +256,14 @@ for n in np.arange(N):
 fig = plot_3well_effcurrent(eff_vectors_unit_f[:N-1,:,:], colors_f[:N-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N-1, (3*(N-1),3),'Finite-time $f^+(n)$', subtitles=subtitles_f[:N-1])
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_f.png'), dpi=100)
 
+plot_rate(
+    rate=rate_f,
+    time_av_rate=time_av_rate_f,                                                               
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates_f.png'),
+    title='Discrete finite-time, time-homogeneous rates',
+)
+plot_reactiveness(
+    reac_norm_factor=reac_norm_factor_f,
+    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_f.png'),
+    title='Discrete finite-time, time-homogeneous reactiveness',
+)
