@@ -70,13 +70,13 @@ stat_dens_p = well3_periodic.stationary_density()
 P_back_m = well3_periodic.backward_transitions()
 
 # normalized reactive density
+reac_norm_factor_p = well3_periodic.reac_norm_factor()
 norm_reac_dens_p = well3_periodic.norm_reac_density()
 
 # and reactive currents
 [current_p, eff_current_p] = well3_periodic.reac_current()
-
-rate_p = well3_periodic.transition_rate()
-
+ 
+[rate_p, time_av_rate_p] = well3_periodic.transition_rate()
 
 ###################################
 #finite-time
@@ -209,6 +209,19 @@ for m in np.arange(M):
             
 fig = plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), M, (3*M,3),'Periodic $f^+_m$', subtitles=subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_p.png'), dpi=100)
+
+
+plot_rate(
+    rate=rate_p,
+    time_av_rate=time_av_rate_p,                                                               
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.png'),
+    title='Discrete periodic, time-homogeneous rates',
+)
+plot_reactiveness(
+    reac_norm_factor=reac_norm_factor_p,
+    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_p.png'),
+    title='Discrete periodic, time-homogeneous reactiveness',
+)
 ######################################################## plots finite-time
 
 subtitles_f = np.array(['n = ' + str(i) for i in np.arange(N)])
@@ -267,3 +280,4 @@ plot_reactiveness(
     file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_f.png'),
     title='Discrete finite-time, time-homogeneous reactiveness',
 )
+
