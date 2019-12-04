@@ -50,7 +50,7 @@ T=tms.transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y, dim)
 
 ############################################################################
 #transition matrix for triple well plus circular forcing
-M=8 #length of period
+M=6 #length of period
 
 #forcing is the vector field sin(t)*f[(-y,x)], where f applies some convolution, such that 
 factor_forced=1.2
