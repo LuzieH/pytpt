@@ -541,6 +541,7 @@ plot_convergence(
     q_f_conv=q_f_conv,
     q_b=q_b,
     q_b_conv=q_b_conv,
+    scale_type='log',
     file_path=os.path.join(charts_path, example_name + '_' + 'conv_finite.png'),
     title='Convergence of finite-time, stationary $q^+(n)$ on $\{-N,...,N\}$ for large $N$',
 )

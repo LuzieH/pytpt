@@ -186,8 +186,9 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     fig.savefig(file_path, dpi=100)
 
 
-def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, file_path, title):
+def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title):
     # TODO document method
+    assert scale_type in ['linear', 'log', 'symlog', 'logit']
 
     # compute errors 
     q_f_conv_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)                                  
@@ -197,35 +198,25 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, file_path, title):
 
     fig, ax = plt.subplots(1, 1, figsize=(2*6, 5))                                                     
 
-#    plt.scatter(                                                                                   
-#        x=np.arange(1, N_max +1),                                                                   
-#        y=q_f_conv_error,                                                                              
-#        #color=blue,
-#        alpha=0.7,                                                                                 
-#        label='$l_2$-Error $||q^+ - q^+(0)||$',
-#    )                                                                                              
-#    plt.scatter(                                                                                   
-#        x=np.arange(1, N_max +1),                                                                   
-#        y=q_b_conv_error,                                                                              
-#        #color=red,
-#        alpha=0.7,                                                                                 
-#        label='$l_2$-Error $||q^- - q^-(0)||$',
-#    )                                                                                              
-#    plt.scatter(                                                                                   
-#        x=np.arange(1, N_max +1),                                                                   
-#        y=dens_conv_error,                                                                              
-#        #color=red,
-#        alpha=0.7,                                                                                 
-#        label='$l_2$-Error $||\pi - \pi_0||$',
-#    )                                                                                              
-    plt.yscale('log') 
-    plt.plot(np.arange(1, N_max + 1), q_f_conv_error)  # , s=5, marker='o')                              
-    plt.plot(np.arange(1, N_max + 1), q_b_conv_error)  # , s=5, marker='o')                              
+    plt.yscale(scale_type) 
+    plt.plot(
+        np.arange(1, N_max + 1),
+        q_f_conv_error,
+        color='b',
+        alpha=0.5,
+        label='$||q^+ - q^+(0)||_2$',
+    )
+    plt.plot(
+        np.arange(1, N_max + 1),
+        q_b_conv_error,
+        color='r',
+        alpha=0.5,
+        label='$||q^- - q^-(0)||_2$',
+    )
 
     plt.title(title)                                                                                   
     plt.xlabel('$N$')                                                                                  
-    #plt.ylabel('$l_2$-Error $||q^+ - q^+(0)||$ ')                                                      
-    #plt.legend(ncol=3)
+    plt.legend(ncol=2)
 
     # Hide the right and top spines                                                                    
     ax.spines['right'].set_visible(False)                                                              
