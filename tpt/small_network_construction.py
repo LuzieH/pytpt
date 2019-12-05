@@ -5,6 +5,18 @@ import os.path
 
 my_path = os.path.abspath(os.path.dirname(__file__))
 
+# classification of the states
+states = {
+    0: 'A',
+    1: 'C',
+    2: 'C',
+    3: 'C',
+    4: 'B',
+}
+
+# number of states
+S = len(states)
+
 # node positions
 pos = {}
 pos[0] = (0, -1)
@@ -13,17 +25,8 @@ pos[2] = (0.5, -0.5)
 pos[3] = (1, -1)
 pos[4] = (1, 0)
 
-# some math labels
-labels = {
-    0: r'$A$',
-    1: '1',
-    2: '2',
-    3: '3',
-    4: r'$B$',
-}
-
 # T: symmetric stochastic matrix
-T = np.zeros((5, 5))
+T = np.zeros((S, S))
 T[0, 0] = 0.7
 T[0, 1] = 0.15
 T[0, 3] = 0.15
@@ -42,7 +45,7 @@ T[4, 4] = 0.7
 
 # L: 0-rowsum matrix
 # L+T does not have the 1-2 connection and L-T does not have the 2-3 connection 
-L = np.zeros(np.shape(T))
+L = np.zeros((S, S))
 L[0, 1] = -0.05
 L[0, 3] =  0.05
 L[1, 0] =  0.2
@@ -58,7 +61,7 @@ L[4, 3] =  0.05
 
 # K: 0-rowsum matrix
 # L+T+K transition matrix where A and B are less metastable
-K = np.zeros((5, 5))
+K = np.zeros((S, S))
 K[0, 0] = -0.6
 K[0, 1] =  0.3
 K[0, 3] =  0.3
@@ -66,8 +69,8 @@ K[4, 1] =  0.3
 K[4, 3] =  0.3
 K[4, 4] = -0.6
 
+np.save(os.path.join(my_path, 'data/small_network_states.npy'), states)
 np.save(os.path.join(my_path, 'data/small_network_pos.npy'), pos)
-np.save(os.path.join(my_path, 'data/small_network_labels.npy'), labels)
 np.save(os.path.join(my_path, 'data/small_network_T.npy'), T)
 np.save(os.path.join(my_path, 'data/small_network_L.npy'), L)
 np.save(os.path.join(my_path, 'data/small_network_K.npy'), K)

@@ -186,15 +186,47 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     fig.savefig(file_path, dpi=100)
 
 
-def plot_convergence(N_ex, q_f, q_f_conv, file_path, title):
+def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, file_path, title):
     # TODO document method
 
+    # compute errors 
+    q_f_conv_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)                                  
+    q_b_conv_error = np.linalg.norm(q_b_conv - q_b, ord=2, axis=1)                                  
+
+    N_max = len(q_f_conv)
+
     fig, ax = plt.subplots(1, 1, figsize=(2*6, 5))                                                     
-    convergence_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)                                  
-    plt.plot(np.arange(1, N_ex), convergence_error)  # , s=5, marker='o')                              
+
+#    plt.scatter(                                                                                   
+#        x=np.arange(1, N_max +1),                                                                   
+#        y=q_f_conv_error,                                                                              
+#        #color=blue,
+#        alpha=0.7,                                                                                 
+#        label='$l_2$-Error $||q^+ - q^+(0)||$',
+#    )                                                                                              
+#    plt.scatter(                                                                                   
+#        x=np.arange(1, N_max +1),                                                                   
+#        y=q_b_conv_error,                                                                              
+#        #color=red,
+#        alpha=0.7,                                                                                 
+#        label='$l_2$-Error $||q^- - q^-(0)||$',
+#    )                                                                                              
+#    plt.scatter(                                                                                   
+#        x=np.arange(1, N_max +1),                                                                   
+#        y=dens_conv_error,                                                                              
+#        #color=red,
+#        alpha=0.7,                                                                                 
+#        label='$l_2$-Error $||\pi - \pi_0||$',
+#    )                                                                                              
+    plt.yscale('log') 
+    plt.plot(np.arange(1, N_max + 1), q_f_conv_error)  # , s=5, marker='o')                              
+    plt.plot(np.arange(1, N_max + 1), q_b_conv_error)  # , s=5, marker='o')                              
+
     plt.title(title)                                                                                   
     plt.xlabel('$N$')                                                                                  
-    plt.ylabel('$l_2$-Error $||q^+ - q^+(0)||$ ')                                                      
+    #plt.ylabel('$l_2$-Error $||q^+ - q^+(0)||$ ')                                                      
+    #plt.legend(ncol=3)
+
     # Hide the right and top spines                                                                    
     ax.spines['right'].set_visible(False)                                                              
     ax.spines['top'].set_visible(False)                                                                
@@ -202,6 +234,7 @@ def plot_convergence(N_ex, q_f, q_f_conv, file_path, title):
     # Only show ticks on the left and bottom spines                                                    
     ax.yaxis.set_ticks_position('left')                                                                
     ax.xaxis.set_ticks_position('bottom')                                                              
+
     fig.savefig(file_path, dpi=100)  
 
 

@@ -19,19 +19,35 @@ import os.path
 
 # load data about small network
 my_path = os.path.abspath(os.path.dirname(__file__))
+states = np.load(
+    os.path.join(my_path, 'data/small_network_states.npy'),
+    allow_pickle=True, 
+)
+states = states.item()
 pos = np.load(
     os.path.join(my_path, 'data/small_network_pos.npy'),
     allow_pickle=True,
 )
 pos = pos.item()
-labels = np.load(
-    os.path.join(my_path, 'data/small_network_labels.npy'),
-    allow_pickle=True, 
-)
-labels = labels.item()
 T = np.load(os.path.join(my_path, 'data/small_network_T.npy'))
 L = np.load(os.path.join(my_path, 'data/small_network_L.npy'))
 K = np.load(os.path.join(my_path, 'data/small_network_K.npy'))
+
+
+S = len(states)
+#labels = {}
+#for s in states.keys():
+#    if states[s] == 'A' or states[s] == 'B':
+#        labels[s] = r'$' + states[s] + '$'
+#    else:
+#        labels[s] = s
+labels = {
+    0: r'$A$',
+    1: '1',
+    2: '2',
+    3: '3',
+    4: r'$B$',
+ }
 
 ind_A = np.array([0])
 ind_C = np.arange(1, np.shape(T)[0] - 1)
@@ -39,10 +55,6 @@ ind_B = np.array([4])
 
 
 # TPT ergodic, infinite-time
-
-# transition matrix at time n
-def P(n):
-    return T + L
 
 # instantiate
 small = tp.transitions_mcs(T + L, ind_A, ind_B, ind_C)
@@ -86,7 +98,7 @@ norm_reac_dens_p = small_periodic.norm_reac_density()
 # and reactive currents
 [current_p, eff_current_p] = small_periodic.reac_current()
 
-rate_p = small_periodic.transition_rate()
+[rate_p, time_av_rate_p] = small_periodic.transition_rate()
 
 
 # TPT finite time, time-homogeneous
@@ -153,19 +165,50 @@ norm_reac_dens_inhom = small_inhom.norm_reac_density()
 [rate_inhom, time_av_rate_inhom] = small_inhom.transition_rate()
 
 
-
 # TPT finite time extension to infinite time, convergence analysis
+N_max = 150  # max value of N
+q_f_conv = np.zeros((N_max, S))
+q_b_conv = np.zeros((N_max, S))
 
-N_ex = 150  # size of time interval
-q_f_conv = np.zeros((N_ex-1, np.shape(T)[0]))
-for n in np.arange(1, N_ex):
+for n in np.arange(1, N_max + 1):
+    # extended time interval
+    N_ex = n*2 + 1
+
     # instantiate
     small_finite_ex = tpf.transitions_finite_time(
-        P_hom, n*2+1, ind_A, ind_B,  ind_C, init_dens_small)
+        P_hom,
+        N_ex,
+        ind_A,
+        ind_B,
+        ind_C,
+        init_dens_small,
+    )
+    
+    # compute statistics
     [q_f_ex, q_b_ex] = small_finite_ex.committor()
     q_f_conv[n-1, :] = q_f_ex[n, :]
+    q_b_conv[n-1, :] = q_b_ex[n, :]
+
+# TODO store the transition statistics in data
+# idea1: 
+#np.save(os.path.join(my_path, 'data/small_network_trans_stat.npy'), small)
+#np.save(os.path.join(my_path, 'data/small_network_trans_stat_p.npy'), small_periodic)
+#np.save(os.path.join(my_path, 'data/small_network_trans_stat_f.npy'), small_finite)
+#np.save(os.path.join(my_path, 'data/small_network_trans_stat_inhom.npy'), small_inhom)
+
+# idea2:
+#C = 5
+#data_coll = np.zeros((5,np.shape(stat_dens)[0]))
+#data_coll[0,:] = stat_dens
+#data_coll[1,:] = q_f
+#data_coll[2,:] = q_b
+#data_coll[3,:] = reac_dens
+#subtitles_coll = np.array(['Stationary density','$q^+$','$q^-$','Reactive density','Current density'])
+#
+#fig = plot_subplot(data_coll, G, pos, C, (2*C, 3),'Stationary system',subtitles_coll)
 
 
+# plotting
 v_min_dens = min([
     np.min(stat_dens),
     np.min(stat_dens_p),
@@ -494,20 +537,11 @@ plot_reactiveness(
 
 # extended finite-time -> large N=100
 plot_convergence(
-    N_ex=N_ex,
     q_f=q_f,
     q_f_conv=q_f_conv,
+    q_b=q_b,
+    q_b_conv=q_b_conv,
     file_path=os.path.join(charts_path, example_name + '_' + 'conv_finite.png'),
     title='Convergence of finite-time, stationary $q^+(n)$ on $\{-N,...,N\}$ for large $N$',
 )
 
-# collect computed statistics for plotting
-#C = 5
-#data_coll = np.zeros((5,np.shape(stat_dens)[0]))
-#data_coll[0,:] = stat_dens
-#data_coll[1,:] = q_f
-#data_coll[2,:] = q_b
-#data_coll[3,:] = reac_dens
-#subtitles_coll = np.array(['Stationary density','$q^+$','$q^-$','Reactive density','Current density'])
-#
-#fig = plot_subplot(data_coll, G, pos, C, (2*C, 3),'Stationary system',subtitles_coll)
