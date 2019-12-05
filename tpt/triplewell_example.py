@@ -105,6 +105,27 @@ norm_reac_dens_f = well3_finite.norm_reac_density()
 [rate_f, time_av_rate_f] = well3_finite.transition_rate()
 
 
+#finite-time, periodic forcing
+
+N_force = 6 #time window
+
+# initial density
+init_dens_triple_force = stat_dens_p[0, :]
+
+# instantiate
+well3_finite_force = tpf.transitions_finite_time(Tm, N_force, ind_A, ind_B,  ind_C, init_dens_triple_force)
+ 
+dens_f_force = well3_finite_force.density()
+[q_f_f_force, q_b_f_force] = well3_finite_force.committor()
+ 
+# normalized reactive density
+reac_norm_factor_f_force = well3_finite_force.reac_norm_factor()
+norm_reac_dens_f_force = well3_finite_force.norm_reac_density()
+
+# and reactive currents
+[current_f_force, eff_current_f_force] = well3_finite_force.reac_current()
+
+[rate_f_force, time_av_rate_f_force] = well3_finite_force.transition_rate()
 
 charts_path = os.path.join(my_path, 'charts')
 example_name = 'triplewell'
@@ -279,5 +300,63 @@ plot_reactiveness(
     reac_norm_factor=reac_norm_factor_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_f.png'),
     title='Discrete finite-time, time-homogeneous reactiveness',
+)
+
+######################################################## plots finite-time, forcing
+subtitles_f_force = np.array(['n = ' + str(i) for i in np.arange(N_force)])
+
+data = dens_f_force
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, 'Finite-time periodic forcing density', subtitles = subtitles_f_force)
+fig.savefig(os.path.join(charts_path, 'triplewell_dens_f_force.png'), dpi=100)
+
+
+data = q_f_f_force
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, 'Finite-time periodic forcing $q^+(n)$', subtitles = subtitles_f_force)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f_force.png'), dpi=100)
+
+data = q_b_f_force
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, 'Finite-time periodic forcing $q^-(n)$', subtitles = subtitles_f_force)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f_force.png'), dpi=100)
+
+data = norm_reac_dens_f_force
+v_min = np.nanmin(data)
+v_max = np.nanmax(data)
+fig = plot_3well(data[1:N_force-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force-2, (3*(N_force-2),3), v_min, v_max, 'Finite-time periodic forcing $\mu^\mathcal{AB}(n)$', subtitles = subtitles_f_force[1:N_force-1])
+fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f_force.png'), dpi=100)
+
+#calculation the effective vector for each state
+eff_vectors_f_force = np.zeros((N_force, dim_st, 2))
+eff_vectors_unit_f_force = np.zeros((N_force, dim_st, 2))
+colors_f_force = np.zeros((N_force, dim_st))
+for n in np.arange(N_force):
+    for i in np.arange(dim_st):
+        for j in np.arange(dim_st):
+            #if np.isnan(eff_current_f[n,i,j])==False:
+            eff_vectors_f_force[n,i,0] += eff_current_f_force[n,i,j] *  (xn[j] - xn[i])  
+            eff_vectors_f_force[n,i,1] += eff_current_f_force[n,i,j] *  (yn[j] - yn[i])  
+        colors_f_force[n,i] = np.linalg.norm(eff_vectors_f_force[n,i,:])
+        if colors_f_force[n,i]>0:
+            eff_vectors_unit_f_force[n,i,:] = eff_vectors_f_force[n,i,:]/colors_f_force[n,i]
+            
+
+fig = plot_3well_effcurrent(eff_vectors_unit_f_force[:N_force-1,:,:], colors_f_force[:N_force-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N_force-1, (3*(N_force-1),3),'Finite-time periodic forcing $f^+(n)$', subtitles=subtitles_f_force[:N_force-1])
+fig.savefig(os.path.join(charts_path, 'triplewell_eff_f_force.png'), dpi=100)
+
+plot_rate(
+    rate=rate_f_force,
+    time_av_rate=time_av_rate_f_force,                                                               
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates_f_force.png'),
+    title='Discrete finite-time, periodic forcing rates',
+)
+plot_reactiveness(
+    reac_norm_factor=reac_norm_factor_f_force,
+    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_f_force.png'),
+    title='Discrete finite-time, periodic forcing reactiveness',
 )
 
