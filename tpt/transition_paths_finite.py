@@ -277,8 +277,8 @@ class transitions_finite_time:
         rate[1, 0] = np.nan
         
         time_av_rate = np.zeros(2)
-        time_av_rate[0] = sum(rate[0][:self._N-1])/(self._N-1)
-        time_av_rate[1] = sum(rate[1][1:])/(self._N-1)
+        time_av_rate[0] = sum(rate[0][:self._N-1])/(self._N)
+        time_av_rate[1] = sum(rate[1][1:])/(self._N)
        
         self._rate = rate
         self._time_av_rate = time_av_rate
