@@ -62,22 +62,15 @@ L[4, 3] =  0.05
 # K: 0-rowsum matrix
 # L+T+K transition matrix where A and B are less metastable
 K = np.zeros((S, S))
-K[0, 0] = -0.6
-K[0, 1] =  0.3
-K[0, 3] =  0.3
-K[4, 1] =  0.3
-K[4, 3] =  0.3
-K[4, 4] = -0.6
+K[0, 0] = -0.2
+K[0, 1] =  0.05
+K[0, 3] =  0.15
+K[4, 1] =  0.05
+K[4, 3] =  0.15
+K[4, 4] = -0.2
 
 np.save(os.path.join(my_path, 'data/small_network_states.npy'), states)
 np.save(os.path.join(my_path, 'data/small_network_pos.npy'), pos)
 np.save(os.path.join(my_path, 'data/small_network_T.npy'), T)
 np.save(os.path.join(my_path, 'data/small_network_L.npy'), L)
 np.save(os.path.join(my_path, 'data/small_network_K.npy'), K)
-
-# slower transition matrix
-#
-#factor = 0.5
-#T_new = factor*T + (1-factor)*np.diag(np.ones(5))
-#
-#T_p_new = factor*T_p

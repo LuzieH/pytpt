@@ -56,8 +56,11 @@ ind_B = np.array([4])
 
 # TPT ergodic, infinite-time
 
+# transition matrix
+P = T + L
+
 # instantiate
-small = tp.transitions_mcs(T + L, ind_A, ind_B, ind_C)
+small = tp.transitions_mcs(P, ind_A, ind_B, ind_C)
 stat_dens = small.stationary_density()
 
 # compute committor probabilities
@@ -78,7 +81,6 @@ rate = small.transition_rate()  # AB discrete transition rate
 M = 6  # 6 size of period
 
 # transition matrix at time k
-
 def P_p(k):
     # varies the transition matrices periodically, by weighting the added
     # matrix L with weights 1..0..-1.. over one period
@@ -105,11 +107,11 @@ norm_reac_dens_p = small_periodic.norm_reac_density()
 
 # transition matrix at time n
 def P_hom(n):
-    return T + L
+    return P
 
 # initial density
 init_dens_small = stat_dens
-N = 6  # size of time interval
+N = 10  # size of time interval
 
 # instantiate
 small_finite = tpf.transitions_finite_time(
@@ -130,21 +132,27 @@ norm_reac_dens_f = small_finite.norm_reac_density()
 
 
 # TPT finite time, time-inhomogeneous
+# size of time interval
+N_inhom = 10  
 
 # transition matrix at time n
 def P_inhom(n):
-    if (n == 4 or n == 5): 
-        return T + L + K
+    if n in [0, 1, 2, 7, 8, 9]: 
+        return P - K/3
+    elif n in [3, 6]:
+        return P
     else:
-        return T + L
+        return P + K
+
+def P_inhom_p(n):
+    return P + np.sin(n*2.*np.pi/N_inhom)*K
 
 # initial density
 init_dens_small_inhom = stat_dens
-N_inhom = 10  # size of time interval
 
 # instantiate
 small_inhom = tpf.transitions_finite_time(
-    P_inhom,
+    P_inhom_p,
     N_inhom,
     ind_A,
     ind_B,
@@ -188,6 +196,9 @@ for n in np.arange(1, N_max + 1):
     [q_f_ex, q_b_ex] = small_finite_ex.committor()
     q_f_conv[n-1, :] = q_f_ex[n, :]
     q_b_conv[n-1, :] = q_b_ex[n, :]
+
+print(time_av_rate_f)
+print(time_av_rate_inhom)
 
 # TODO store the transition statistics in data
 # idea1: 
@@ -276,7 +287,7 @@ charts_path = os.path.join(my_path, 'charts')
 example_name = 'small_network'
 
 # plotting results for ergodic, infinite-time case
-graphs = [nx.Graph(T+L)]
+graphs = [nx.Graph(P)]
 
 plot_density(
     data=np.array([stat_dens]),
@@ -466,7 +477,7 @@ plot_reactiveness(
 
 
 # plotting results for finite-time, time-inhomogeneous case
-graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)] 
+graphs_inhom = [nx.Graph(P_inhom_p(n)) for n in np.arange(N_inhom)] 
 subtitles_inhom = np.array(['n = ' + str(n) for n in np.arange(N_inhom)])
 
 plot_density(
