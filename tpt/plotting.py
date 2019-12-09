@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+from matplotlib.colors import Normalize
 import networkx as nx
 
 
@@ -26,6 +28,11 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
     file_path:                                                                                     
         bla                                                                                        
     """                                                                                            
+    #fig[0].colorbar(
+    #    im,
+    #    orientation='vertical',
+    #    shrink=0.8,
+    #)
                                                                                                    
     num_plots = len(graphs)                                                                        
     size = (2*num_plots, 2)                                                                        
@@ -226,6 +233,94 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
     ax.yaxis.set_ticks_position('left')                                                                
     ax.xaxis.set_ticks_position('bottom')                                                              
 
+    fig.savefig(file_path, dpi=100)  
+
+
+def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
+                                   file_path, title, subtitles=None):
+    number_of_plots = 4 
+    size = (4*number_of_plots, 3) 
+    fig, ax = plt.subplots(
+        nrows=1,
+        ncols=number_of_plots,
+        sharex='col',
+        sharey='row',
+        figsize=size,
+    )
+    plt.title(title)                                                                                   
+
+    # compute mesh grid
+    delta = 0.01
+    x = np.arange(-2.0, 2.0 + delta, delta)
+    y = np.arange(-1.0, 2.0 + delta, delta)
+    X, Y = np.meshgrid(x, y)
+    
+    # compute potential on the grid
+    potential = potential(X, Y) 
+
+    im = ax[0].imshow(
+        potential,
+        origin='lower',
+        extent=[-2, 2, -1, 2],
+        vmax=abs(potential).max(),
+        vmin=abs(potential).min(),
+    )
+    ax[0].title.set_text(subtitles[0])
+    
+    # make grid coarser
+    factor = 20
+    X, Y = np.meshgrid(x[::factor], y[::factor])
+    
+    # compute gradient/forced gradient on the grid
+    U, V = vector_field(X, Y) 
+    U_forced_0, V_forced_0 = vector_field_forced(X, Y, 0) 
+    U_forced_3, V_forced_3 = vector_field_forced(X, Y, 3) 
+
+    norm = np.linalg.norm(np.array([U, V]), axis=0)
+    norm_forced_0 = np.linalg.norm(np.array([U_forced_0, V_forced_0]), axis=0)
+    norm_forced_3 = np.linalg.norm(np.array([U_forced_3, V_forced_3]), axis=0)
+    
+    U_norm = U/norm
+    U_forced_0_norm = U_forced_0/norm_forced_0
+    U_forced_3_norm = U_forced_3/norm_forced_3
+    V_norm = V/norm
+    V_forced_0_norm = V_forced_0/norm_forced_0
+    V_forced_3_norm = V_forced_3/norm_forced_3
+
+    ax[1].quiver(
+        X,
+        Y,
+        U_norm,
+        V_norm,
+        norm,
+        cmap='coolwarm',
+        width=0.02,
+        scale=25, 
+    )             
+    ax[1].title.set_text(subtitles[1])
+    ax[2].quiver(
+        X,
+        Y,
+        U_forced_0_norm,
+        V_forced_0_norm,
+        norm_forced_0,
+        cmap='coolwarm',
+        width=0.02,
+        scale=25, 
+    )             
+    ax[2].title.set_text(subtitles[2])
+    ax[3].quiver(
+        X,
+        Y,
+        U_forced_3_norm,
+        V_forced_3_norm,
+        norm_forced_3,
+        cmap='coolwarm',
+        width=0.02,
+        scale=25, 
+    )             
+    ax[3].title.set_text(subtitles[3])
+    
     fig.savefig(file_path, dpi=100)  
 
 

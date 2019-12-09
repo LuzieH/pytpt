@@ -1,5 +1,7 @@
-import numpy as np
 import transition_matrix_from_samples as tms
+from plotting import plot_3well_potential_and_force
+
+import numpy as np
 
 import os.path
 
@@ -7,18 +9,43 @@ my_path = os.path.abspath(os.path.dirname(__file__))
 
 
 ##############################################################################
-#triple well in 2D, energy landscape V and gradient dV
+#triple well in 2D energy landscape V and gradient dV
 
-factor=0.25
+factor = 0.25
 V_param = lambda x,y,p: -1 * factor*(3*np.exp(-x**2-(y-(1./3))**2) - p*np.exp(-x**2-(y-(5./3))**2) - 5*np.exp(-(x-1)**2-y**2) - 5*np.exp(-(x+1)**2-y**2)  + 0.2*(x**4) + 0.2*(y-1./3)**4)
-
-V0 = lambda x,y: V_param(x,y,3)
 
 dV_param_x = lambda x,y,p: -1 * factor*((-2*3*x)*np.exp(-x**2-(y-(1./3))**2) +(p*2*x)*np.exp(-x**2-(y-(5./3))**2) + (10*(x-1))*np.exp(-(x-1)**2-y**2) + (10*(x+1))*np.exp(-(x+1)**2-y**2)  + 0.8*(x**3))
 dV_param_y = lambda x,y,p: -1 * factor*((-2*3*(y-1./3))*np.exp(-x**2-(y-(1./3))**2) + (p*2*(y-(5./3)))*np.exp(-x**2-(y-(5./3))**2) + (10*y)*np.exp(-(x-1)**2-y**2) + (10*y)*np.exp(-(x+1)**2-y**2)  + 0.8*(y-1./3)**3)
 
-dV0 = lambda x,y: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)])
+V0 = lambda x,y: V_param(x,y,3)
+dV0 = lambda x,y: np.array([dV_param_x(x,y,3), dV_param_y(x,y,3)])
 
+
+##############################################################################
+#triple well in 2D gradient dV plus circular forcing
+M=6 #length of period
+
+#forcing is the vector field sin(t)*f[(-y,x)], where f applies some convolution, such that 
+factor_forced = 1.2
+dV_forced = lambda x,y,m: np.array([dV_param_x(x,y,3), dV_param_y(x,y,3)]) + factor_forced*np.cos(m*2.*np.pi/M)* np.array([-y, x])
+
+charts_path = os.path.join(my_path, 'charts')
+example_name = 'triplewell'
+title = 'Triple well Potential and Force'
+subtitles=[
+    '$V(x, y)$',
+    r'$\nabla V(x, y)$', 
+    r'$\nabla V(x, y) + F(0, x, y)$', 
+    r'$\nabla V(x, y) + F(3, x, y)$', 
+]
+plot_3well_potential_and_force(
+    potential=V0,
+    vector_field=dV0,
+    vector_field_forced=dV_forced,
+    file_path=os.path.join(charts_path, example_name + '_' + 'potential_and_vector_field.png'),
+    title=title,
+    subtitles=subtitles,
+)
 
 ##############################################################################
 #count matrix (triple well, no extra forcing)
@@ -50,11 +77,6 @@ T=tms.transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y, dim)
 
 ############################################################################
 #transition matrix for triple well plus circular forcing
-M=6 #length of period
-
-#forcing is the vector field sin(t)*f[(-y,x)], where f applies some convolution, such that 
-factor_forced=1.2
-dV_forced = lambda x,y,m: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)]) +factor_forced*np.cos(m*2.*np.pi/M)* np.array([-y,x])
 
 T_m =np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
