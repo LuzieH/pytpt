@@ -4,6 +4,7 @@ import matplotlib.cm as cm
 from matplotlib.colors import Normalize
 import networkx as nx
 
+VIRIDIS = cm.get_cmap('viridis', 12) 
 
 def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, title, subtitles=None):               
     # TODO document method                                                                         
@@ -28,14 +29,13 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
     file_path:                                                                                     
         bla                                                                                        
     """                                                                                            
-    #fig[0].colorbar(
-    #    im,
-    #    orientation='vertical',
-    #    shrink=0.8,
-    #)
                                                                                                    
-    num_plots = len(graphs)                                                                        
-    size = (2*num_plots, 2)                                                                        
+    num_plots = len(graphs)
+    width_plot = 2
+    height_plot = 2
+    width_colorbar = 0.5
+    size = (width_plot*num_plots, height_plot)                                                                        
+    #size = (width_plot*num_plots + width_colorbar, height_plot)                                                                        
                                                                                                    
     fig, ax = plt.subplots(1, num_plots, sharex='col',                                             
                            sharey='row', figsize=size)                                             
@@ -43,10 +43,22 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
         ax = [ax]                                                                                  
     for i in range(num_plots):                                                                     
         nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i],                             
-                ax=ax[i], vmin=v_min, vmax=v_max)                                                  
+                cmap=VIRIDIS, ax=ax[i], vmin=v_min, vmax=v_max)                                                  
         if subtitles is not None:                                                                  
             ax[i].set_title(subtitles[i])                                                          
-                                                                                                   
+
+    sm = plt.cm.ScalarMappable(
+        cmap=VIRIDIS,
+        norm=plt.Normalize(vmin=v_min, vmax=v_max)
+    )
+    #sm._A = []
+    #fig.colorbar(
+    #    sm,
+    #    ax=ax[:],
+    #    orientation='vertical',
+    #    pad=0.05,
+    #    shrink=0.8,
+    #)
     fig.suptitle(title)                                                                            
     fig.subplots_adjust(top=0.8)                                                                   
     fig.savefig(file_path, dpi=100)  
@@ -261,9 +273,10 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
     im = ax[0].imshow(
         potential,
         origin='lower',
+        cmap=VIRIDIS,
         extent=[-2, 2, -1, 2],
-        vmax=abs(potential).max(),
         vmin=abs(potential).min(),
+        vmax=abs(potential).max(),
     )
     ax[0].title.set_text(subtitles[0])
     
@@ -293,7 +306,7 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
         U_norm,
         V_norm,
         norm,
-        cmap='coolwarm',
+        cmap=VIRIDIS,
         width=0.02,
         scale=25, 
     )             
@@ -304,7 +317,7 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
         U_forced_0_norm,
         V_forced_0_norm,
         norm_forced_0,
-        cmap='coolwarm',
+        cmap=VIRIDIS,
         width=0.02,
         scale=25, 
     )             
@@ -315,12 +328,41 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
         U_forced_3_norm,
         V_forced_3_norm,
         norm_forced_3,
-        cmap='coolwarm',
+        cmap=VIRIDIS,
         width=0.02,
         scale=25, 
     )             
     ax[3].title.set_text(subtitles[3])
     
+    vmin = min([
+        np.min(potential),
+        np.min(norm),
+        np.min(norm_forced_0),
+        np.min(norm_forced_3),
+    ])
+    vmax = max([
+        np.max(potential),
+        np.max(norm),
+        np.max(norm_forced_0),
+        np.max(norm_forced_3),
+    ])
+    
+    # set scalar mappable for the colorbar
+    norm_wrt_potential = plt.Normalize(
+        vmin=vmin,
+        vmax=vmax,
+    )
+    sm = plt.cm.ScalarMappable(cmap=VIRIDIS, norm=norm_wrt_potential)
+    sm._A = []
+    
+    # add colorbar
+    fig.colorbar(
+        sm,
+        ax=ax[:],
+        orientation='vertical',
+        pad=0.03,
+    )
+
     fig.savefig(file_path, dpi=100)  
 
 
