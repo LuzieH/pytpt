@@ -236,12 +236,12 @@ plot_rate(
     rate=rate_p,
     time_av_rate=time_av_rate_p,                                                               
     file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.png'),
-    title='Discrete periodic, time-homogeneous rates',
+    title='Discrete periodic rates',
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_p,
     file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_p.png'),
-    title='Discrete periodic, time-homogeneous reactiveness',
+    title='Discrete periodic reactiveness',
 )
 ######################################################## plots finite-time
 

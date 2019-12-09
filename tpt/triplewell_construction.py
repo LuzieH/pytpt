@@ -77,6 +77,14 @@ T=tms.transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y, dim)
 
 ############################################################################
 #transition matrix for triple well plus circular forcing
+<<<<<<< Updated upstream
+=======
+M=6 #length of period
+
+#forcing is the vector field sin(t)*f[(-y,x)], where f applies some convolution, such that 
+factor_forced=1.2
+dV_forced = lambda x,y,m: np.array([dV_param_x(x,y,3),dV_param_y(x,y,3)]) +factor_forced*np.cos(m*2.*np.pi/M)* np.array([y,-x])
+>>>>>>> Stashed changes
 
 T_m =np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):

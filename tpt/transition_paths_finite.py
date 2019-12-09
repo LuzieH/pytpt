@@ -120,12 +120,12 @@ class transitions_finite_time:
                 # else: its just zero
 
             # define restricted transition matrices
-            P_CC = self._P(n)[np.ix_(self._ind_C, self._ind_C)]
-            P_CA = self._P(n)[np.ix_(self._ind_A, self._ind_C)]
+            P_CC = self._P(n-1)[np.ix_(self._ind_C, self._ind_C)]
+            P_AC = self._P(n-1)[np.ix_(self._ind_A, self._ind_C)]
 
             # compute backward committor forward in time
             q_b[n, self._ind_C] = d_n_inv*(dens_nmin1[self._ind_C]*q_b[n-1, self._ind_C]).dot(P_CC) \
-                + d_n_inv*dens_nmin1[self._ind_A].dot(P_CA)
+                + d_n_inv*dens_nmin1[self._ind_A].dot(P_AC)
 
             # backward committor is 1 on A, 0 on B
             q_b[n, self._ind_A] = 1
