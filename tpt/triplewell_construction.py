@@ -34,9 +34,9 @@ example_name = 'triplewell'
 title = 'Triple well Potential and Force'
 subtitles=[
     '$V(x, y)$',
-    r'$\nabla V(x, y)$', 
-    r'$\nabla V(x, y) + F(0, x, y)$', 
-    r'$\nabla V(x, y) + F(3, x, y)$', 
+    r'$-\nabla V(x, y)$', 
+    r'$-\nabla V(x, y) + F(0, x, y)$', 
+    r'$-\nabla V(x, y) + F(3, x, y)$', 
 ]
 plot_3well_potential_and_force(
     potential=V0,
