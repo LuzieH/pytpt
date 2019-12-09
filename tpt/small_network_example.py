@@ -145,7 +145,11 @@ def P_inhom(n):
         return P + K
 
 def P_inhom_p(n):
-    return P + np.sin(n*2.*np.pi/N_inhom)*K
+    if np.mod(n,2)==0:
+        return P + K# np.sin(n*2.*np.pi/N_inhom)*K
+    else: 
+        return P - K
+
 
 # initial density
 init_dens_small_inhom = stat_dens
