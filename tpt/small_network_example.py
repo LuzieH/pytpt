@@ -136,7 +136,14 @@ norm_reac_dens_f = small_finite.norm_reac_density()
 N_inhom = 10  
 
 # transition matrix at time n
+
 def P_inhom(n):
+    if np.mod(n,2)==0:
+        return P + K
+    else: 
+        return P - K
+
+def P_inhom_2(n):
     if n in [0, 1, 2, 7, 8, 9]: 
         return P - K/3
     elif n in [3, 6]:
@@ -144,19 +151,15 @@ def P_inhom(n):
     else:
         return P + K
 
-def P_inhom_p(n):
-    if np.mod(n,2)==0:
-        return P + K# np.sin(n*2.*np.pi/N_inhom)*K
-    else: 
-        return P - K
-
+def P_inhom_3(n):
+    return np.sin(n*2.*np.pi/N_inhom)*K
 
 # initial density
 init_dens_small_inhom = stat_dens
 
 # instantiate
 small_inhom = tpf.transitions_finite_time(
-    P_inhom_p,
+    P_inhom,
     N_inhom,
     ind_A,
     ind_B,
@@ -481,7 +484,7 @@ plot_reactiveness(
 
 
 # plotting results for finite-time, time-inhomogeneous case
-graphs_inhom = [nx.Graph(P_inhom_p(n)) for n in np.arange(N_inhom)] 
+graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)] 
 subtitles_inhom = np.array(['n = ' + str(n) for n in np.arange(N_inhom)])
 
 plot_density(
