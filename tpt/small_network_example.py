@@ -204,8 +204,6 @@ for n in np.arange(1, N_max + 1):
     q_f_conv[n-1, :] = q_f_ex[n, :]
     q_b_conv[n-1, :] = q_b_ex[n, :]
 
-print(time_av_rate_f)
-print(time_av_rate_inhom)
 
 # TODO store the transition statistics in data
 # idea1: 
