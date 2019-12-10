@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.colors import Normalize
 import networkx as nx
+from mpl_toolkits.axes_grid1 import AxesGrid
 
 VIRIDIS = cm.get_cmap('viridis', 12) 
 
@@ -366,43 +367,69 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
     fig.savefig(file_path, dpi=100)  
 
 
+
+
+
 def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashape, extent, timeframe, size,title, subtitles=None):
     # TODO document method
     
-    fig, ax = plt.subplots(1, timeframe, sharex='col',
-                           sharey='row', figsize=size)
-    if timeframe == 1:
-        ax=[ax]
+    fig = plt.figure(figsize=size)
+    grid = AxesGrid(fig, 111,
+                nrows_ncols=(1, timeframe),
+                axes_pad=0.13,
+                cbar_mode='single',
+                cbar_location='right',
+                cbar_pad=0.1
+                )    
+    
+    #if timeframe == 1:
+     #   ax=[ax]
        # if np.isnan(eff_vectors_unit).all()==False: #if not all values are nan
         #    plt.imshow(background.reshape(datashape), cmap='Greys', alpha=.4, ax=ax, origin='lower', extent=extent)
          #   plt.quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm', width=0.02, scale=25)    
- 
-    for i in range(timeframe):
+    i=0
+    for ax in grid:
         if np.isnan(eff_vectors_unit[i,:,:]).all()==False: #if not all values are nan
-            ax[i].imshow(background.reshape(datashape), cmap='Greys', alpha=.4, origin='lower', extent=extent)
-            ax[i].quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap='coolwarm', width=0.02, scale=25)             
+            ax.imshow(background.reshape(datashape), cmap='Greys', alpha=.4, origin='lower', extent=extent)
+            im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap='coolwarm', width=0.02, scale=25)             
         if subtitles is not None:
-            ax[i].set_title(subtitles[i])  
+            ax.set_title(subtitles[i])  
+        i = i + 1
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
+    cbar = ax.cax.colorbar(im)
+    cbar = grid.cbar_axes[0].colorbar(im)
     return fig
-
 
 
 def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, title, subtitles=None):
     # TODO document method
     
-    fig, ax = plt.subplots(1, timeframe, sharex='col',
-                           sharey='row', figsize=size)
-    if timeframe == 1:
-        ax=[ax]
+    fig = plt.figure(figsize=size)
 
-    for i in range(timeframe):
+    grid = AxesGrid(fig, 111,
+                nrows_ncols=(1, timeframe),
+                axes_pad=0.13,
+                cbar_mode='single',
+                cbar_location='right',
+                cbar_pad=0.1
+                )
+    
+ 
+    #if timeframe == 1:
+     #   ax=[ax]
+    i=0
+    for ax in grid: #i in range(timeframe):
         if np.isnan(data[i,:]).all()==False: #if not all values are nan
-            ax[i].imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', extent=extent)
+            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', extent=extent)
         if subtitles is not None:
-            ax[i].set_title(subtitles[i])  
+            ax.set_title(subtitles[i])  
+        i = i + 1
             
     fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
+    cbar = ax.cax.colorbar(im)
+    cbar = grid.cbar_axes[0].colorbar(im)
+
+   # fig.colorbar(im, ax=ax[:], shrink=0.95)
     return fig
