@@ -26,7 +26,7 @@ dV0 = lambda x,y: np.array([dV_param_x(x,y,3), dV_param_y(x,y,3)])
 M=6 #length of period
 
 #forcing is the vector field sin(t)*f[(-y,x)], where f applies some convolution, such that 
-factor_forced = 1.2
+factor_forced = 1.4
 dV_forced = lambda x,y,m: np.array([dV_param_x(x,y,3), dV_param_y(x,y,3)]) + factor_forced*np.cos(m*2.*np.pi/M)* np.array([-y, x])
 
 charts_path = os.path.join(my_path, 'charts')
