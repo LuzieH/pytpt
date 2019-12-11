@@ -370,7 +370,7 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
 
 
 
-def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashape, extent, timeframe, size,title, subtitles=None):
+def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashape, extent, timeframe, size,titles):
     # TODO document method
     
     fig = plt.figure(figsize=size)
@@ -392,17 +392,16 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
         if np.isnan(eff_vectors_unit[i,:,:]).all()==False: #if not all values are nan
             ax.imshow(background.reshape(datashape), cmap='Greys', alpha=.4, origin='lower', extent=extent)
             im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap='coolwarm', width=0.02, scale=25)             
-        if subtitles is not None:
-            ax.set_title(subtitles[i])  
+            ax.set_title(titles[i])  
         i = i + 1
-    fig.suptitle(title)
+    #fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
     cbar = ax.cax.colorbar(im)
     cbar = grid.cbar_axes[0].colorbar(im)
     return fig
 
 
-def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, title, subtitles=None):
+def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles):
     # TODO document method
     
     fig = plt.figure(figsize=size)
@@ -422,11 +421,10 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, title, su
     for ax in grid: #i in range(timeframe):
         if np.isnan(data[i,:]).all()==False: #if not all values are nan
             im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', extent=extent)
-        if subtitles is not None:
-            ax.set_title(subtitles[i])  
+            ax.set_title(titles[i])  
         i = i + 1
             
-    fig.suptitle(title)
+    #fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
     cbar = ax.cax.colorbar(im)
     cbar = grid.cbar_axes[0].colorbar(im)

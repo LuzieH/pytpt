@@ -136,26 +136,26 @@ example_name = 'triplewell'
 data = np.array([stat_dens])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, 'Stationary density')
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\pi$'])
 fig.savefig(os.path.join(charts_path, 'triplewell_dens.png'), dpi=100)
 
 
 data = np.array([q_f])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, '$q^+$')
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$q^+$'])
 fig.savefig(os.path.join(charts_path, 'triplewell_q_f.png'), dpi=100)
 
 data = np.array([q_b])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, '$q^-$')
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$q^-$'])
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b.png'), dpi=100)
 
 data = np.array([norm_reac_dens])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, '$\mu^\mathcal{AB}$')
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\mu^\mathcal{AB}$'])
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens.png'), dpi=100)
 
 #define AB sets
@@ -175,40 +175,40 @@ for i in np.arange(dim_st):
     if colors[i]>0:
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i] 
             
-fig = plot_3well_effcurrent(np.array([eff_vectors_unit]), np.array([colors]), xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), 1, (3*1,3),'$f^+$')
+fig = plot_3well_effcurrent(np.array([eff_vectors_unit]), np.array([colors]), xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), 1, (3*1,3),['$f^+$'])
 fig.savefig(os.path.join(charts_path, 'triplewell_eff.png'), dpi=100)
 
 
 
 ######################################################## plots periodic
 
-subtitles_p = np.array(['m = ' + str(i) for i in np.arange(M)])
+def subtitles_m(quant,M):
+    return np.array([quant.format(str(i)) for i in np.arange(M)])
 
 data = stat_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic stationary density', subtitles = subtitles_p)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$\pi_{}$',M))#Periodic stationary density', subtitles = subtitles_p)
 fig.savefig(os.path.join(charts_path, 'triplewell_dens_p.png'), dpi=100)
 
 
 data = q_f_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic $q^+_m$', subtitles = subtitles_p)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$q^+_{}$',M))
 fig.savefig(os.path.join(charts_path, 'triplewell_q_f_p.png'), dpi=100)
 
 data = q_b_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic $q^-_m$', subtitles = subtitles_p)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$q^-_{}$',M))
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p.png'), dpi=100)
 
 data = norm_reac_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, 'Periodic $\mu_m^\mathcal{AB}$', subtitles = subtitles_p)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max,np.array(['$\mu^\mathcal{AB}_0$','$\mu^\mathcal{AB}_1$','$\mu^\mathcal{AB}_2$','$\mu^\mathcal{AB}_3$','$\mu^\mathcal{AB}_4$','$\mu^\mathcal{AB}_5$'])) 
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100)
-
 
 #define AB sets
 densAB = np.zeros(dim_st)
@@ -228,7 +228,7 @@ for m in np.arange(M):
         if colors_p[m,i]>0:
             eff_vectors_unit_p[m,i,:] = eff_vectors_p[m,i,:]/colors_p[m,i]
             
-fig = plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), M, (3*M,3),'Periodic $f^+_m$', subtitles=subtitles_p)
+fig = plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), M, (3*M,3), subtitles_m('$f^+_{}$',M)) 
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_p.png'), dpi=100)
 
 
@@ -245,31 +245,30 @@ plot_reactiveness(
 )
 ######################################################## plots finite-time
 
-subtitles_f = np.array(['n = ' + str(i) for i in np.arange(N)])
 
 data = dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time density', subtitles = subtitles_f)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, subtitles_m('$\lambda({})$',N))
 fig.savefig(os.path.join(charts_path, 'triplewell_dens_f.png'), dpi=100)
 
 
 data = q_f_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time $q^+(n)$', subtitles = subtitles_f)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, subtitles_m('$q^+({})$',N))
 fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f.png'), dpi=100)
 
 data = q_b_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, 'Finite-time $q^-(n)$', subtitles = subtitles_f)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, subtitles_m('$q^-({})$',N))
 fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100)
 
 data = norm_reac_dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N-2, (3*(N-2),3), v_min, v_max, 'Finite-time $\mu^\mathcal{AB}(n)$', subtitles = subtitles_f[1:N-1])
+fig = plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N-2, (3*(N-2),3), v_min, v_max, np.array(['$\mu^\mathcal{AB}(1)$','$\mu^\mathcal{AB}(2)$','$\mu^\mathcal{AB}(3)$','$\mu^\mathcal{AB}(4)$'])) 
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f.png'), dpi=100)
 
 #calculation the effective vector for each state
@@ -287,7 +286,7 @@ for n in np.arange(N):
             eff_vectors_unit_f[n,i,:] = eff_vectors_f[n,i,:]/colors_f[n,i]
             
 
-fig = plot_3well_effcurrent(eff_vectors_unit_f[:N-1,:,:], colors_f[:N-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N-1, (3*(N-1),3),'Finite-time $f^+(n)$', subtitles=subtitles_f[:N-1])
+fig = plot_3well_effcurrent(eff_vectors_unit_f[:N-1,:,:], colors_f[:N-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N-1, (3*(N-1),3), subtitles_m('$f^+({})$',N-1))
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_f.png'), dpi=100)
 
 plot_rate(
@@ -303,31 +302,29 @@ plot_reactiveness(
 )
 
 ######################################################## plots finite-time, forcing
-subtitles_f_force = np.array(['n = ' + str(i) for i in np.arange(N_force)])
 
 data = dens_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, 'Finite-time periodic forcing density', subtitles = subtitles_f_force)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$\lambda({})$',N_force))
 fig.savefig(os.path.join(charts_path, 'triplewell_dens_f_force.png'), dpi=100)
 
 
 data = q_f_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, 'Finite-time periodic forcing $q^+(n)$', subtitles = subtitles_f_force)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$q^+({})$',N_force))
 fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f_force.png'), dpi=100)
 
 data = q_b_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, 'Finite-time periodic forcing $q^-(n)$', subtitles = subtitles_f_force)
-fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f_force.png'), dpi=100)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$q^-({})$',N_force))
 
 data = norm_reac_dens_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data[1:N_force-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force-2, (3*(N_force-2),3), v_min, v_max, 'Finite-time periodic forcing $\mu^\mathcal{AB}(n)$', subtitles = subtitles_f_force[1:N_force-1])
+fig = plot_3well(data[1:N_force-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force-2, (3*(N_force-2),3), v_min, v_max, np.array(['$\mu^\mathcal{AB}(1)$','$\mu^\mathcal{AB}(2)$','$\mu^\mathcal{AB}(3)$','$\mu^\mathcal{AB}(4)$'])) 
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f_force.png'), dpi=100)
 
 #calculation the effective vector for each state
@@ -345,7 +342,7 @@ for n in np.arange(N_force):
             eff_vectors_unit_f_force[n,i,:] = eff_vectors_f_force[n,i,:]/colors_f_force[n,i]
             
 
-fig = plot_3well_effcurrent(eff_vectors_unit_f_force[:N_force-1,:,:], colors_f_force[:N_force-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N_force-1, (3*(N_force-1),3),'Finite-time periodic forcing $f^+(n)$', subtitles=subtitles_f_force[:N_force-1])
+fig = plot_3well_effcurrent(eff_vectors_unit_f_force[:N_force-1,:,:], colors_f_force[:N_force-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N_force-1, (3*(N_force-1),3), subtitles_m('$f^+({})$',N_force-1))
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_f_force.png'), dpi=100)
 
 plot_rate(
