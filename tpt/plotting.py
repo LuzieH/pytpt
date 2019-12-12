@@ -122,13 +122,17 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
     plt.scatter(                                                                                   
         x=np.arange(timeframes),                                                                   
         y=rate[0, :],                                                                              
-        alpha=0.7,                                                                                 
+        marker='.',
+        color='black',
         label='$k^{A->}$',                                                                         
     )                                                                                              
     plt.scatter(                                                                                   
         x=np.arange(timeframes),                                                                   
         y=rate[1, :],                                                                              
-        alpha=0.7,                                                                                 
+        marker='o',
+        color='black',
+        facecolors='none',
+        edgecolors='black',
         label='$k^{->B}$',                                                                         
     )                                                                                              
     if type(time_av_rate) != type(None):                                                           
@@ -137,7 +141,7 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
             y=time_av_rate[0],                                                                     
             xmin=np.arange(timeframes)[0],                                                         
             xmax=np.arange(timeframes)[-1],                                                        
-            color='r',                                                                             
+            color='black',
             linestyles='dashed',                                                                   
             label='$\hat{k}^{AB}_N$',                                                              
         )                                                                                          
@@ -350,8 +354,8 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
     
     # set scalar mappable for the colorbar
     norm_wrt_potential = plt.Normalize(
-        vmin=vmin,
         vmax=vmax,
+        vmin=vmin,
     )
     sm = plt.cm.ScalarMappable(cmap=VIRIDIS, norm=norm_wrt_potential)
     sm._A = []
