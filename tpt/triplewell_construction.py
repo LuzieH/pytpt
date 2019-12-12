@@ -75,6 +75,9 @@ lag=15 #lag time of transition matrix is lag*dt
 #row stochastic transition matrix
 T=tms.transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y, dim)
 
+#row stochastic transition matrix
+sigma_small = 0.5
+T_small_noise=tms.transitionmatrix_2D(dV0,sigma_small,dt, lag ,Nstep, interval,   x, y, dim)
 ############################################################################
 #transition matrix for triple well plus circular forcing
 
@@ -138,6 +141,7 @@ ind_A = np.argwhere(np.array([set_A_triplewell(grid[:,i],A_center, radius_setAB)
 #
 np.save(os.path.join(my_path, 'data/triplewell_T.npy'), T)
 np.save(os.path.join(my_path, 'data/triplewell_T_m.npy'), T_m)
+np.save(os.path.join(my_path, 'data/triplewell_T_small_noise.npy'), T_small_noise)
 np.save(os.path.join(my_path, 'data/triplewell_interval.npy'), interval)
 np.save(os.path.join(my_path, 'data/triplewell_dx.npy'), dx)
 np.save(os.path.join(my_path, 'data/triplewell_ind_A.npy'), ind_A)
