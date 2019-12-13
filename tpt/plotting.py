@@ -90,7 +90,12 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
                 ]                                                                                  
                 widths[j] = 150*edge_colors[j]                                                     
                                                                                                    
-            nx.draw_networkx_nodes(G_eff, pos, ax=ax[n])                                           
+            nx.draw_networkx_nodes(
+                G_eff,
+                pos,
+                node_color='lightgrey',
+                ax=ax[n],
+            )
             nx.draw_networkx_edges(                                                                
                 G_eff,                                                                             
                 pos,                                                                               
@@ -98,8 +103,8 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
                 arrowsize=10,                                                                      
                 edge_color=edge_colors,                                                            
                 width=widths,                                                                      
-                edge_cmap=plt.cm.Blues,                                                            
-            )                                                                                      
+                edge_cmap=plt.cm.Greys,
+            )
                                                                                                    
             # labels                                                                               
             nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])                           
@@ -130,9 +135,9 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
         x=np.arange(timeframes),                                                                   
         y=rate[1, :],                                                                              
         marker='o',
-        color='black',
-        facecolors='none',
+        #color='black',
         edgecolors='black',
+        facecolors='none',
         label='$k^{->B}$',                                                                         
     )                                                                                              
     if type(time_av_rate) != type(None):                                                           
@@ -184,7 +189,7 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     plt.scatter(
         np.arange(timeframes),
         reac_norm_factor[:],
-        alpha=0.7,
+        color='black',
         label='$\sum_{j \in C} \mu_j^{R}(n)$',
     )
 
@@ -224,17 +229,20 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
 
     plt.yscale(scale_type) 
     plt.plot(
-        np.arange(1, N_max + 1),
-        q_f_conv_error,
-        color='b',
-        alpha=0.5,
+        np.arange(1, N_max + 1)[::2],
+        q_f_conv_error[::2],
+        marker='.',
+        color='black',
+        linestyle='None',
         label='$||q^+ - q^+(0)||_2$',
     )
     plt.plot(
-        np.arange(1, N_max + 1),
-        q_b_conv_error,
-        color='r',
-        alpha=0.5,
+        np.arange(1, N_max + 1)[::2],
+        q_b_conv_error[::2],
+        marker='o',
+        markeredgecolor='black',
+        markerfacecolor='None',
+        linestyle='None',
         label='$||q^- - q^-(0)||_2$',
     )
 
