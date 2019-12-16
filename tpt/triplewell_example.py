@@ -17,6 +17,7 @@ import os.path
 my_path = os.path.abspath(os.path.dirname(__file__))
 T = np.load(os.path.join(my_path, 'data/triplewell_T.npy'))
 T_m = np.load(os.path.join(my_path, 'data/triplewell_T_m.npy'))
+T_small_noise = np.load(os.path.join(my_path, 'data/triplewell_T_small_noise.npy'))
 interval = np.load(os.path.join(my_path, 'data/triplewell_interval.npy'))
 dx = np.load(os.path.join(my_path, 'data/triplewell_dx.npy'))
 ind_A = np.load(os.path.join(my_path, 'data/triplewell_ind_A.npy'))
@@ -104,7 +105,91 @@ norm_reac_dens_f = well3_finite.norm_reac_density()
 
 [rate_f, time_av_rate_f] = well3_finite.transition_rate()
 
+###################################
+# finite time bifurcation analysis 
 
+#finite-time
+
+def Tn_small_noise(n):  
+    return T_small_noise#T_m[np.mod(m,M),:,:].squeeze()
+
+# compute stationary density of triple well with small noise to get initial density
+well3_small_noise = tp.transitions_mcs(T_small_noise, ind_A, ind_B, ind_C)
+stat_dens_small_noise = well3_small_noise.stationary_density()
+
+init_dens_triple_bif = stat_dens_small_noise
+
+N_bif_array = np.array([20,30,40,50,60,70,80])#time window 20-> lower channel only in stat dens, time window 50, lower channel in both
+    
+for N_bif in N_bif_array:
+    
+    # instantiate
+    well3_finite_bif = tpf.transitions_finite_time(Tn_small_noise, N_bif, ind_A, ind_B,  ind_C, init_dens_triple_bif)
+     
+    dens_f_bif = well3_finite_bif.density()
+    [q_f_f_bif, q_b_f_bif] = well3_finite_bif.committor()
+     
+    # normalized reactive density
+    reac_norm_factor_f_bif = well3_finite_bif.reac_norm_factor()
+    norm_reac_dens_f_bif = well3_finite_bif.norm_reac_density()
+    
+    # and reactive currents
+    [current_f_bif, eff_current_f_bif] = well3_finite_bif.reac_current()
+    
+    [rate_f_bif, time_av_rate_f_bif] = well3_finite_bif.transition_rate()
+    
+    ###############################################################
+    #plots bifurcation analysis, small noise
+    
+    
+    data = np.array([dens_f_bif[int(N_bif/2)]])
+    v_min = np.nanmin(data)
+    v_max = np.nanmax(data)
+    fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\pi$('+str(int(N_bif/2))+'), $N=$'+str(N_bif)])
+    fig.savefig(os.path.join(charts_path, 'triplewell_dens_f_bif'+str(N_bif)+'.png'), dpi=100)
+    
+    
+    data = np.array([q_f_f_bif[int(N_bif/2)]])
+    v_min = np.nanmin(data)
+    v_max = np.nanmax(data)
+    fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$q^+$('+str(int(N_bif/2))+'), $N=$'+str(N_bif)])
+    fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f_bif'+str(N_bif)+'.png'), dpi=100)
+    
+    data = np.array([q_b_f_bif[int(N_bif/2)]])
+    v_min = np.nanmin(data)
+    v_max = np.nanmax(data)
+    fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$q^-$('+str(int(N_bif/2))+'), $N=$'+str(N_bif)])
+    fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f_bif'+str(N_bif)+'.png'), dpi=100)
+    
+    data = np.array([norm_reac_dens_f_bif[int(N_bif/2)]])
+    v_min = np.nanmin(data)
+    v_max = np.nanmax(data)
+    fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\mu^\mathcal{AB}$('+str(int(N_bif/2))+'), $N=$'+str(N_bif)])
+    fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f_bif'+str(N_bif)+'.png'), dpi=100)
+    
+    #define AB sets
+    densAB = np.zeros(dim_st)
+    densAB[ind_A]=1
+    densAB[ind_B]=1
+    
+    #calculation the effective vector for each state
+    eff_vectors_f_bif = np.zeros((dim_st, 2))
+    eff_vectors_unit_f_bif = np.zeros((dim_st, 2))
+    colors_f_bif = np.zeros(dim_st)
+    for i in np.arange(dim_st):
+        for j in np.arange(dim_st):
+            eff_vectors_f_bif[i,0] += eff_current_f_bif[int(N_bif/2),i,j] *  (xn[j] - xn[i])  
+            eff_vectors_f_bif[i,1] += eff_current_f_bif[int(N_bif/2),i,j] *  (yn[j] - yn[i])  
+        colors_f_bif[i] = np.linalg.norm(eff_vectors_f_bif[i,:])
+        if colors_f_bif[i]>0:
+            eff_vectors_unit_f_bif[i,:] = eff_vectors_f_bif[i,:]/colors_f_bif[i] 
+                
+    fig = plot_3well_effcurrent(np.array([eff_vectors_unit_f_bif]), np.array([colors_f_bif]), xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), 1, (3*1,3),['$f^+$('+str(int(N_bif/2))+'), $N=$'+str(N_bif)])
+    fig.savefig(os.path.join(charts_path, 'triplewell_eff_f_bif'+str(N_bif)+'.png'), dpi=100)
+    
+
+
+########################################
 #finite-time, periodic forcing
 
 N_force = 6 #time window
@@ -320,6 +405,8 @@ data = q_b_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$q^-({})$',N_force))
+fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f_force.png'), dpi=100)
+
 
 data = norm_reac_dens_f_force
 v_min = np.nanmin(data)
