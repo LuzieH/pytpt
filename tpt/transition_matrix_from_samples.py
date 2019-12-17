@@ -15,7 +15,7 @@ def sample_stat_trajectories_2D(force_function, sigma, dt, steps, limits_x, limi
     return traj
 
 
-def transitionmatrix_2D(force,  sigma, dt, lag, Nstep, interval,  x, y, dim):
+def transitionmatrix_2D(force,  sigma, dt, lag, Nstep, interval,  x, y, dx, dim):
     ''' This function returns a row-stochastic transition matrix by counting transitions of the
     overdamped langevin process dX = F(X) dt + sigma dW, e.g. with F = -dV. The state space is discretized into boxes
     and jumps from each box are counted. 
@@ -42,8 +42,8 @@ def transitionmatrix_2D(force,  sigma, dt, lag, Nstep, interval,  x, y, dim):
     
     for j in range(Nstep):
             for seed in range(states_dim):
-                #todo: if cells are large, need to reweigh with stationary density in each cell
-                current_X = grid[:,seed]
+                # draw uniform sample from grid cell
+                current_X = grid[:,seed] + np.random.uniform(-1,1,size=2)*dx
                 for l in range(lag):
                     new_X = current_X + (force(current_X[0],current_X[1]))*dt + sigma*np.sqrt(dt)*np.random.randn(2)
                     for d in range(dim): #dim=2
