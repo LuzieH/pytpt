@@ -1,5 +1,5 @@
 import transition_matrix_from_samples as tms
-from plotting import plot_3well_potential_and_force
+from plotting import plot_3well_potential, plot_3well_vector_field
 
 import numpy as np
 
@@ -17,13 +17,12 @@ V_param = lambda x,y,p: -1 * factor*(3*np.exp(-x**2-(y-(1./3))**2) - p*np.exp(-x
 dV_param_x = lambda x,y,p: -1 * factor*((-2*3*x)*np.exp(-x**2-(y-(1./3))**2) +(p*2*x)*np.exp(-x**2-(y-(5./3))**2) + (10*(x-1))*np.exp(-(x-1)**2-y**2) + (10*(x+1))*np.exp(-(x+1)**2-y**2)  + 0.8*(x**3))
 dV_param_y = lambda x,y,p: -1 * factor*((-2*3*(y-1./3))*np.exp(-x**2-(y-(1./3))**2) + (p*2*(y-(5./3)))*np.exp(-x**2-(y-(5./3))**2) + (10*y)*np.exp(-(x-1)**2-y**2) + (10*y)*np.exp(-(x+1)**2-y**2)  + 0.8*(y-1./3)**3)
 
-V0 = lambda x,y: V_param(x,y,3)
+V0 = lambda x,y: -1 * V_param(x,y,3)
 dV0 = lambda x,y: np.array([dV_param_x(x,y,3), dV_param_y(x,y,3)])
-
 
 ##############################################################################
 #triple well in 2D gradient dV plus circular forcing
-M=6 #length of period
+M = 6 #length of period
 
 #forcing is the vector field sin(t)*f[(-y,x)], where f applies some convolution, such that 
 factor_forced = 1.4
@@ -31,18 +30,26 @@ dV_forced = lambda x,y,m: np.array([dV_param_x(x,y,3), dV_param_y(x,y,3)]) + fac
 
 charts_path = os.path.join(my_path, 'charts')
 example_name = 'triplewell'
-title = 'Triple well Potential and Force'
+title = 'Triple well Potential'
 subtitles=[
-    '$V(x, y)$',
+    r'$V(x, y)$', 
+]
+plot_3well_potential(
+    potential=V0,
+    file_path=os.path.join(charts_path, example_name + '_' + 'potential.png'),
+    title=title,
+    subtitles=subtitles,
+)
+title = 'Triple well Gradient and Force'
+subtitles=[
     r'$-\nabla V(x, y)$', 
     r'$-\nabla V(x, y) + F(0, x, y)$', 
     r'$-\nabla V(x, y) + F(3, x, y)$', 
 ]
-plot_3well_potential_and_force(
-    potential=V0,
+plot_3well_vector_field(
     vector_field=dV0,
     vector_field_forced=dV_forced,
-    file_path=os.path.join(charts_path, example_name + '_' + 'potential_and_vector_field.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'vector_field.png'),
     title=title,
     subtitles=subtitles,
 )

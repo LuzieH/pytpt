@@ -40,6 +40,13 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
                                                                                                    
     fig, ax = plt.subplots(1, num_plots, sharex='col',                                             
                            sharey='row', figsize=size)                                             
+    grid = AxesGrid(fig, 111,
+                nrows_ncols=(1, num_plots),
+                axes_pad=0.13,
+                cbar_mode='single',
+                cbar_location='right',
+                cbar_pad=0.1
+                )
     if num_plots == 1:                                                                             
         ax = [ax]                                                                                  
     for i in range(num_plots):                                                                     
@@ -62,6 +69,8 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
     #)
     fig.suptitle(title)                                                                            
     fig.subplots_adjust(top=0.8)                                                                   
+    #cbar = ax.cax.colorbar(data[i])
+    #cbar = grid.cbar_axes[0].colorbar(data[i])
     fig.savefig(file_path, dpi=100)  
 
     
@@ -261,20 +270,8 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
     fig.savefig(file_path, dpi=100)  
 
 
-def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
-                                   file_path, title, subtitles=None):
-    number_of_plots = 4 
-    size = (4*number_of_plots, 3) 
-    fig, ax = plt.subplots(
-        nrows=1,
-        ncols=number_of_plots,
-        sharex='col',
-        sharey='row',
-        figsize=size,
-    )
-    plt.title(title)                                                                                   
-
-    # compute mesh grid
+def plot_3well_potential(potential, file_path, title, subtitles=None):
+    # create mesh grid
     delta = 0.01
     x = np.arange(-2.0, 2.0 + delta, delta)
     y = np.arange(-1.0, 2.0 + delta, delta)
@@ -282,20 +279,47 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
     
     # compute potential on the grid
     potential = potential(X, Y) 
+   
+    number_of_plots = 1
+    size = (4*number_of_plots, 3) 
+    fig = plt.figure(figsize=size)
 
-    im = ax[0].imshow(
-        potential,
-        origin='lower',
-        cmap=VIRIDIS,
-        extent=[-2, 2, -1, 2],
-        vmin=abs(potential).min(),
-        vmax=abs(potential).max(),
-    )
-    ax[0].title.set_text(subtitles[0])
+    grid = AxesGrid(
+        fig,
+        rect=111,
+        nrows_ncols=(1, number_of_plots),
+        axes_pad=0.13,
+        cbar_mode='single',
+        cbar_location='right',
+        cbar_pad=0.1,
+    )    
+
+    for i in range(number_of_plots):
+        im = grid[i].imshow(
+            potential,
+            vmin=potential.min(),
+            vmax=potential.max(),
+            origin='lower',
+            extent=[-2, 2, -1, 2],
+        )
+        grid[i].title.set_text(subtitles[i])
     
-    # make grid coarser
-    factor = 20
-    X, Y = np.meshgrid(x[::factor], y[::factor])
+    # add color bar
+    cbar_pot = grid[i].cax.colorbar(im)
+    cbar_pot = grid.cbar_axes[0].colorbar(im)
+    
+    # save figure
+    fig.subplots_adjust(top=0.8)
+    fig.savefig(file_path, dpi=100)  
+
+def plot_3well_vector_field(vector_field, vector_field_forced,
+                                   file_path, title, subtitles=None):
+
+    #create mesh grid 
+    delta = 0.20
+    x = np.arange(-2.0, 2.0 + delta, delta)
+    y = np.arange(-1.0, 2.0 + delta, delta)
+    X, Y = np.meshgrid(x, y)
     
     # compute gradient/forced gradient on the grid
     U, V = vector_field(X, Y) 
@@ -313,69 +337,44 @@ def plot_3well_potential_and_force(potential, vector_field, vector_field_forced,
     V_forced_0_norm = V_forced_0/norm_forced_0
     V_forced_3_norm = V_forced_3/norm_forced_3
 
-    ax[1].quiver(
-        X,
-        Y,
-        U_norm,
-        V_norm,
-        norm,
-        cmap=VIRIDIS,
-        width=0.02,
-        scale=25, 
-    )             
-    ax[1].title.set_text(subtitles[1])
-    ax[2].quiver(
-        X,
-        Y,
-        U_forced_0_norm,
-        V_forced_0_norm,
-        norm_forced_0,
-        cmap=VIRIDIS,
-        width=0.02,
-        scale=25, 
-    )             
-    ax[2].title.set_text(subtitles[2])
-    ax[3].quiver(
-        X,
-        Y,
-        U_forced_3_norm,
-        V_forced_3_norm,
-        norm_forced_3,
-        cmap=VIRIDIS,
-        width=0.02,
-        scale=25, 
-    )             
-    ax[3].title.set_text(subtitles[3])
-    
-    vmin = min([
-        np.min(potential),
-        np.min(norm),
-        np.min(norm_forced_0),
-        np.min(norm_forced_3),
-    ])
-    vmax = max([
-        np.max(potential),
-        np.max(norm),
-        np.max(norm_forced_0),
-        np.max(norm_forced_3),
-    ])
-    
-    # set scalar mappable for the colorbar
-    norm_wrt_potential = plt.Normalize(
-        vmax=vmax,
-        vmin=vmin,
-    )
-    sm = plt.cm.ScalarMappable(cmap=VIRIDIS, norm=norm_wrt_potential)
-    sm._A = []
-    
-    # add colorbar
-    fig.colorbar(
-        sm,
-        ax=ax[:],
-        orientation='vertical',
-        pad=0.03,
-    )
+    Us = [U_norm, U_forced_0_norm, U_forced_3_norm]
+    Vs = [V_norm, V_forced_0_norm, V_forced_3_norm]
+    norms = [norm, norm_forced_0, norm_forced_3]
 
+    number_of_plots = 3 
+    size = (4*number_of_plots, 3) 
+    fig = plt.figure(figsize=size)
+    
+    # create grid
+    grid = AxesGrid(
+        fig,
+        rect=111,
+        nrows_ncols=(1, number_of_plots),
+        axes_pad=0.13,
+        cbar_mode='single',
+        cbar_location='right',
+        cbar_pad=0.1,
+    )    
+
+    for i in range(number_of_plots):
+        im = grid[i].quiver(
+            X,
+            Y,
+            Us[i],
+            Vs[i],
+            norms[i],
+            cmap='coolwarm',
+            width=0.02,
+            scale=25, 
+        )             
+        grid[i].title.set_text(subtitles[i])
+    
+    # add color bar
+    cbar_pot = grid[i].cax.colorbar(im)
+    cbar_pot = grid.cbar_axes[0].colorbar(im)
+
+    # save figure
+    fig.subplots_adjust(top=0.8)
     fig.savefig(file_path, dpi=100)  
 
 
