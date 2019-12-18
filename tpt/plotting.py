@@ -4,6 +4,7 @@ import matplotlib.cm as cm
 from matplotlib.colors import Normalize
 import networkx as nx
 from mpl_toolkits.axes_grid1 import AxesGrid
+from matplotlib.ticker import ScalarFormatter
 
 VIRIDIS = cm.get_cmap('viridis', 12) 
 
@@ -407,7 +408,7 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
         i = i + 1
     #fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
-    sfmt=ticker.ScalarFormatter(useMathText=True) 
+    sfmt=ScalarFormatter(useMathText=True) 
     sfmt.set_powerlimits((0, 0))
     cbar = ax.cax.colorbar(im, format=sfmt)
     cbar = grid.cbar_axes[0].colorbar(im)
@@ -439,7 +440,7 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles):
             
     #fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
-    sfmt=ticker.ScalarFormatter(useMathText=True) 
+    sfmt=ScalarFormatter(useMathText=True) 
     sfmt.set_powerlimits((0, 0))
     cbar = ax.cax.colorbar(im, format=sfmt)#%.0e')
     cbar = grid.cbar_axes[0].colorbar(im)
