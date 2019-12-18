@@ -119,7 +119,7 @@ stat_dens_small_noise = well3_small_noise.stationary_density()
 
 init_dens_triple_bif = stat_dens_small_noise
 
-N_bif_array = np.array([20,40,60, 100, 150])#time window 20-> lower channel only in stat dens, time window 50, lower channel in both
+N_bif_array = np.array([20,30, 40,50, 60, 100, 150, 200])#time window 20-> lower channel only in stat dens, time window 50, lower channel in both
     
 for N_bif in N_bif_array:
     
@@ -222,26 +222,26 @@ data = np.array([stat_dens])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\pi$'])
-fig.savefig(os.path.join(charts_path, 'triplewell_dens.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_dens.png'), dpi=100,bbox_inches='tight')
 
 
 data = np.array([q_f])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$q^+$'])
-fig.savefig(os.path.join(charts_path, 'triplewell_q_f.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_f.png'), dpi=100,bbox_inches='tight')
 
 data = np.array([q_b])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$q^-$'])
-fig.savefig(os.path.join(charts_path, 'triplewell_q_b.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_b.png'), dpi=100,bbox_inches='tight')
 
 data = np.array([norm_reac_dens])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\mu^\mathcal{AB}$'])
-fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens.png'), dpi=100,bbox_inches='tight')
 
 #define AB sets
 densAB = np.zeros(dim_st)
@@ -261,7 +261,7 @@ for i in np.arange(dim_st):
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i] 
             
 fig = plot_3well_effcurrent(np.array([eff_vectors_unit]), np.array([colors]), xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), 1, (3*1,3),['$f^+$'])
-fig.savefig(os.path.join(charts_path, 'triplewell_eff.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_eff.png'), dpi=100,bbox_inches='tight')
 
 
 
@@ -274,26 +274,26 @@ data = stat_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$\pi_{}$',M))#Periodic stationary density', subtitles = subtitles_p)
-fig.savefig(os.path.join(charts_path, 'triplewell_dens_p.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_dens_p.png'), dpi=100,bbox_inches='tight')
 
 
 data = q_f_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$q^+_{}$',M))
-fig.savefig(os.path.join(charts_path, 'triplewell_q_f_p.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_f_p.png'), dpi=100,bbox_inches='tight')
 
 data = q_b_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$q^-_{}$',M))
-fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p.png'), dpi=100,bbox_inches='tight')
 
 data = norm_reac_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max,np.array(['$\mu^\mathcal{AB}_0$','$\mu^\mathcal{AB}_1$','$\mu^\mathcal{AB}_2$','$\mu^\mathcal{AB}_3$','$\mu^\mathcal{AB}_4$','$\mu^\mathcal{AB}_5$'])) 
-fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100,bbox_inches='tight')
 
 #define AB sets
 densAB = np.zeros(dim_st)
@@ -314,7 +314,7 @@ for m in np.arange(M):
             eff_vectors_unit_p[m,i,:] = eff_vectors_p[m,i,:]/colors_p[m,i]
             
 fig = plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), M, (3*M,3), subtitles_m('$f^+_{}$',M)) 
-fig.savefig(os.path.join(charts_path, 'triplewell_eff_p.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_eff_p.png'), dpi=100,bbox_inches='tight')
 
 
 plot_rate(
@@ -335,26 +335,26 @@ data = dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, subtitles_m('$\lambda({})$',N))
-fig.savefig(os.path.join(charts_path, 'triplewell_dens_f.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_dens_f.png'), dpi=100,bbox_inches='tight')
 
 
 data = q_f_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, subtitles_m('$q^+({})$',N))
-fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f.png'), dpi=100,bbox_inches='tight')
 
 data = q_b_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N, (3*N,3), v_min, v_max, subtitles_m('$q^-({})$',N))
-fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100,bbox_inches='tight')
 
 data = norm_reac_dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N-2, (3*(N-2),3), v_min, v_max, np.array(['$\mu^\mathcal{AB}(1)$','$\mu^\mathcal{AB}(2)$','$\mu^\mathcal{AB}(3)$','$\mu^\mathcal{AB}(4)$'])) 
-fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f.png'), dpi=100,bbox_inches='tight')
 
 #calculation the effective vector for each state
 eff_vectors_f = np.zeros((N,dim_st, 2))
@@ -372,7 +372,7 @@ for n in np.arange(N):
             
 
 fig = plot_3well_effcurrent(eff_vectors_unit_f[:N-1,:,:], colors_f[:N-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N-1, (3*(N-1),3), subtitles_m('$f^+({})$',N-1))
-fig.savefig(os.path.join(charts_path, 'triplewell_eff_f.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_eff_f.png',bbox_inches='tight'), dpi=100)
 
 plot_rate(
     rate=rate_f,
@@ -392,27 +392,27 @@ data = dens_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$\lambda({})$',N_force))
-fig.savefig(os.path.join(charts_path, 'triplewell_dens_f_force.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_dens_f_force.png'), dpi=100,bbox_inches='tight')
 
 
 data = q_f_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$q^+({})$',N_force))
-fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f_force.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f_force.png'), dpi=100,bbox_inches='tight')
 
 data = q_b_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$q^-({})$',N_force))
-fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f_force.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f_force.png'), dpi=100,bbox_inches='tight')
 
 
 data = norm_reac_dens_f_force
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data[1:N_force-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force-2, (3*(N_force-2),3), v_min, v_max, np.array(['$\mu^\mathcal{AB}(1)$','$\mu^\mathcal{AB}(2)$','$\mu^\mathcal{AB}(3)$','$\mu^\mathcal{AB}(4)$'])) 
-fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f_force.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f_force.png'), dpi=100,bbox_inches='tight')
 
 #calculation the effective vector for each state
 eff_vectors_f_force = np.zeros((N_force, dim_st, 2))
@@ -430,7 +430,7 @@ for n in np.arange(N_force):
             
 
 fig = plot_3well_effcurrent(eff_vectors_unit_f_force[:N_force-1,:,:], colors_f_force[:N_force-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N_force-1, (3*(N_force-1),3), subtitles_m('$f^+({})$',N_force-1))
-fig.savefig(os.path.join(charts_path, 'triplewell_eff_f_force.png'), dpi=100)
+fig.savefig(os.path.join(charts_path, 'triplewell_eff_f_force.png'), dpi=100,bbox_inches='tight')
 
 plot_rate(
     rate=rate_f_force,

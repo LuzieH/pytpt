@@ -407,7 +407,9 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
         i = i + 1
     #fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
-    cbar = ax.cax.colorbar(im)
+    sfmt=ticker.ScalarFormatter(useMathText=True) 
+    sfmt.set_powerlimits((0, 0))
+    cbar = ax.cax.colorbar(im, format=sfmt)
     cbar = grid.cbar_axes[0].colorbar(im)
     return fig
 
@@ -437,8 +439,14 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles):
             
     #fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
-    cbar = ax.cax.colorbar(im)
+    sfmt=ticker.ScalarFormatter(useMathText=True) 
+    sfmt.set_powerlimits((0, 0))
+    cbar = ax.cax.colorbar(im, format=sfmt)#%.0e')
     cbar = grid.cbar_axes[0].colorbar(im)
-
+   # ticks = np.linspace(np.min(data),np.max(data), 4) 
+    #cb = grid.cbar_axes[0].colorbar(im, ticks=ticks)
+    #cb.ax.set_yticklabels(np.array(['1','2','3','4']))
+#    cb.ax.text(-0.25, 1, r'$\times$10$^{-1}$', va='bottom', ha='left')
    # fig.colorbar(im, ax=ax[:], shrink=0.95)
+ 
     return fig

@@ -83,8 +83,8 @@ lag=15 #lag time of transition matrix is lag*dt
 T=tms.transitionmatrix_2D(dV0,sigma,dt, lag ,Nstep, interval,   x, y,  dx, dim)
 
 #row stochastic transition matrix
-sigma_small = 0.5
-T_small_noise=tms.transitionmatrix_2D(dV0,sigma_small,dt, lag ,Nstep, interval,   x, y, dx, dim)
+sigma_small = 0.3
+T_small_noise=tms.transitionmatrix_2D(dV0,sigma_small,dt, lag ,2*Nstep, interval,   x, y, dx, dim)
 ############################################################################
 #transition matrix for triple well plus circular forcing
 
