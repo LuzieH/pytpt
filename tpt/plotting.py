@@ -451,3 +451,5 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles):
    # fig.colorbar(im, ax=ax[:], shrink=0.95)
  
     return fig
+ 
+
