@@ -129,64 +129,64 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
 
 
 def plot_rate(rate, file_path, title, time_av_rate=None):                                          
-    # TODO document method                                                                         
-    ncol = 2                                                                                       
-    timeframes = len(rate[0])                                                                      
-    fig, ax = plt.subplots(1, 1, figsize=(2*timeframes, 2))                                        
-                                                                                                   
-    plt.scatter(                                                                                   
-        x=np.arange(timeframes),                                                                   
-        y=rate[0, :],                                                                              
+    # TODO document method
+    ncol = 2
+    timeframes = len(rate[0])
+    fig, ax = plt.subplots(1, 1, figsize=(5*timeframes, 5))
+    
+    plt.scatter(
+        x=np.arange(timeframes),
+        y=rate[0, :],
         marker='.',
+        s=20,
         color='black',
-        label='$k^{A->}$',                                                                         
-    )                                                                                              
-    plt.scatter(                                                                                   
-        x=np.arange(timeframes),                                                                   
-        y=rate[1, :],                                                                              
+        label='$k^{A->}$',
+    )
+    plt.scatter(
+        x=np.arange(timeframes),
+        y=rate[1, :],
         marker='o',
-        #color='black',
+        s=20,
         edgecolors='black',
         facecolors='none',
-        label='$k^{->B}$',                                                                         
-    )                                                                                              
-    if type(time_av_rate) != type(None):                                                           
-        ncol = 3                                                                                   
-        ax.hlines(                                                                                 
-            y=time_av_rate[0],                                                                     
-            xmin=np.arange(timeframes)[0],                                                         
-            xmax=np.arange(timeframes)[-1],                                                        
+        label='$k^{->B}$',
+    )
+    if type(time_av_rate) != type(None):
+        ncol = 3
+        ax.hlines(
+            y=time_av_rate[0],
+            xmin=np.arange(timeframes)[0],
+            xmax=np.arange(timeframes)[-1],
             color='black',
-            linestyles='dashed',                                                                   
-            label='$\hat{k}^{AB}_N$',                                                              
-        )                                                                                          
-                                                                                                   
-    # Hide the right and top spines                                                                
-    ax.spines['right'].set_visible(False)                                                          
-    ax.spines['top'].set_visible(False)                                                            
-                                                                                                   
-    # Only show ticks on the left and bottom spines                                                
-    ax.yaxis.set_ticks_position('left')                                                            
-    ax.xaxis.set_ticks_position('bottom')                                                          
-                                                                                                   
-    # add title and legend                                                                         
-    plt.title(title)                                                                               
-    min_rate = np.nanmin([                                                                         
-        np.nanmin(rate[0]),                                                                        
-        np.nanmin(rate[1]),                                                                        
-    ])                                                                                             
-    max_rate = np.nanmax([                                                                         
-        np.nanmax(rate[0]),                                                                        
-        np.nanmax(rate[1]),                                                                        
-    ])                                                                                             
-    plt.ylim(                                                                                      
-        min_rate - (max_rate-min_rate)/4,                                                          
-        max_rate + (max_rate-min_rate)/4,                                                          
-    )                                                                                              
-    plt.xlabel('n')                                                                                
-    plt.ylabel('Discrete rate')                                                                    
-    plt.legend(ncol=ncol)                                                                          
-                                                                                                   
+            #s=20,
+            linestyles='dashed',
+            label='$\hat{k}^{AB}_N$',
+        )
+
+    # add title and legend
+    plt.title(title, fontsize=20)
+    min_rate = np.nanmin([
+        np.nanmin(rate[0]),
+        np.nanmin(rate[1]),
+    ])
+    max_rate = np.nanmax([
+        np.nanmax(rate[0]),
+        np.nanmax(rate[1]),
+    ])
+    plt.ylim(
+        min_rate - (max_rate-min_rate)/4,
+        max_rate + (max_rate-min_rate)/4,
+    )
+    plt.xlabel('n', fontsize=18)
+    plt.ylabel('Discrete rate', fontsize=18)
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.legend(ncol=ncol, fontsize=20)
+    
+    # Hide the right and top spines
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    
     fig.savefig(file_path, dpi=100)
 
 
@@ -194,33 +194,31 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     # TODO document method
     timeframes = len(reac_norm_factor)
 
-    fig, ax = plt.subplots(1, 1, figsize=(2*timeframes, 2))
+    fig, ax = plt.subplots(1, 1, figsize=(5*timeframes, 5))
 
     plt.scatter(
         np.arange(timeframes),
         reac_norm_factor[:],
         color='black',
+        s=20,
         label='$\sum_{j \in C} \mu_j^{R}(n)$',
     )
 
-    # Hide the right and top spines
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-
-    # Only show ticks on the left and bottom spines
-    ax.yaxis.set_ticks_position('left')
-    ax.xaxis.set_ticks_position('bottom')
-
-    plt.title(title)
+    plt.title(title, fontsize=20)
     min_norm_factor = np.nanmin(reac_norm_factor)
     max_norm_factor = np.nanmax(reac_norm_factor)
     plt.ylim(
         min_norm_factor - (max_norm_factor - min_norm_factor)/4,
         max_norm_factor + (max_norm_factor - min_norm_factor)/4,
     )
-    #plt.ylim(-0.002, max_norm_factor*(1+1/10))
-    plt.xlabel('n')
-    plt.legend()
+    plt.xlabel('$n$', fontsize=18)
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.legend(fontsize=20)
+    
+    # Hide the right and top spines
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
 
     fig.savefig(file_path, dpi=100)
 
@@ -230,14 +228,14 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
     assert scale_type in ['linear', 'log', 'symlog', 'logit']
 
     # compute errors 
-    q_f_conv_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)                                  
-    q_b_conv_error = np.linalg.norm(q_b_conv - q_b, ord=2, axis=1)                                  
+    q_f_conv_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)
+    q_b_conv_error = np.linalg.norm(q_b_conv - q_b, ord=2, axis=1)
 
     N_max = len(q_f_conv)
 
-    fig, ax = plt.subplots(1, 1, figsize=(2*6, 5))                                                     
+    fig, ax = plt.subplots(1, 1, figsize=(25, 5))
 
-    plt.yscale(scale_type) 
+    plt.yscale(scale_type)
     plt.plot(
         np.arange(1, N_max + 1)[::2],
         q_f_conv_error[::2],
@@ -256,19 +254,17 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
         label='$||q^- - q^-(0)||_2$',
     )
 
-    plt.title(title)                                                                                   
-    plt.xlabel('$N$')                                                                                  
-    plt.legend(ncol=2)
+    plt.title(title, fontsize=20)
+    plt.xlabel('$N$', fontsize=18)
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.legend(ncol=2, fontsize=15)
 
-    # Hide the right and top spines                                                                    
-    ax.spines['right'].set_visible(False)                                                              
-    ax.spines['top'].set_visible(False)                                                                
-                                                                                                       
-    # Only show ticks on the left and bottom spines                                                    
-    ax.yaxis.set_ticks_position('left')                                                                
-    ax.xaxis.set_ticks_position('bottom')                                                              
+    # Hide the right and top spines
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
 
-    fig.savefig(file_path, dpi=100)  
+    fig.savefig(file_path, dpi=100)
 
 
 def plot_3well_potential(potential, file_path, title, subtitles=None):
