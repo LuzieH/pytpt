@@ -74,7 +74,7 @@ yn=np.reshape(yv,(xdim*ydim,1))
 
 grid = np.squeeze(np.array([xn,yn]))
 
-Nstep=1000 #number of seeds per box for count matrix
+Nstep=5000 #number of seeds per box for count matrix
 sigma=1.0 
 dt=0.02 #dt for Euler Maruyama discretization
 lag=15 #lag time of transition matrix is lag*dt
@@ -92,8 +92,11 @@ T_m =np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
     T_m[m,:,:]= tms.transitionmatrix_2D(lambda x,y : dV_forced(x,y,m) ,sigma,dt, lag ,Nstep, interval,x, y, dx, dim)
 
-
-
+#T_m_small_noise =np.zeros((M, dim_st, dim_st))
+#for m in np.arange(M):
+#    T_m_small_noise[m,:,:]= tms.transitionmatrix_2D(lambda x,y : dV_forced(x,y,m) ,sigma_small,dt, lag ,4*Nstep, interval,x, y, dx, dim)
+#
+#
 
 ##############################################################################
 # defining A and B
@@ -149,6 +152,7 @@ ind_A = np.argwhere(np.array([set_A_triplewell(grid[:,i],A_center, radius_setAB)
 np.save(os.path.join(my_path, 'data/triplewell_T.npy'), T)
 np.save(os.path.join(my_path, 'data/triplewell_T_m.npy'), T_m)
 np.save(os.path.join(my_path, 'data/triplewell_T_small_noise.npy'), T_small_noise)
+#np.save(os.path.join(my_path, 'data/triplewell_T_m_small_noise.npy'), T_m_small_noise)
 np.save(os.path.join(my_path, 'data/triplewell_interval.npy'), interval)
 np.save(os.path.join(my_path, 'data/triplewell_dx.npy'), dx)
 np.save(os.path.join(my_path, 'data/triplewell_ind_A.npy'), ind_A)
