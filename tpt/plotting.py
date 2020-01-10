@@ -8,123 +8,117 @@ from matplotlib.ticker import ScalarFormatter
 
 VIRIDIS = cm.get_cmap('viridis', 12) 
 
-def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, title, subtitles=None):               
-    # TODO document method                                                                         
-    """                                                                                            
-    plots bla bla                                                                                  
-                                                                                                   
-    parameters                                                                                     
-    data : ndarray                                                                                 
-        bla                                                                                        
-    graphs : list                                                                                  
-        bla                                                                                        
-    pos :                                                                                          
-        bla                                                                                        
-    vmin :                                                                                         
-        bla                                                                                        
-    vmax :                                                                                         
-        bla                                                                                        
-    title :                                                                                        
-        bla                                                                                        
-    subtitles :                                                                                    
-        bla                                                                                        
-    file_path:                                                                                     
-        bla                                                                                        
-    """                                                                                            
-                                                                                                   
+def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
+    # TODO document method
+    """
+    plots bla bla
+    
+    parameters
+    data : ndarray
+        bla
+    graphs : list
+        bla
+    pos :
+        bla
+    vmin :
+        bla
+    vmax :
+        bla
+    title :
+        bla
+    subtitles :
+        bla
+    file_path:
+        bla
+    """
+    
     num_plots = len(graphs)
     width_plot = 2
     height_plot = 2
-    width_colorbar = 0.5
-    size = (width_plot*num_plots, height_plot)                                                                        
-    #size = (width_plot*num_plots + width_colorbar, height_plot)                                                                        
-                                                                                                   
-    fig, ax = plt.subplots(1, num_plots, sharex='col',                                             
-                           sharey='row', figsize=size)                                             
-    grid = AxesGrid(fig, 111,
-                nrows_ncols=(1, num_plots),
-                axes_pad=0.13,
-                cbar_mode='single',
-                cbar_location='right',
-                cbar_pad=0.1
-                )
-    if num_plots == 1:                                                                             
-        ax = [ax]                                                                                  
-    for i in range(num_plots):                                                                     
-        nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i],                             
-                cmap=VIRIDIS, ax=ax[i], vmin=v_min, vmax=v_max)                                                  
-        if subtitles is not None:                                                                  
-            ax[i].set_title(subtitles[i])                                                          
-
+    size = (width_plot*num_plots, height_plot)
+    
+    fig, ax = plt.subplots(1, num_plots, sharex='col',
+                           sharey='row', figsize=size)
+    if num_plots == 1:
+        ax = [ax]
+    for i in range(num_plots):
+        nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i],
+                cmap=VIRIDIS, ax=ax[i], vmin=v_min, vmax=v_max)
+        if subtitles is not None:
+            ax[i].set_title(subtitles[i])
+    
     sm = plt.cm.ScalarMappable(
         cmap=VIRIDIS,
         norm=plt.Normalize(vmin=v_min, vmax=v_max)
     )
-    #sm._A = []
-    #fig.colorbar(
-    #    sm,
-    #    ax=ax[:],
-    #    orientation='vertical',
-    #    pad=0.05,
-    #    shrink=0.8,
-    #)
-    fig.suptitle(title)                                                                            
-    fig.subplots_adjust(top=0.8)                                                                   
+    sm._A = []
+    
+    if title is not None:
+        fig.suptitle(title)
+    
+    #fig.subplots_adjust(right=2)
+    fig.subplots_adjust(top=0.8) 
+    #cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
+    #fig.colorbar(sm)
+    #fig.colorbar(sm, cax=cbar_ax)
     #cbar = ax.cax.colorbar(data[i])
     #cbar = grid.cbar_axes[0].colorbar(data[i])
+
     fig.savefig(file_path, dpi=100)  
 
     
-def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path, title, subtitles=None):          
-    # TODO document method                                                                         
-                                                                                                   
-    timeframes = len(weights)                                                                      
-    size = (2*timeframes, 2)                                                                       
-    fig, ax = plt.subplots(1, timeframes, sharex='col',                                            
-                           sharey='row', figsize=size)                                             
-    if timeframes == 1:                                                                            
-        ax = [ax]                                                                                  
-    for n in range(timeframes):                                                                    
-        if not np.isnan(weights[n]).any():                                                         
-            A_eff = (weights[n, :, :] > 0)*1                                                       
-            G_eff = nx.DiGraph(A_eff)                                                              
-            nbr_edges = int(np.sum(A_eff))                                                         
-            edge_colors = np.zeros(nbr_edges)                                                      
-            widths = np.zeros(nbr_edges)                                                           
-                                                                                                   
-            for j in np.arange(nbr_edges):                                                         
-                edge_colors[j] = weights[                                                          
-                    n,                                                                             
-                    np.array(G_eff.edges())[j, 0],                                                 
-                    np.array(G_eff.edges())[j, 1],                                                 
-                ]                                                                                  
-                widths[j] = 150*edge_colors[j]                                                     
-                                                                                                   
+def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
+    # TODO document method
+    
+    timeframes = len(weights)
+    size = (2*timeframes, 2)
+    fig, ax = plt.subplots(1, timeframes, sharex='col',
+                           sharey='row', figsize=size)
+    if timeframes == 1:
+        ax = [ax]
+    for n in range(timeframes):
+        if not np.isnan(weights[n]).any():
+            A_eff = (weights[n, :, :] > 0)*1
+            G_eff = nx.DiGraph(A_eff)
+            nbr_edges = int(np.sum(A_eff))
+            edge_colors = np.zeros(nbr_edges)
+            widths = np.zeros(nbr_edges)
+            
+            for j in np.arange(nbr_edges):
+                edge_colors[j] = weights[
+                    n,
+                    np.array(G_eff.edges())[j, 0],
+                    np.array(G_eff.edges())[j, 1],
+                ]
+                widths[j] = 150*edge_colors[j]
+            
             nx.draw_networkx_nodes(
                 G_eff,
                 pos,
                 node_color='lightgrey',
                 ax=ax[n],
             )
-            nx.draw_networkx_edges(                                                                
-                G_eff,                                                                             
-                pos,                                                                               
-                ax=ax[n],                                                                          
-                arrowsize=10,                                                                      
-                edge_color=edge_colors,                                                            
-                width=widths,                                                                      
+            nx.draw_networkx_edges(
+                G_eff,
+                pos,
+                ax=ax[n],
+                arrowsize=10,
+                edge_color=edge_colors,
+                width=widths,
                 edge_cmap=plt.cm.Greys,
             )
-                                                                                                   
-            # labels                                                                               
-            nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])                           
-            #ax = plt.gca()                                                                        
-            ax[n].set_axis_off()                                                                   
-            if subtitles is not None:                                                              
-                ax[n].set_title(subtitles[n])  # , pad=0)                                          
-                                                                                                   
-    fig.suptitle(title)                                                                            
-    fig.subplots_adjust(top=0.8)                                                                   
+            
+            # labels
+            nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
+            #ax = plt.gca()
+            ax[n].set_axis_off()
+            if subtitles is not None:
+                ax[n].set_title(subtitles[n])
+    
+    if title is not None:
+        fig.suptitle(title)
+    fig.subplots_adjust(top=0.8)
+
     fig.savefig(file_path, dpi=100)
 
 

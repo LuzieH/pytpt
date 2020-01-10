@@ -302,7 +302,7 @@ plot_density(
     v_min=v_min_dens,
     v_max=v_max_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
-    title='Stationary density',
+    subtitles=['$\pi$']
 )
 plot_density(
     data=np.array([q_f]),
@@ -312,7 +312,7 @@ plot_density(
     v_min=v_min_q_f,
     v_max=v_max_q_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
-    title='$q^+$',
+    subtitles=['$q^+$'],
 )
 plot_density(
     data=np.array([q_b]),
@@ -322,7 +322,7 @@ plot_density(
     v_min=v_min_q_b,
     v_max=v_max_q_b,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
-    title='$q^-$',
+    subtitles=['$q^-$'],
 )
 plot_density(
     data=np.array([norm_reac_dens]),
@@ -332,7 +332,7 @@ plot_density(
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
-    title='$\mu^\mathcal{AB}$',
+    subtitles=['$\mu^\mathcal{AB}$'],
 )
 plot_effective_current(
     weights=np.array([eff_current]),
@@ -341,13 +341,12 @@ plot_effective_current(
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
-    title='Effective current $f^+$',
+    subtitles=['$f^+$'],
 )
 
 
 # plotting results for periodic case
 graphs_p = [nx.Graph(P_p(m)) for m in np.arange(M)] 
-subtitles_p = np.array(['m = ' + str(m) for m in np.arange(M)])
 
 plot_density(
     data=stat_dens_p,
@@ -357,8 +356,7 @@ plot_density(
     v_min=v_min_dens,
     v_max=v_max_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'dens_p.png'),
-    title='Periodic stationary density',
-    subtitles=subtitles_p,
+    subtitles=['$\pi_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
     data=q_f_p,
@@ -368,8 +366,7 @@ plot_density(
     v_min=v_min_q_f,
     v_max=v_max_q_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_f_p.png'),
-    title='Periodic $q^+_m$',
-    subtitles=subtitles_p,
+    subtitles=['$q^+_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
     data=q_b_p,
@@ -379,8 +376,7 @@ plot_density(
     v_min=v_min_q_b,
     v_max=v_max_q_b,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_b_p.png'),
-    title='Periodic $q^-_m$',
-    subtitles=subtitles_p,
+    subtitles=['$q^-_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
     data=norm_reac_dens_p,
@@ -390,8 +386,7 @@ plot_density(
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_p.png'),
-    title='Periodic $\mu_m^\mathcal{AB}$',
-    subtitles=subtitles_p,
+    subtitles=['$\mu_' + str(m) + '^\mathcal{AB}$' for m in np.arange(M)]
 )
 plot_effective_current(
     weights=eff_current_p,
@@ -400,8 +395,7 @@ plot_effective_current(
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, example_name + '_' + 'eff_p.png'),
-    title='Periodic effective current $f^+_m$',
-    subtitles=subtitles_p,
+    subtitles=['$f^+_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_rate(
     rate=rate_p,
@@ -412,7 +406,6 @@ plot_rate(
 
 # plotting results for finite-time, time-homogeneous case
 graphs_f = [nx.Graph(P_hom(n)) for n in np.arange(N)] 
-subtitles_f = np.array(['n = ' + str(n) for n in np.arange(N)])
 
 plot_density(
     data=stat_dens_f,
@@ -422,8 +415,7 @@ plot_density(
     v_min=v_min_dens,
     v_max=v_max_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'dens_f.png'),
-    title='Finite-time density',
-    subtitles=subtitles_f,
+    subtitles=['$\pi(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
     data=q_f_f,
@@ -433,8 +425,7 @@ plot_density(
     v_min=v_min_q_f,
     v_max=v_max_q_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_f_f.png'),
-    title='Finite-time $q^+(n)$',
-    subtitles=subtitles_f,
+    subtitles=['$q^+(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
     data=q_b_f,
@@ -444,8 +435,7 @@ plot_density(
     v_min=v_min_q_b,
     v_max=v_max_q_b,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_b_f.png'),
-    title='Finite-time $q^-(n)$',
-    subtitles=subtitles_f,
+    subtitles=['$q^-(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
     data=norm_reac_dens_f[1:N-1],
@@ -455,8 +445,7 @@ plot_density(
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_f.png'),
-    title='Finite-time $\mu^\mathcal{AB}(n)$',
-    subtitles=subtitles_f[1:N-1],
+    subtitles=['$\mu^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N-1)]
 )
 plot_effective_current(
     weights=eff_current_f[:N-1],
@@ -465,8 +454,7 @@ plot_effective_current(
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, example_name + '_' + 'eff_f.png'),
-    title='Finite-time effective current $f^+_m$',
-    subtitles=subtitles_f[:N-1],
+    subtitles=['$f^+(' + str(n) + ')$' for n in np.arange(N-1)]
 )
 plot_rate(
     rate=rate_f,
@@ -483,7 +471,6 @@ plot_reactiveness(
 
 # plotting results for finite-time, time-inhomogeneous case
 graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)] 
-subtitles_inhom = np.array(['n = ' + str(n) for n in np.arange(N_inhom)])
 
 plot_density(
     data=stat_dens_inhom,
@@ -493,8 +480,7 @@ plot_density(
     v_min=v_min_dens,
     v_max=v_max_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'dens_inhom.png'),
-    title='Finite-time density',
-    subtitles=subtitles_inhom,
+    subtitles=['$\lambda(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
     data=q_f_inhom,
@@ -504,8 +490,7 @@ plot_density(
     v_min=v_min_q_f,
     v_max=v_max_q_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_f_inhom.png'),
-    title='Finite-time $q^+(n)$',
-    subtitles=subtitles_inhom,
+    subtitles=['$q^+(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
     data=q_b_inhom,
@@ -515,8 +500,7 @@ plot_density(
     v_min=v_min_q_b,
     v_max=v_max_q_b,
     file_path=os.path.join(charts_path, example_name + '_' + 'q_b_inhom.png'),
-    title='Finite-time $q^-(n)$',
-    subtitles=subtitles_inhom,
+    subtitles=['$q^-(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
     data=norm_reac_dens_inhom[1:N_inhom-1],
@@ -526,8 +510,7 @@ plot_density(
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_inhom.png'),
-    title='Finite-time $\mu^\mathcal{AB}(n)$',
-    subtitles=subtitles_inhom[1:N_inhom-1],
+    subtitles=['$\mu^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N_inhom-1)]
 )
 plot_effective_current(
     weights=eff_current_inhom[:N_inhom-1],
@@ -536,8 +519,7 @@ plot_effective_current(
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
     file_path=os.path.join(charts_path, example_name + '_' + 'eff_inhom.png'),
-    title='Finite-time effective current $f^+_m$',
-    subtitles=subtitles_inhom[:N_inhom-1],
+    subtitles=['$f^+(' + str(n) + ')$' for n in np.arange(N_inhom-1)]
 )
 plot_rate(
     rate=rate_inhom,
