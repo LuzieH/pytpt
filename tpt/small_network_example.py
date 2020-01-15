@@ -111,7 +111,7 @@ def P_hom(n):
 
 # initial density
 init_dens_small = stat_dens
-N = 7  # size of time interval
+N = 5  # size of time interval
 
 # instantiate
 small_finite = tpf.transitions_finite_time(
@@ -133,7 +133,7 @@ norm_reac_dens_f = small_finite.norm_reac_density()
 
 # TPT finite time, time-inhomogeneous
 # size of time interval
-N_inhom = 7 
+N_inhom = 5 
 
 # transition matrix at time n
 
@@ -178,7 +178,6 @@ norm_reac_dens_inhom = small_inhom.norm_reac_density()
 
 # first row, out rate of A, second row in rate for B
 [rate_inhom, time_av_rate_inhom] = small_inhom.transition_rate()
-
 
 # TPT finite time extension to infinite time, convergence analysis
 N_max = 150  # max value of N
