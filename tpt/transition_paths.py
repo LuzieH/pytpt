@@ -42,6 +42,7 @@ class transitions_mcs:
         self._current = None  # reactive current
         self._eff_current = None  # effective reactive current
         self._rate = None  # rate of transitions from A to B
+        self._length = None  # mean transition length from A to B
         self._current_dens = None  # density of the effective current
 
         # compute the stationary density if its not given
@@ -177,6 +178,21 @@ class transitions_mcs:
         self._rate = np.sum(self._current[self._ind_A, :])
         return self._rate
 
+    def mean_transition_length(self):
+        """
+        The mean transition length can be computed as the ration of \
+        the reac_norm_factor and the transition rate.
+        """
+
+        assert self._reac_norm_factor.all() != None, "The normalization factor first needs \
+        to be computed by using the method reac_norm_factor"
+        
+        assert self._rate.all() != None, "The transition rate first needs \
+        to be computed by using the method transition_rate"
+
+        self._length = self._reac_norm_factor/self._rate
+        return self._length
+
     def current_density(self):
         """
         The current density in a node is the sum of effective currents 
@@ -197,4 +213,3 @@ class transitions_mcs:
 # todo future: method to sample realizations -> get reactives densities thereof
 # it's also a check of all the quantities
 # todo: add to github repository
-# todo: switch to python 3

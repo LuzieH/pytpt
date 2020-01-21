@@ -331,7 +331,7 @@ plot_density(
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
-    subtitles=['$\mu^\mathcal{AB}$'],
+    subtitles=['$\hat{\mu}^\mathcal{AB}$'],
 )
 plot_effective_current(
     weights=np.array([eff_current]),
@@ -385,7 +385,7 @@ plot_density(
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_p.png'),
-    subtitles=['$\mu_' + str(m) + '^\mathcal{AB}$' for m in np.arange(M)]
+    subtitles=['$\hat{\mu}_' + str(m) + '^\mathcal{AB}$' for m in np.arange(M)]
 )
 plot_effective_current(
     weights=eff_current_p,
@@ -444,7 +444,7 @@ plot_density(
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_f.png'),
-    subtitles=['$\mu^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N-1)]
+    subtitles=['$\hat{\mu}^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N-1)]
 )
 plot_effective_current(
     weights=eff_current_f[:N-1],
@@ -509,7 +509,7 @@ plot_density(
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_inhom.png'),
-    subtitles=['$\mu^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N_inhom-1)]
+    subtitles=['$\hat{\mu}^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N_inhom-1)]
 )
 plot_effective_current(
     weights=eff_current_inhom[:N_inhom-1],

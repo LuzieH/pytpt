@@ -15,6 +15,7 @@ import os.path
 # load data
  
 my_path = os.path.abspath(os.path.dirname(__file__))
+charts_path = os.path.join(my_path, 'charts')
 T = np.load(os.path.join(my_path, 'data/triplewell_T.npy'))
 T_m = np.load(os.path.join(my_path, 'data/triplewell_T_m.npy'))
 T_small_noise = np.load(os.path.join(my_path, 'data/triplewell_T_small_noise.npy'))
@@ -80,28 +81,7 @@ norm_reac_dens_p = well3_periodic.norm_reac_density()
  
 [rate_p, time_av_rate_p] = well3_periodic.transition_rate()
 
-##############################################################################
-## periodic, small noise
-#M=np.shape(T_m_small_noise)[0]
-#
-#def Tm_small_noise(m): 
-#    return T_m_small_noise[np.mod(m,M),:,:].squeeze()
-#
-## instantiate
-#well3_periodic_small_noise = tpp.transitions_periodic(Tm_small_noise, M, ind_A, ind_B, ind_C)
-#stat_dens_p_small_noise = well3_periodic_small_noise.stationary_density()
-#
-#[q_f_p_small_noise, q_b_p_small_noise] = well3_periodic_small_noise.committor()
-#P_back_m_small_noise = well3_periodic_small_noise.backward_transitions()
-#
-## normalized reactive density
-#reac_norm_factor_p_small_noise = well3_periodic_small_noise.reac_norm_factor()
-#norm_reac_dens_p_small_noise = well3_periodic_small_noise.norm_reac_density()
-#
-## and reactive currents
-#[current_p_small_noise, eff_current_p_small_noise] = well3_periodic_small_noise.reac_current()
-# 
-#[rate_p_small_noise, time_av_rate_p_small_noise] = well3_periodic_small_noise.transition_rate()
+
 ###################################
 #finite-time
 
@@ -187,7 +167,7 @@ for N_bif in N_bif_array:
     data = np.array([norm_reac_dens_f_bif[int(N_bif/2)]])
     v_min = np.nanmin(data)
     v_max = np.nanmax(data)
-    fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\mu^\mathcal{AB}$('+str(int(N_bif/2))+'), $N=$'+str(N_bif)])
+    fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\hat{\mu}^\mathcal{AB}$('+str(int(N_bif/2))+'), $N=$'+str(N_bif)])
     fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f_bif'+str(N_bif)+'.png'), dpi=100,bbox_inches='tight')
     
     #define AB sets
@@ -212,32 +192,7 @@ for N_bif in N_bif_array:
     
 
 
-########################################
-#finite-time, periodic forcing
-
-N_force = 6 #time window
-
-# initial density
-init_dens_triple_force = stat_dens_p[0, :]
-
-# instantiate
-well3_finite_force = tpf.transitions_finite_time(Tm, N_force, ind_A, ind_B,  ind_C, init_dens_triple_force)
- 
-dens_f_force = well3_finite_force.density()
-[q_f_f_force, q_b_f_force] = well3_finite_force.committor()
- 
-# normalized reactive density
-reac_norm_factor_f_force = well3_finite_force.reac_norm_factor()
-norm_reac_dens_f_force = well3_finite_force.norm_reac_density()
-
-# and reactive currents
-[current_f_force, eff_current_f_force] = well3_finite_force.reac_current()
-
-[rate_f_force, time_av_rate_f_force] = well3_finite_force.transition_rate()
-
-charts_path = os.path.join(my_path, 'charts')
-example_name = 'triplewell'
-#############################https://de.overleaf.com/project/5d555a6bdfb42d0001a9dac6################################################
+############################################################################
 ## plots  infinite-time, ergodic
 
 
@@ -263,7 +218,7 @@ fig.savefig(os.path.join(charts_path, 'triplewell_q_b.png'), dpi=100,bbox_inches
 data = np.array([norm_reac_dens])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\mu^\mathcal{AB}$'])
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\hat{\mu}^\mathcal{AB}$'])
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens.png'), dpi=100,bbox_inches='tight')
 
 #define AB sets
@@ -315,7 +270,7 @@ fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p.png'), dpi=100,bbox_inch
 data = norm_reac_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max,np.array(['$\mu^\mathcal{AB}_0$','$\mu^\mathcal{AB}_1$','$\mu^\mathcal{AB}_2$','$\mu^\mathcal{AB}_3$','$\mu^\mathcal{AB}_4$','$\mu^\mathcal{AB}_5$'])) 
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max,np.array(['$\hat{\mu}^\mathcal{AB}_0$','$\hat{\mu}^\mathcal{AB}_1$','$\hat{\mu}^\mathcal{AB}_2$','$\hat{\mu}^\mathcal{AB}_3$','$\hat{\mu}^\mathcal{AB}_4$','$\hat{\mu}^\mathcal{AB}_5$'])) 
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100,bbox_inches='tight')
 
 #define AB sets
@@ -351,69 +306,7 @@ plot_reactiveness(
     file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_p.png'),
     title='Discrete periodic reactiveness',
 )
-######################################################### plots periodic
-#
-#def subtitles_m(quant,M):
-#    return np.array([quant.format(str(i)) for i in np.arange(M)])
-#
-#data = stat_dens_p_small_noise
-#v_min = np.nanmin(data)
-#v_max = np.nanmax(data)
-#fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$\pi_{}$',M))#Periodic stationary density', subtitles = subtitles_p)
-#fig.savefig(os.path.join(charts_path, 'triplewell_dens_p_small_noise.png'), dpi=100,bbox_inches='tight')
-#
-#
-#data = q_f_p_small_noise
-#v_min = np.nanmin(data)
-#v_max = np.nanmax(data)
-#fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$q^+_{}$',M))
-#fig.savefig(os.path.join(charts_path, 'triplewell_q_f_p_small_noise.png'), dpi=100,bbox_inches='tight')
-#
-#data = q_b_p_small_noise
-#v_min = np.nanmin(data)
-#v_max = np.nanmax(data)
-#fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max, subtitles_m('$q^-_{}$',M))
-#fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p_small_noise.png'), dpi=100,bbox_inches='tight')
-#
-#data = norm_reac_dens_p_small_noise
-#v_min = np.nanmin(data)
-#v_max = np.nanmax(data)
-#fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max,np.array(['$\mu^\mathcal{AB}_0$','$\mu^\mathcal{AB}_1$','$\mu^\mathcal{AB}_2$','$\mu^\mathcal{AB}_3$','$\mu^\mathcal{AB}_4$','$\mu^\mathcal{AB}_5$'])) 
-#fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p_small_noise.png'), dpi=100,bbox_inches='tight')
-#
-##define AB sets
-#densAB = np.zeros(dim_st)
-#densAB[ind_A]=1
-#densAB[ind_B]=1
-#
-##calculation the effective vector for each state
-#eff_vectors_p_small_noise = np.zeros((M,dim_st, 2))
-#eff_vectors_unit_p_small_noise = np.zeros((M,dim_st, 2))
-#colors_p_small_noise = np.zeros((M,dim_st))
-#for m in np.arange(M):
-#    for i in np.arange(dim_st):
-#        for j in np.arange(dim_st):
-#            eff_vectors_p_small_noise[m,i,0] += eff_current_p_small_noise[m,i,j] *  (xn[j] - xn[i])  
-#            eff_vectors_p_small_noise[m,i,1] += eff_current_p_small_noise[m,i,j] *  (yn[j] - yn[i])  
-#        colors_p_small_noise[m,i] = np.linalg.norm(eff_vectors_p_small_noise[m,i,:])
-#        if colors_p_small_noise[m,i]>0:
-#            eff_vectors_unit_p_small_noise[m,i,:] = eff_vectors_p_small_noise[m,i,:]/colors_p_small_noise[m,i]
-#            
-#fig = plot_3well_effcurrent(eff_vectors_unit_p_small_noise, colors_p_small_noise, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), M, (3*M,3), subtitles_m('$f^+_{}$',M)) 
-#fig.savefig(os.path.join(charts_path, 'triplewell_eff_p_small_noise.png'), dpi=100,bbox_inches='tight')
-#
-#
-#plot_rate(
-#    rate=rate_p_small_noise,
-#    time_av_rate=time_av_rate_p_small_noise,                                                               
-#    file_path=os.path.join(charts_path, example_name + '_' + 'rates_p_small_noise.png'),
-#    title='Discrete periodic rates',
-#)
-#plot_reactiveness(
-#    reac_norm_factor=reac_norm_factor_p_small_noise,
-#    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_p_small_noise.png'),
-#    title='Discrete periodic reactiveness',
-#)
+
 ######################################################## plots finite-time
 
 
@@ -439,7 +332,7 @@ fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100,bbox_inch
 data = norm_reac_dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N-2, (3*(N-2),3), v_min, v_max, np.array(['$\mu^\mathcal{AB}(1)$','$\mu^\mathcal{AB}(2)$','$\mu^\mathcal{AB}(3)$','$\mu^\mathcal{AB}(4)$'])) 
+fig = plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N-2, (3*(N-2),3), v_min, v_max, np.array(['$\hat{\mu}^\mathcal{AB}(1)$','$\hat{\mu}^\mathcal{AB}(2)$','$\hat{\mu}^\mathcal{AB}(3)$','$\hat{\mu}^\mathcal{AB}(4)$'])) 
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f.png'), dpi=100,bbox_inches='tight')
 
 #calculation the effective vector for each state
@@ -472,61 +365,5 @@ plot_reactiveness(
     title='Discrete finite-time, time-homogeneous reactiveness',
 )
 
-######################################################## plots finite-time, forcing
 
-data = dens_f_force
-v_min = np.nanmin(data)
-v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$\lambda({})$',N_force))
-fig.savefig(os.path.join(charts_path, 'triplewell_dens_f_force.png'), dpi=100,bbox_inches='tight')
-
-
-data = q_f_f_force
-v_min = np.nanmin(data)
-v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$q^+({})$',N_force))
-fig.savefig(os.path.join(charts_path, 'triplewell_q_f_f_force.png'), dpi=100,bbox_inches='tight')
-
-data = q_b_f_force
-v_min = np.nanmin(data)
-v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force, (3*N_force,3), v_min, v_max, subtitles_m('$q^-({})$',N_force))
-fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f_force.png'), dpi=100,bbox_inches='tight')
-
-
-data = norm_reac_dens_f_force
-v_min = np.nanmin(data)
-v_max = np.nanmax(data)
-fig = plot_3well(data[1:N_force-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_force-2, (3*(N_force-2),3), v_min, v_max, np.array(['$\mu^\mathcal{AB}(1)$','$\mu^\mathcal{AB}(2)$','$\mu^\mathcal{AB}(3)$','$\mu^\mathcal{AB}(4)$'])) 
-fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f_force.png'), dpi=100,bbox_inches='tight')
-
-#calculation the effective vector for each state
-eff_vectors_f_force = np.zeros((N_force, dim_st, 2))
-eff_vectors_unit_f_force = np.zeros((N_force, dim_st, 2))
-colors_f_force = np.zeros((N_force, dim_st))
-for n in np.arange(N_force):
-    for i in np.arange(dim_st):
-        for j in np.arange(dim_st):
-            #if np.isnan(eff_current_f[n,i,j])==False:
-            eff_vectors_f_force[n,i,0] += eff_current_f_force[n,i,j] *  (xn[j] - xn[i])  
-            eff_vectors_f_force[n,i,1] += eff_current_f_force[n,i,j] *  (yn[j] - yn[i])  
-        colors_f_force[n,i] = np.linalg.norm(eff_vectors_f_force[n,i,:])
-        if colors_f_force[n,i]>0:
-            eff_vectors_unit_f_force[n,i,:] = eff_vectors_f_force[n,i,:]/colors_f_force[n,i]
-            
-
-fig = plot_3well_effcurrent(eff_vectors_unit_f_force[:N_force-1,:,:], colors_f_force[:N_force-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N_force-1, (3*(N_force-1),3), subtitles_m('$f^+({})$',N_force-1))
-fig.savefig(os.path.join(charts_path, 'triplewell_eff_f_force.png'), dpi=100,bbox_inches='tight')
-
-plot_rate(
-    rate=rate_f_force,
-    time_av_rate=time_av_rate_f_force,                                                               
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates_f_force.png'),
-    title='Discrete finite-time, periodic forcing rates',
-)
-plot_reactiveness(
-    reac_norm_factor=reac_norm_factor_f_force,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_f_force.png'),
-    title='Discrete finite-time, periodic forcing reactiveness',
-)
 

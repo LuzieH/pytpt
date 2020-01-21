@@ -50,6 +50,7 @@ class transitions_finite_time:
         self._current = None  # reactive current
         self._eff_current = None  # effective reactive current
         self._rate = None  # rate of transitions from A to B
+        self._av_length = None  # mean transition length from A to B
         self._time_av_rate = None  # time-averaged rate of transitions from A to B
         self._current_dens = None  # density of the effective current
 
@@ -284,7 +285,23 @@ class transitions_finite_time:
         self._time_av_rate = time_av_rate
         return self._rate, self._time_av_rate
 
+    def mean_transition_length(self):
+        """
+        The mean transition length can be computed as the ration of \
+        the reac_norm_factor and the transition rate.
+        """
 
+        assert self._reac_norm_factor.all() != None, "The normalization factor first needs \
+        to be computed by using the method reac_norm_factor"
+        
+        assert self._rate.all() != None, "The transition rate first needs \
+        to be computed by using the method transition_rate"
+
+        self._av_length = np.nansum(self._reac_norm_factor)/self._time_av_rate[0]
+        
+        return self._av_length
+    
+    
     def current_density(self):
         """
         The current density in a node is the sum of effective currents 
