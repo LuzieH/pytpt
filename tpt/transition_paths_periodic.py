@@ -321,7 +321,7 @@ class transitions_periodic:
         assert self._rate.all() != None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self._av_length = np.nansum(self._reac_norm_factor)/self._time_av_rate[0]
+        self._av_length = np.nansum(self._reac_norm_factor)/np.nansum(self._rate[0,:])
         
         return self._av_length 
 

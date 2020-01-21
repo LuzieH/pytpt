@@ -23,7 +23,6 @@ from matplotlib.ticker import ScalarFormatter
 my_path = os.path.abspath(os.path.dirname(__file__))
 T = np.load(os.path.join(my_path, 'data/triplewell_T.npy'))
 T_small_noise = np.load(os.path.join(my_path, 'data/triplewell_T_small_noise.npy'))
-Tm_small_noise = np.load(os.path.join(my_path, 'data/triplewell_Tm_small_noise.npy'))
 interval = np.load(os.path.join(my_path, 'data/triplewell_interval.npy'))
 dx = np.load(os.path.join(my_path, 'data/triplewell_dx.npy'))
 ind_A = np.load(os.path.join(my_path, 'data/triplewell_ind_A.npy'))
