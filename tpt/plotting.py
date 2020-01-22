@@ -240,11 +240,11 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
     )
 
     if title is not None:
-        plt.title(title, fontsize=20)
-    plt.xlabel('$N$', fontsize=18)
-    plt.xticks(fontsize=15)
-    plt.yticks(fontsize=15)
-    plt.legend(ncol=2, fontsize=15)
+        plt.title(title, fontsize=25)
+    plt.xlabel('$N$', fontsize=25)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.legend(ncol=2, fontsize=20)
 
     # Hide the right and top spines
     ax.spines['right'].set_visible(False)
