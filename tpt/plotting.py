@@ -122,25 +122,25 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
     fig.savefig(file_path, dpi=100)
 
 
-def plot_rate(rate, file_path, title, time_av_rate=None):                                          
+def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}$', time_av_rate=None):                                          
     # TODO document method
     ncol = 2
     timeframes = len(rate[0])
-    fig, ax = plt.subplots(1, 1, figsize=(5*timeframes, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(4*timeframes, 3))
     
     plt.scatter(
         x=np.arange(timeframes),
         y=rate[0, :],
         marker='.',
-        s=20,
+        s=100,
         color='black',
         label='$k^{A->}$',
     )
     plt.scatter(
         x=np.arange(timeframes),
         y=rate[1, :],
-        marker='o',
-        s=20,
+        marker='*',
+        s=100,
         edgecolors='black',
         facecolors='none',
         label='$k^{->B}$',
@@ -154,7 +154,7 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
             color='black',
             #s=20,
             linestyles='dashed',
-            label='$\hat{k}^{AB}_N$',
+            label=average_rate_legend,#'$\hat{k}^{AB}_M$',
         )
 
     # add title and legend
@@ -171,8 +171,8 @@ def plot_rate(rate, file_path, title, time_av_rate=None):
         min_rate - (max_rate-min_rate)/4,
         max_rate + (max_rate-min_rate)/4,
     )
-    plt.xlabel('n', fontsize=18)
-    plt.ylabel('Discrete rate', fontsize=18)
+    plt.xlabel(xlabel, fontsize=18)
+    plt.ylabel('Rate', fontsize=18)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
     plt.legend(ncol=ncol, fontsize=20)
@@ -227,7 +227,7 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
 
     N_max = len(q_f_conv)
 
-    fig, ax = plt.subplots(1, 1, figsize=(25, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(20,3))#(25, 5))
 
     plt.yscale(scale_type)
     plt.plot(
