@@ -47,22 +47,10 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
         if subtitles is not None:
             ax[i].set_title(subtitles[i])
     
-    sm = plt.cm.ScalarMappable(
-        cmap=VIRIDIS,
-        norm=plt.Normalize(vmin=v_min, vmax=v_max)
-    )
-    sm._A = []
-    
     if title is not None:
         fig.suptitle(title)
     
-    #fig.subplots_adjust(right=2)
     fig.subplots_adjust(top=0.8) 
-    #cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
-    #fig.colorbar(sm)
-    #fig.colorbar(sm, cax=cbar_ax)
-    #cbar = ax.cax.colorbar(data[i])
-    #cbar = grid.cbar_axes[0].colorbar(data[i])
 
     fig.savefig(file_path, dpi=100)  
 
@@ -70,13 +58,16 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
 def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
     # TODO document method
     
-    timeframes = len(weights)
-    size = (2*timeframes, 2)
-    fig, ax = plt.subplots(1, timeframes, sharex='col',
+    num_plots = len(weights)
+    width_plot = 2
+    height_plot = 2
+    size = (width_plot*num_plots, height_plot)
+
+    fig, ax = plt.subplots(1, num_plots, sharex='col',
                            sharey='row', figsize=size)
-    if timeframes == 1:
+    if num_plots == 1:
         ax = [ax]
-    for n in range(timeframes):
+    for n in range(num_plots):
         if not np.isnan(weights[n]).any():
             A_eff = (weights[n, :, :] > 0)*1
             G_eff = nx.DiGraph(A_eff)
