@@ -4,6 +4,7 @@ import transition_paths_finite as tpf
 
 from plotting import plot_network_density as plot_density, \
                      plot_network_effective_current as plot_effective_current, \
+                     plot_network_effcurrent_and_rate as plot_effcurrent_and_rate, \
                      plot_rate, \
                      plot_reactiveness, \
                      plot_convergence
@@ -333,8 +334,10 @@ plot_density(
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}^\mathcal{AB}$'],
 )
-plot_effective_current(
+#plot_effective_current(
+plot_effcurrent_and_rate(
     weights=np.array([eff_current]),
+    rates=[rate],
     pos=pos,
     labels=labels,
     v_min=v_min_eff_curr,
@@ -387,8 +390,10 @@ plot_density(
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_p.png'),
     subtitles=['$\hat{\mu}_' + str(m) + '^\mathcal{AB}$' for m in np.arange(M)]
 )
-plot_effective_current(
+#plot_effective_current(
+plot_effcurrent_and_rate(
     weights=eff_current_p,
+    rates=rate_p,
     pos=pos,
     labels=labels,
     v_min=v_min_eff_curr,
@@ -446,8 +451,9 @@ plot_density(
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_f.png'),
     subtitles=['$\hat{\mu}^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N-1)]
 )
-plot_effective_current(
+plot_effcurrent_and_rate(
     weights=eff_current_f[:N-1],
+    rates=rate_f,
     pos=pos,
     labels=labels,
     v_min=v_min_eff_curr,
@@ -511,8 +517,10 @@ plot_density(
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_inhom.png'),
     subtitles=['$\hat{\mu}^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N_inhom-1)]
 )
-plot_effective_current(
+#plot_effective_current(
+plot_effcurrent_and_rate(
     weights=eff_current_inhom[:N_inhom-1],
+    rates=rate_inhom,
     pos=pos,
     labels=labels,
     v_min=v_min_eff_curr,

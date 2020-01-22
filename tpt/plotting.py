@@ -67,14 +67,25 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
                            sharey='row', figsize=size)
     if num_plots == 1:
         ax = [ax]
+
     for n in range(num_plots):
         if not np.isnan(weights[n]).any():
+
+            # graph
             A_eff = (weights[n, :, :] > 0)*1
             G_eff = nx.DiGraph(A_eff)
+            
+            nx.draw_networkx_nodes(
+                G_eff,
+                pos,
+                ax=ax[n],
+                node_color='lightgrey',
+            )
+
+            # edges
             nbr_edges = int(np.sum(A_eff))
             edge_colors = np.zeros(nbr_edges)
             widths = np.zeros(nbr_edges)
-            
             for j in np.arange(nbr_edges):
                 edge_colors[j] = weights[
                     n,
@@ -82,27 +93,92 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
                     np.array(G_eff.edges())[j, 1],
                 ]
                 widths[j] = 150*edge_colors[j]
-            
-            nx.draw_networkx_nodes(
-                G_eff,
-                pos,
-                node_color='lightgrey',
-                ax=ax[n],
-            )
             nx.draw_networkx_edges(
                 G_eff,
                 pos,
                 ax=ax[n],
-                arrowsize=10,
-                edge_color=edge_colors,
                 width=widths,
+                edge_color=edge_colors,
                 edge_cmap=plt.cm.Greys,
+                arrowsize=10,
             )
             
             # labels
             nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
-            #ax = plt.gca()
             ax[n].set_axis_off()
+
+            if subtitles is not None:
+                ax[n].set_title(subtitles[n])
+    
+    if title is not None:
+        fig.suptitle(title)
+    fig.subplots_adjust(top=0.8)
+
+    fig.savefig(file_path, dpi=100)
+
+
+def plot_network_effcurrent_and_rate(weights, rates, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
+    # TODO document method
+    
+    num_plots = len(weights)
+    width_plot = 2
+    height_plot = 2
+    size = (width_plot*num_plots, height_plot)
+
+    fig, ax = plt.subplots(1, num_plots, sharex='col',
+                           sharey='row', figsize=size)
+    if num_plots == 1:
+        ax = [ax]
+
+    for n in range(num_plots):
+        if not np.isnan(weights[n]).any(): 
+
+            # graph
+            A_eff = (weights[n, :, :] > 0)*1
+            G_eff = nx.DiGraph(A_eff)
+            
+            # nodes
+            nx.draw_networkx_nodes(
+                G_eff,
+                pos,
+                nodelist=[1, 2, 3],
+                node_color='lightgrey',
+                ax=ax[n],
+            )
+            nx.draw_networkx_nodes(
+                G_eff,
+                pos,
+                nodelist=[0, 4],
+                node_color=[rates[n][0], rates[n][1]],
+                cmap=VIRIDIS,
+                ax=ax[n],
+            )
+
+            # edges
+            nbr_edges = int(np.sum(A_eff))
+            edge_colors = np.zeros(nbr_edges)
+            widths = np.zeros(nbr_edges)
+            for j in np.arange(nbr_edges):
+                edge_colors[j] = weights[
+                    n,
+                    np.array(G_eff.edges())[j, 0],
+                    np.array(G_eff.edges())[j, 1],
+                ]
+                widths[j] = 150*edge_colors[j]
+            nx.draw_networkx_edges(
+                G_eff,
+                pos,
+                ax=ax[n],
+                width=widths,
+                edge_color=edge_colors,
+                edge_cmap=plt.cm.Greys,
+                arrowsize=10,
+            )
+            
+            # labels
+            nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
+            ax[n].set_axis_off()
+
             if subtitles is not None:
                 ax[n].set_title(subtitles[n])
     
