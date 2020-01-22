@@ -55,10 +55,10 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
     fig.savefig(file_path, dpi=100)  
 
     
-def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
+def plot_network_effective_current(eff_current, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
     # TODO document method
     
-    num_plots = len(weights)
+    num_plots = len(eff_current)
     width_plot = 2
     height_plot = 2
     size = (width_plot*num_plots, height_plot)
@@ -69,10 +69,10 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
         ax = [ax]
 
     for n in range(num_plots):
-        if not np.isnan(weights[n]).any():
+        if not np.isnan(eff_current[n]).any():
 
             # graph
-            A_eff = (weights[n, :, :] > 0)*1
+            A_eff = (eff_current[n, :, :] > 0)*1
             G_eff = nx.DiGraph(A_eff)
             
             nx.draw_networkx_nodes(
@@ -87,7 +87,7 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
             edge_colors = np.zeros(nbr_edges)
             widths = np.zeros(nbr_edges)
             for j in np.arange(nbr_edges):
-                edge_colors[j] = weights[
+                edge_colors[j] = eff_current[
                     n,
                     np.array(G_eff.edges())[j, 0],
                     np.array(G_eff.edges())[j, 1],
@@ -117,10 +117,10 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
     fig.savefig(file_path, dpi=100)
 
 
-def plot_network_effcurrent_and_rate(weights, rates, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
+def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
     # TODO document method
     
-    num_plots = len(weights)
+    num_plots = len(eff_current)
     width_plot = 2
     height_plot = 2
     size = (width_plot*num_plots, height_plot)
@@ -131,10 +131,10 @@ def plot_network_effcurrent_and_rate(weights, rates, pos, labels, v_min, v_max, 
         ax = [ax]
 
     for n in range(num_plots):
-        if not np.isnan(weights[n]).any(): 
+        if not np.isnan(eff_current[n]).any(): 
 
             # graph
-            A_eff = (weights[n, :, :] > 0)*1
+            A_eff = (eff_current[n, :, :] > 0)*1
             G_eff = nx.DiGraph(A_eff)
             
             # nodes
@@ -149,7 +149,7 @@ def plot_network_effcurrent_and_rate(weights, rates, pos, labels, v_min, v_max, 
                 G_eff,
                 pos,
                 nodelist=[0, 4],
-                node_color=[rates[n][0], rates[n][1]],
+                node_color=shifted_rate[n],
                 cmap=VIRIDIS,
                 ax=ax[n],
             )
@@ -159,7 +159,7 @@ def plot_network_effcurrent_and_rate(weights, rates, pos, labels, v_min, v_max, 
             edge_colors = np.zeros(nbr_edges)
             widths = np.zeros(nbr_edges)
             for j in np.arange(nbr_edges):
-                edge_colors[j] = weights[
+                edge_colors[j] = eff_current[
                     n,
                     np.array(G_eff.edges())[j, 0],
                     np.array(G_eff.edges())[j, 1],

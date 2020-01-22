@@ -5,7 +5,7 @@ import os.path
 
 my_path = os.path.abspath(os.path.dirname(__file__))
 
-# classification of the states
+# classification of states
 states = {
     0: 'A',
     1: 'C',
@@ -14,16 +14,26 @@ states = {
     4: 'B',
 }
 
+# labelling of states
+labels = {
+    0: r'$A$',
+    1: '1',
+    2: '2',
+    3: '3',
+    4: r'$B$',
+ }
+
+# position of states
+pos = {
+    0: (0, -1),
+    1: (0, 0),
+    2: (0.5, -0.5),
+    3: (1, -1),
+    4: (1, 0),
+}
+
 # number of states
 S = len(states)
-
-# node positions
-pos = {}
-pos[0] = (0, -1)
-pos[1] = (0, 0)
-pos[2] = (0.5, -0.5)
-pos[3] = (1, -1)
-pos[4] = (1, 0)
 
 # T: symmetric stochastic matrix
 T = np.zeros((S, S))
@@ -74,6 +84,7 @@ K[4, 3] =  0.2
 K[4, 4] = -0.3
 
 np.save(os.path.join(my_path, 'data/small_network_states.npy'), states)
+np.save(os.path.join(my_path, 'data/small_network_labels.npy'), labels)
 np.save(os.path.join(my_path, 'data/small_network_pos.npy'), pos)
 np.save(os.path.join(my_path, 'data/small_network_T.npy'), T)
 np.save(os.path.join(my_path, 'data/small_network_L.npy'), L)

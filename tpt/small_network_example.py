@@ -25,6 +25,11 @@ states = np.load(
     allow_pickle=True, 
 )
 states = states.item()
+labels = np.load(
+    os.path.join(my_path, 'data/small_network_labels.npy'),
+    allow_pickle=True, 
+)
+labels = labels.item()
 pos = np.load(
     os.path.join(my_path, 'data/small_network_pos.npy'),
     allow_pickle=True,
@@ -34,21 +39,7 @@ T = np.load(os.path.join(my_path, 'data/small_network_T.npy'))
 L = np.load(os.path.join(my_path, 'data/small_network_L.npy'))
 K = np.load(os.path.join(my_path, 'data/small_network_K.npy'))
 
-
 S = len(states)
-#labels = {}
-#for s in states.keys():
-#    if states[s] == 'A' or states[s] == 'B':
-#        labels[s] = r'$' + states[s] + '$'
-#    else:
-#        labels[s] = s
-labels = {
-    0: r'$A$',
-    1: '1',
-    2: '2',
-    3: '3',
-    4: r'$B$',
- }
 
 ind_A = np.array([0])
 ind_C = np.arange(1, np.shape(T)[0] - 1)
@@ -334,10 +325,9 @@ plot_density(
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}^\mathcal{AB}$'],
 )
-#plot_effective_current(
 plot_effcurrent_and_rate(
-    weights=np.array([eff_current]),
-    rates=[rate],
+    eff_current=np.array([eff_current]),
+    shifted_rate=[[rate, rate]],
     pos=pos,
     labels=labels,
     v_min=v_min_eff_curr,
@@ -346,9 +336,12 @@ plot_effcurrent_and_rate(
     subtitles=['$f^+$'],
 )
 
-
 # plotting results for periodic case
 graphs_p = [nx.Graph(P_p(m)) for m in np.arange(M)] 
+shifted_rate_p = np.zeros((M, 2))
+shifted_rate_p[:, 0] = rate_p[:, 0]
+shifted_rate_p[:M-1, 1] = rate_p[1:, 1]
+shifted_rate_p[M-1, 1] = rate_p[0, 1]
 
 plot_density(
     data=stat_dens_p,
@@ -390,10 +383,9 @@ plot_density(
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_p.png'),
     subtitles=['$\hat{\mu}_' + str(m) + '^\mathcal{AB}$' for m in np.arange(M)]
 )
-#plot_effective_current(
 plot_effcurrent_and_rate(
-    weights=eff_current_p,
-    rates=rate_p,
+    eff_current=eff_current_p,
+    shifted_rate=shifted_rate_p,
     pos=pos,
     labels=labels,
     v_min=v_min_eff_curr,
@@ -410,6 +402,9 @@ plot_rate(
 
 # plotting results for finite-time, time-homogeneous case
 graphs_f = [nx.Graph(P_hom(n)) for n in np.arange(N)] 
+shifted_rate_f = np.zeros((N-1, 2))
+shifted_rate_f[:, 0] = rate_f[:N-1, 0]
+shifted_rate_f[:, 1] = rate_f[1:, 1]
 
 plot_density(
     data=stat_dens_f,
@@ -452,8 +447,8 @@ plot_density(
     subtitles=['$\hat{\mu}^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N-1)]
 )
 plot_effcurrent_and_rate(
-    weights=eff_current_f[:N-1],
-    rates=rate_f,
+    eff_current=eff_current_f[:N-1],
+    shifted_rate=shifted_rate_f,
     pos=pos,
     labels=labels,
     v_min=v_min_eff_curr,
@@ -476,6 +471,9 @@ plot_reactiveness(
 
 # plotting results for finite-time, time-inhomogeneous case
 graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)] 
+shifted_rate_inhom = np.zeros((N_inhom-1, 2))
+shifted_rate_inhom[:, 0] = rate_inhom[:N_inhom-1, 0]
+shifted_rate_inhom[:, 1] = rate_inhom[1:, 1]
 
 plot_density(
     data=stat_dens_inhom,
@@ -517,10 +515,9 @@ plot_density(
     file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_inhom.png'),
     subtitles=['$\hat{\mu}^\mathcal{AB}(' + str(n) + ')$' for n in np.arange(1, N_inhom-1)]
 )
-#plot_effective_current(
 plot_effcurrent_and_rate(
-    weights=eff_current_inhom[:N_inhom-1],
-    rates=rate_inhom,
+    eff_current=eff_current_inhom[:N_inhom-1],
+    shifted_rate=shifted_rate_inhom,
     pos=pos,
     labels=labels,
     v_min=v_min_eff_curr,
