@@ -267,19 +267,19 @@ class transitions_finite_time:
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
-        rate = np.zeros((2, self._N))
-        rate[0, :self._N-1] = np.sum(
+        rate = np.zeros((self._N, 2))
+        rate[:self._N-1, 0] = np.sum(
             self._current[:self._N-1, self._ind_A, :], axis=(1, 2)
         )
-        rate[0, self._N-1] = np.nan
-        rate[1, 1:] = np.sum(
+        rate[self._N-1, 0] = np.nan
+        rate[1:, 1] = np.sum(
             self._current[:self._N-1, :, self._ind_B], axis=(1, 2)
         )
-        rate[1, 0] = np.nan
+        rate[0, 1] = np.nan
         
         time_av_rate = np.zeros(2)
-        time_av_rate[0] = sum(rate[0][:self._N-1])/(self._N)
-        time_av_rate[1] = sum(rate[1][1:])/(self._N)
+        time_av_rate[0] = sum(rate[:self._N-1][0])/(self._N)
+        time_av_rate[1] = sum(rate[1:][1])/(self._N)
        
         self._rate = rate
         self._time_av_rate = time_av_rate
@@ -297,7 +297,7 @@ class transitions_finite_time:
         assert self._rate.all() != None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self._av_length = np.nansum(self._reac_norm_factor)/np.nansum(self._rate[0,:])
+        self._av_length = np.nansum(self._reac_norm_factor)/np.nansum(self._rate[:, 0])
         
         return self._av_length
     
