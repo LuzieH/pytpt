@@ -294,7 +294,7 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
 
     N_max = len(q_f_conv)
 
-    fig, ax = plt.subplots(1, 1, figsize=(25,4.5))#(25, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(20,5.5))#(25, 5))
 
     plt.yscale(scale_type)
     plt.plot(
