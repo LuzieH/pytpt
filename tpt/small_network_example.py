@@ -399,7 +399,7 @@ plot_effective_current(
 plot_rate(
     rate=rate_p,
     file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.png'),
-    title='Discrete M-periodic rates',xlabel = 'm', average_rate_legend='$\bar{k}^{AB}_M$'
+    title='Discrete M-periodic rates',xlabel = 'm', average_rate_legend=r'$\bar{k}^{AB}_M$'
 )
 
 
@@ -459,7 +459,7 @@ plot_rate(
     rate=rate_f,
     time_av_rate=time_av_rate_f,
     file_path=os.path.join(charts_path, example_name + '_' + 'rates_f.png'),
-    title='Discrete finite-time rates',xlabel = 'n', average_rate_legend='$\bar{k}^{AB}_N$'
+    title='Discrete finite-time rates',xlabel = 'n', average_rate_legend=r'$\bar{k}^{AB}_N$'
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_f,
@@ -524,7 +524,7 @@ plot_rate(
     rate=rate_inhom,
     time_av_rate=time_av_rate_inhom,
     file_path=os.path.join(charts_path, example_name + '_' + 'rates_inhom.png'),
-    title='Discrete finite-time, time-inhomogeneous rates',xlabel = 'N', average_rate_legend='$\bar{k}^{AB}_n$'
+    title='Discrete finite-time, time-inhomogeneous rates',xlabel = 'N', average_rate_legend=r'$\bar{k}^{AB}_n$'
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_inhom,
@@ -540,6 +540,6 @@ plot_convergence(
     q_b_conv=q_b_conv,
     scale_type='log',
     file_path=os.path.join(charts_path, example_name + '_' + 'conv_finite.png'),
-    title='Convergence of finite-time, stationary $q^+(n)$ and $q^-(n)$ on $\{-N,...,N\}$ for large $N$',
+    title=None,#'Convergence of finite-time, stationary $q^+(n)$ and $q^-(n)$ on $\{-N,...,N\}$ for large $N$',
 )
 

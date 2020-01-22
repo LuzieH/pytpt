@@ -304,7 +304,7 @@ plot_rate(
     rate=rate_p,
     time_av_rate=time_av_rate_p,                                                               
     file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.png'),
-    title='Perio',xlabel = 'm', average_rate_legend='$\bar{k}^{AB}_M$'
+    title='',xlabel = 'm', average_rate_legend=r'$ \bar{k}^{AB}_M $'
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_p,
@@ -362,7 +362,7 @@ plot_rate(
     rate=rate_f,
     time_av_rate=time_av_rate_f,                                                               
     file_path=os.path.join(charts_path, example_name + '_' + 'rates_f.png'),
-    title='Discrete finite-time, time-homogeneous rates',xlabel = 'n', average_rate_legend='$\bar{k}^{AB}_N$'
+    title='Discrete finite-time, time-homogeneous rates',xlabel = 'n', average_rate_legend=r'$\bar{k}^{AB}_N$'
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_f,

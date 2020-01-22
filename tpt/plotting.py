@@ -227,7 +227,7 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
 
     N_max = len(q_f_conv)
 
-    fig, ax = plt.subplots(1, 1, figsize=(20,3))#(25, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(20,3.5))#(25, 5))
 
     plt.yscale(scale_type)
     plt.plot(
@@ -248,7 +248,8 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
         label='$||q^- - q^-(0)||_2$',
     )
 
-    plt.title(title, fontsize=20)
+    if title is not None:
+        plt.title(title, fontsize=20)
     plt.xlabel('$N$', fontsize=18)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
