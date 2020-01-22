@@ -116,12 +116,12 @@ def plot_network_effective_current(weights, pos, labels, v_min, v_max, file_path
 def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}$', time_av_rate=None):                                          
     # TODO document method
     ncol = 2
-    timeframes = len(rate[0])
+    timeframes = len(rate)
     fig, ax = plt.subplots(1, 1, figsize=(4*timeframes, 3))
     
     plt.scatter(
         x=np.arange(timeframes),
-        y=rate[0, :],
+        y=rate[:, 0],
         marker='.',
         s=100,
         color='black',
@@ -129,7 +129,7 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
     )
     plt.scatter(
         x=np.arange(timeframes),
-        y=rate[1, :],
+        y=rate[:, 1],
         marker='*',
         s=100,
         edgecolors='black',
@@ -151,12 +151,12 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
     # add title and legend
     plt.title(title, fontsize=20)
     min_rate = np.nanmin([
-        np.nanmin(rate[0]),
-        np.nanmin(rate[1]),
+        np.nanmin(rate[:, 0]),
+        np.nanmin(rate[:, 1]),
     ])
     max_rate = np.nanmax([
-        np.nanmax(rate[0]),
-        np.nanmax(rate[1]),
+        np.nanmax(rate[:, 0]),
+        np.nanmax(rate[:, 1]),
     ])
     plt.ylim(
         min_rate - (max_rate-min_rate)/4,
