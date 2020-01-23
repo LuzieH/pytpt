@@ -65,7 +65,11 @@ norm_reac_dens = small.norm_reac_density()
 [current, eff_current] = small.reac_current()
 rate = small.transition_rate()  # AB discrete transition rate
 
-
+#compute share along upper (1) and lower path (via 3)
+eff_out = eff_current[0,1]+eff_current[0,3]
+share_1 = eff_current[0,1]/eff_out
+share_3 = eff_current[0,3]/eff_out
+print('In the infinite-time, stationary case, a share of '+str(share_3)+' outflow is via 3, while a share of '+str(share_1)+' outflow is via 1')
 # TPT periodisch
 # use as transition matrix T + wL, where w varies from 1..0..-1...0
 # either faster switching or slower dynamics
