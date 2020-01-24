@@ -65,11 +65,15 @@ norm_reac_dens = small.norm_reac_density()
 [current, eff_current] = small.reac_current()
 rate = small.transition_rate()  # AB discrete transition rate
 
+mean_length = small.mean_transition_length()
+
 #compute share along upper (1) and lower path (via 3)
 eff_out = eff_current[0,1]+eff_current[0,3]
 share_1 = eff_current[0,1]/eff_out
 share_3 = eff_current[0,3]/eff_out
 print('In the infinite-time, stationary case, a share of '+str(share_3)+' outflow is via 3, while a share of '+str(share_1)+' outflow is via 1')
+
+
 # TPT periodisch
 # use as transition matrix T + wL, where w varies from 1..0..-1...0
 # either faster switching or slower dynamics
@@ -98,6 +102,8 @@ norm_reac_dens_p = small_periodic.norm_reac_density()
 
 [rate_p, time_av_rate_p] = small_periodic.transition_rate()
 
+mean_length_p = small_periodic.mean_transition_length()
+
 
 # TPT finite time, time-homogeneous
 
@@ -125,6 +131,8 @@ norm_reac_dens_f = small_finite.norm_reac_density()
 
 # first row, out rate of A, second row in rate for B
 [rate_f, time_av_rate_f] = small_finite.transition_rate()
+
+mean_length_f = small_finite.mean_transition_length()
 
 
 # TPT finite time, time-inhomogeneous
@@ -174,6 +182,13 @@ norm_reac_dens_inhom = small_inhom.norm_reac_density()
 
 # first row, out rate of A, second row in rate for B
 [rate_inhom, time_av_rate_inhom] = small_inhom.transition_rate()
+
+mean_length_inhom = small_inhom.mean_transition_length()
+
+print("mean length (infinite-time, stationary): %f" % mean_length)
+print("mean length (infinite-time, periodic): %f" % mean_length_p)
+print("mean length (finite-time, time-homogeneous): %f" % mean_length_f)
+print("mean length (finite-time, time-inhomogeneous): %f" % mean_length_inhom)
 
 # TPT finite time extension to infinite time, convergence analysis
 N_max = 150  # max value of N
