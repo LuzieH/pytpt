@@ -306,6 +306,7 @@ plot_rate(
     file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.png'),
     title='',xlabel = 'm', average_rate_legend=r'$ \bar{k}^{AB}_M $'
 )
+ 
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_p,
     file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_p.png'),
