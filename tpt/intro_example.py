@@ -103,8 +103,9 @@ eff_vectors_unit = np.zeros((dim_st, 2))
 colors = np.zeros(dim_st)
 for i in np.arange(dim_st):
     for j in np.arange(dim_st):
-        eff_vectors[i,0] += eff_current[i,j] *  (xn[j] - xn[i])  
-        eff_vectors[i,1] += eff_current[i,j] *  (yn[j] - yn[i])  
+        if np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))>0:
+            eff_vectors[i,0] += eff_current[i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
+            eff_vectors[i,1] += eff_current[i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
     colors[i] = np.linalg.norm(eff_vectors[i,:])
     if colors[i]>0:
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i] 
@@ -123,8 +124,9 @@ eff_vectors_unit_f = np.zeros((dim_st, 2))
 colors_f = np.zeros(dim_st)
 for i in np.arange(dim_st):
     for j in np.arange(dim_st):
-        eff_vectors_f[i,0] += eff_current_f[n,i,j] *  (xn[j] - xn[i])  
-        eff_vectors_f[i,1] += eff_current_f[n,i,j] *  (yn[j] - yn[i])  
+        if np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))>0:
+            eff_vectors_f[i,0] += eff_current_f[n,i,j] *  (xn[j] - xn[i])*(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]])))   
+            eff_vectors_f[i,1] += eff_current_f[n,i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
     colors_f[i] = np.linalg.norm(eff_vectors_f[i,:])
     if colors_f[i]>0:
         eff_vectors_unit_f[i,:] = eff_vectors_f[i,:]/colors_f[i] 

@@ -294,7 +294,7 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
 
     N_max = len(q_f_conv)
 
-    fig, ax = plt.subplots(1, 1, figsize=(20,5.5))#(25, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(20,7))#(25, 5))
 
     plt.yscale(scale_type)
     plt.plot(
@@ -316,11 +316,11 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
     )
 
     if title is not None:
-        plt.title(title, fontsize=25)
-    plt.xlabel('$N$', fontsize=25)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.legend(ncol=2, fontsize=20)
+        plt.title(title, fontsize=30)
+    plt.xlabel('$N$', fontsize=30)
+    plt.xticks(fontsize=30)
+    plt.yticks(fontsize=30)
+    plt.legend(ncol=2, fontsize=25)
 
     # Hide the right and top spines
     ax.spines['right'].set_visible(False)

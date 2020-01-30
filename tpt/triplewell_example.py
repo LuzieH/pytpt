@@ -39,7 +39,7 @@ xn=np.reshape(xv,(xdim*ydim,1))
 yn=np.reshape(yv,(xdim*ydim,1))
 grid = np.squeeze(np.array([xn,yn]))
 
-
+example_name = 'triplewell'
 #############################################################################
 # infinite-time ergodic
 
@@ -186,8 +186,9 @@ for N_bif in N_bif_array:
     colors_f_bif = np.zeros(dim_st)
     for i in np.arange(dim_st):
         for j in np.arange(dim_st):
-            eff_vectors_f_bif[i,0] += eff_current_f_bif[int(N_bif/2),i,j] *  (xn[j] - xn[i])  
-            eff_vectors_f_bif[i,1] += eff_current_f_bif[int(N_bif/2),i,j] *  (yn[j] - yn[i])  
+            if np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))>0:
+                eff_vectors_f_bif[i,0] += eff_current_f_bif[int(N_bif/2),i,j] *  (xn[j] - xn[i]) *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
+                eff_vectors_f_bif[i,1] += eff_current_f_bif[int(N_bif/2),i,j] *  (yn[j] - yn[i]) *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]])))  
         colors_f_bif[i] = np.linalg.norm(eff_vectors_f_bif[i,:])
         if colors_f_bif[i]>0:
             eff_vectors_unit_f_bif[i,:] = eff_vectors_f_bif[i,:]/colors_f_bif[i] 
@@ -237,8 +238,9 @@ eff_vectors_unit = np.zeros((dim_st, 2))
 colors = np.zeros(dim_st)
 for i in np.arange(dim_st):
     for j in np.arange(dim_st):
-        eff_vectors[i,0] += eff_current[i,j] *  (xn[j] - xn[i])  
-        eff_vectors[i,1] += eff_current[i,j] *  (yn[j] - yn[i])  
+        if np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))>0:
+            eff_vectors[i,0] += eff_current[i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
+            eff_vectors[i,1] += eff_current[i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
     colors[i] = np.linalg.norm(eff_vectors[i,:])
     if colors[i]>0:
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i] 
@@ -290,11 +292,16 @@ colors_p = np.zeros((M,dim_st))
 for m in np.arange(M):
     for i in np.arange(dim_st):
         for j in np.arange(dim_st):
-            eff_vectors_p[m,i,0] += eff_current_p[m,i,j] *  (xn[j] - xn[i])  
-            eff_vectors_p[m,i,1] += eff_current_p[m,i,j] *  (yn[j] - yn[i])  
+            if np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))>0:
+                eff_vectors_p[m,i,0] += eff_current_p[m,i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
+                eff_vectors_p[m,i,1] += eff_current_p[m,i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
         colors_p[m,i] = np.linalg.norm(eff_vectors_p[m,i,:])
         if colors_p[m,i]>0:
             eff_vectors_unit_p[m,i,:] = eff_vectors_p[m,i,:]/colors_p[m,i]
+ 
+
+
+ 
             
 fig = plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), M, (3*M,3), subtitles_m('$f^+_{}$',M)) 
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_p.png'), dpi=100,bbox_inches='tight')
@@ -349,8 +356,10 @@ for n in np.arange(N):
     for i in np.arange(dim_st):
         for j in np.arange(dim_st):
             #if np.isnan(eff_current_f[n,i,j])==False:
-            eff_vectors_f[n,i,0] += eff_current_f[n,i,j] *  (xn[j] - xn[i])  
-            eff_vectors_f[n,i,1] += eff_current_f[n,i,j] *  (yn[j] - yn[i])  
+
+            if np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))>0:
+                eff_vectors_f[n,i,0] += eff_current_f[n,i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
+                eff_vectors_f[n,i,1] += eff_current_f[n,i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
         colors_f[n,i] = np.linalg.norm(eff_vectors_f[n,i,:])
         if colors_f[n,i]>0:
             eff_vectors_unit_f[n,i,:] = eff_vectors_f[n,i,:]/colors_f[n,i]
@@ -372,4 +381,4 @@ plot_reactiveness(
 )
 
 
-
+ 
