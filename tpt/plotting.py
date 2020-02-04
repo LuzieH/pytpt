@@ -1,12 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-from matplotlib.colors import Normalize
+from matplotlib.colors import Normalize, ListedColormap
 import networkx as nx
 from mpl_toolkits.axes_grid1 import AxesGrid
 from matplotlib.ticker import ScalarFormatter
 
-NETWORK_CMAP = cm.get_cmap('GnBu') 
+PLASMA = cm.get_cmap('plasma', 512)
+NETWORK_CMAP = ListedColormap(
+    PLASMA(np.linspace(0.40, 0.90, 256))
+)
+
 
 def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
     # TODO document method
@@ -43,7 +47,7 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
         ax = [ax]
     for i in range(num_plots):
         nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i],
-                cmap=NETWORK_CMAP, ax=ax[i], vmin=v_min, vmax=v_max)
+                cmap=NETWORK_CMAP, ax=ax[i], vmin=v_min, vmax=v_max, alpha=0.8)
         if subtitles is not None:
             ax[i].set_title(subtitles[i])
     
@@ -143,6 +147,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
                 pos,
                 nodelist=[1, 2, 3],
                 node_color='lightgrey',
+                alpha=0.8,
                 ax=ax[n],
             )
             nx.draw_networkx_nodes(
@@ -151,6 +156,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
                 nodelist=[0, 4],
                 node_color=shifted_rate[n],
                 cmap=NETWORK_CMAP,
+                alpha=0.8,
                 ax=ax[n],
             )
 
@@ -173,6 +179,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
                 edge_color=edge_colors,
                 edge_cmap=plt.cm.Greys,
                 arrowsize=10,
+                alpha=0.8,
             )
             
             # labels
