@@ -56,7 +56,7 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
     
     fig.subplots_adjust(top=0.8) 
 
-    fig.savefig(file_path, format='png', dpi=1000)  
+    fig.savefig(file_path, format='png', dpi=500)  
 
     
 def plot_network_effective_current(eff_current, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
@@ -118,7 +118,7 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, v_max, file_
         fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
 
-    fig.savefig(file_path, format='png', dpi=1000)  
+    fig.savefig(file_path, format='png', dpi=500)  
 
 
 def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
@@ -193,7 +193,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
         fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
 
-    fig.savefig(file_path, format='png', dpi=1000)  
+    fig.savefig(file_path, format='png', dpi=500)  
 
 
 def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}$', time_av_rate=None):                                          
@@ -255,7 +255,7 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     
-    fig.savefig(file_path, format='png', dpi=1000)  
+    fig.savefig(file_path, format='png', dpi=500)  
 
 
 def plot_reactiveness(reac_norm_factor, file_path, title):
@@ -288,7 +288,7 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
-    fig.savefig(file_path, format='png', dpi=1000)  
+    fig.savefig(file_path, format='png', dpi=500)  
 
 
 def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title):
@@ -301,7 +301,7 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
 
     N_max = len(q_f_conv)
 
-    fig, ax = plt.subplots(1, 1, figsize=(20,7))#(25, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(20,8))#(25, 5))
 
     plt.yscale(scale_type)
     plt.plot(
@@ -333,7 +333,7 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
-    fig.savefig(file_path, format='png', dpi=1000)  
+    fig.savefig(file_path, format='png', dpi=500)  
 
 
 def plot_3well_potential(potential, file_path, title, subtitles=None):
@@ -376,7 +376,7 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
     
     # save figure
     fig.subplots_adjust(top=0.8)
-    fig.savefig(file_path, format='png', dpi=1000)  
+    fig.savefig(file_path, format='png', dpi=500)  
 
 def plot_3well_vector_field(vector_field, vector_field_forced,
                                    file_path, title, subtitles=None):
@@ -441,7 +441,7 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
 
     # save figure
     fig.subplots_adjust(top=0.8)
-    fig.savefig(file_path, format='png', dpi=1000)  
+    fig.savefig(file_path, format='png', dpi=500)  
 
 
 def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashape, extent, timeframe, size,titles):
