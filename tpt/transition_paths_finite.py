@@ -268,18 +268,21 @@ class transitions_finite_time:
         to be computed by using the method reac_current"
 
         rate = np.zeros((self._N, 2))
+
         rate[:self._N-1, 0] = np.sum(
             self._current[:self._N-1, self._ind_A, :], axis=(1, 2)
         )
         rate[self._N-1, 0] = np.nan
+        
         rate[1:, 1] = np.sum(
             self._current[:self._N-1, :, self._ind_B], axis=(1, 2)
         )
         rate[0, 1] = np.nan
         
+        # averaged rate over the time interval
         time_av_rate = np.zeros(2)
-        time_av_rate[0] = sum(rate[:self._N-1][0])/(self._N)
-        time_av_rate[1] = sum(rate[1:][1])/(self._N)
+        time_av_rate[0] = sum(rate[:self._N-1, 0])/(self._N)
+        time_av_rate[1] = sum(rate[1:, 1])/(self._N)
        
         self._rate = rate
         self._time_av_rate = time_av_rate

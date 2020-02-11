@@ -292,17 +292,20 @@ class transitions_periodic:
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
-        # for each time m, sum of all currents out of A into S
         rate = np.zeros((self._M, 2))
+
+        # for each time m, sum of all currents out of A into S
         rate[:, 0] = np.sum(
             self._current[:, self._ind_A, :], axis=(1, 2))
+
+        # for each time m, sum of all currents from S into B
         rate[:, 1] = np.sum(
             self._current[:, :, self._ind_B], axis=(1, 2))
 
         # averaged rate over the period
         time_av_rate = np.zeros(2)
-        time_av_rate[0] = sum(rate[:self._M-1][0])/(self._M-1) # out of A
-        time_av_rate[1] = sum(rate[1:][1])/(self._M-1) # into B
+        time_av_rate[0] = sum(rate[:, 0])/(self._M) # out of A
+        time_av_rate[1] = sum(rate[:, 1])/(self._M) # into B
         
         self._rate = rate 
         self._time_av_rate = time_av_rate

@@ -185,6 +185,11 @@ norm_reac_dens_inhom = small_inhom.norm_reac_density()
 
 mean_length_inhom = small_inhom.mean_transition_length()
 
+print("rate (infinite-time, stationary): %f" % rate)
+print("periodic-averaged rate (infinite-time, periodic): %f" % time_av_rate_p[0])
+print("time-averaged rate (finite-time, time-homogeneous): %f" % time_av_rate_f[0])
+print("time-averaged rate (finite-time, time-inhomogeneous): %f" % time_av_rate_inhom[0])
+
 print("mean length (infinite-time, stationary): %f" % mean_length)
 print("mean length (infinite-time, periodic): %f" % mean_length_p)
 print("mean length (finite-time, time-homogeneous): %f" % mean_length_f)
