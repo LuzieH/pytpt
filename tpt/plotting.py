@@ -139,10 +139,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
 
             A_eff = (eff_current[n, :, :] > 0)*1
             G_eff = nx.DiGraph(A_eff)
-<<<<<<< HEAD
             G_eff.add_edge(0, 0)
-=======
->>>>>>> f843a9396bf08e65076108d9d20ee99b9f48751b
 
             # nodes
             nx.draw_networkx_nodes(
