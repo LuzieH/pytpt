@@ -67,17 +67,20 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
     if num_plots == 1:
         ax = [ax]
     for i in range(num_plots):
-        nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i],
-                cmap=NETWORK_CMAP, ax=ax[i], vmin=v_min, vmax=v_max, alpha=0.8)
+        nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i], node_size=500,
+                cmap=NETWORK_CMAP, ax=ax[i], vmin=v_min, vmax=v_max, alpha=0.8, font_size=12)
         if subtitles is not None:
-            ax[i].set_title(subtitles[i])
+            ax[i].set_title(subtitles[i], fontsize=14)
     
     if title is not None:
         fig.suptitle(title)
     
-    fig.subplots_adjust(top=0.8) 
+    fig.subplots_adjust(
+        top=0.8,
+        hspace=0.1,
+    ) 
 
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')  
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')  
 
     
 def plot_network_effective_current(eff_current, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
@@ -168,17 +171,21 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
                 pos,
                 nodelist=[1, 2, 3],
                 node_color='lightgrey',
+                node_size=500,
                 alpha=0.8,
                 ax=ax[n],
+                font_size=12,
             )
             nx.draw_networkx_nodes(
                 G_eff,
                 pos,
                 nodelist=[0, 4],
                 node_color=shifted_rate[n],
+                node_size=500,
                 cmap=NETWORK_CMAP,
                 alpha=0.8,
                 ax=ax[n],
+                font_size=12,
             )
 
             # edges
@@ -202,22 +209,20 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
                 arrowsize=10,
                 alpha=0.8,
             )
-            #print(eff_current[0]) 
-            #print(A_eff)
-            #print(G_eff.edges())
-            #print(edge_colors)
-            #return
             
             # labels
             nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
             ax[n].set_axis_off()
 
             if subtitles is not None:
-                ax[n].set_title(subtitles[n])
+                ax[n].set_title(subtitles[n], fontsize=14)
     
     if title is not None:
         fig.suptitle(title)
-    fig.subplots_adjust(top=0.8)
+    fig.subplots_adjust(
+        top=0.8,
+        hspace=0.1,
+    )
 
     fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')  
 

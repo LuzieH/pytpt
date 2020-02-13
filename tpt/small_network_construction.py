@@ -1,4 +1,3 @@
-import networkx as nx
 import numpy as np
 
 import os.path
@@ -25,11 +24,11 @@ labels = {
 
 # position of states
 pos = {
-    0: (0, -1),
-    1: (0, 0),
-    2: (0.5, -0.5),
-    3: (1, -1),
-    4: (1, 0),
+    0: (0, 0),
+    1: (0, 0.5),
+    2: (0.25, 0.25),
+    3: (0.5, 0),
+    4: (0.5, 0.5),
 }
 
 # number of states

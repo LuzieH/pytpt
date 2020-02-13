@@ -311,7 +311,6 @@ example_name = 'small_network'
 plot_colorbar_only(
     file_path=os.path.join(charts_path, example_name + '_' + 'colorbar.png'),
 )
-exit()
 
 # plotting results for ergodic, infinite-time case
 graphs = [nx.Graph(P)]
