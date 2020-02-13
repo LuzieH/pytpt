@@ -498,9 +498,11 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
     return fig
 
 
-def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles):
+def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles,background=None):
     # TODO document method
-    
+    if background is None: 
+        background = np.ones(datashape[0]*datashape[1])
+        
     fig = plt.figure(figsize=size)
 
     grid = AxesGrid(fig, 111,
@@ -517,7 +519,9 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles):
     i=0
     for ax in grid: #i in range(timeframe):
         if np.isnan(data[i,:]).all()==False: #if not all values are nan
-            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', extent=extent)
+            ax.imshow(background.reshape(datashape), cmap='Greys', alpha=1, origin='lower', extent=extent)
+            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', alpha=0.9, extent=extent)
+ 
             ax.set_title(titles[i])  
         i = i + 1
             

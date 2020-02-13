@@ -26,6 +26,10 @@ ind_A = np.load(os.path.join(my_path, 'data/triplewell_ind_A.npy'))
 ind_B = np.load(os.path.join(my_path, 'data/triplewell_ind_B.npy'))
 ind_C = np.load(os.path.join(my_path, 'data/triplewell_ind_C.npy'))
 
+#define AB sets
+densAB = np.zeros(dim_st)
+densAB[ind_A]=1
+densAB[ind_B]=1
 ############################################################################
 #state space
 x = np.arange(interval[0,0],interval[0,1]+dx, dx) #box centers in x and y direction
@@ -198,13 +202,9 @@ for N_bif in N_bif_array:
 data = norm_reac_dens_f_bif_all
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_bif_size, (3*N_bif_size,3), v_min, v_max,subtitles_bif_dens)
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N_bif_size, (3*N_bif_size,3), v_min, v_max,subtitles_bif_dens,background=densAB)
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f_bif.png'), dpi=100,bbox_inches='tight')
 
-#define AB sets
-densAB = np.zeros(dim_st)
-densAB[ind_A]=1
-densAB[ind_B]=1
             
 fig = plot_3well_effcurrent(eff_current_f_bif_all,color_current_f_bif_all, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N_bif_size, (3*N_bif_size,3),subtitles_bif_eff )
 fig.savefig(os.path.join(charts_path, 'triplewell_eff_f_bif.png'), dpi=100,bbox_inches='tight')
@@ -236,7 +236,7 @@ fig.savefig(os.path.join(charts_path, 'triplewell_q_b.png'), dpi=100,bbox_inches
 data = np.array([norm_reac_dens])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\hat{\mu}^{AB}$'])
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\hat{\mu}^{AB}$'],background=densAB)
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens.png'), dpi=100,bbox_inches='tight')
 
 #define AB sets
@@ -289,7 +289,7 @@ fig.savefig(os.path.join(charts_path, 'triplewell_q_b_p.png'), dpi=100,bbox_inch
 data = norm_reac_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max,np.array(['$\hat{\mu}^{AB}_0$','$\hat{\mu}^{AB}_1$','$\hat{\mu}^{AB}_2$','$\hat{\mu}^{AB}_3$','$\hat{\mu}^{AB}_4$','$\hat{\mu}^{AB}_5$'])) 
+fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max,np.array(['$\hat{\mu}^{AB}_0$','$\hat{\mu}^{AB}_1$','$\hat{\mu}^{AB}_2$','$\hat{\mu}^{AB}_3$','$\hat{\mu}^{AB}_4$','$\hat{\mu}^{AB}_5$']),background=densAB) 
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100,bbox_inches='tight')
 
 #define AB sets
@@ -357,7 +357,7 @@ fig.savefig(os.path.join(charts_path, 'triplewell_q_b_f.png'), dpi=100,bbox_inch
 data = norm_reac_dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-fig = plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N-2, (3*(N-2),3), v_min, v_max, np.array(['$\hat{\mu}^{AB}(1)$','$\hat{\mu}^{AB}(2)$','$\hat{\mu}^{AB}(3)$','$\hat{\mu}^{AB}(4)$'])) 
+fig = plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , N-2, (3*(N-2),3), v_min, v_max, np.array(['$\hat{\mu}^{AB}(1)$','$\hat{\mu}^{AB}(2)$','$\hat{\mu}^{AB}(3)$','$\hat{\mu}^{AB}(4)$']),background=densAB) 
 fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_f.png'), dpi=100,bbox_inches='tight')
 
 #calculation the effective vector for each state
