@@ -1,15 +1,31 @@
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from matplotlib.colors import Normalize, ListedColormap
 import networkx as nx
 from mpl_toolkits.axes_grid1 import AxesGrid
 from matplotlib.ticker import ScalarFormatter
 
-PLASMA = cm.get_cmap('plasma', 512)
-NETWORK_CMAP = ListedColormap(
+PLASMA = mpl.cm.get_cmap('plasma', 512)
+NETWORK_CMAP = mpl.colors.ListedColormap(
     PLASMA(np.linspace(0.40, 0.90, 256))
 )
+
+def plot_network_colorbar(v_min, v_max, file_path):
+    fig, ax = plt.subplots(figsize=(0.15, 2))
+
+    cmap = NETWORK_CMAP
+    norm = mpl.colors.Normalize(vmin=v_min, vmax=v_max)
+
+    cb1 = mpl.colorbar.ColorbarBase(
+        ax,
+        cmap=cmap,
+        norm=norm,
+        orientation='vertical',
+    )
+    cb1.ax.tick_params(length=4, width=0.5, labelsize=8)
+    
+    fig.subplots_adjust(hspace=0.1)
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')  
 
 
 def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
@@ -518,5 +534,3 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles):
    # fig.colorbar(im, ax=ax[:], shrink=0.95)
  
     return fig
- 
-
