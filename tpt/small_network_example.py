@@ -8,7 +8,7 @@ from plotting import plot_network_density as plot_density, \
                      plot_rate, \
                      plot_reactiveness, \
                      plot_convergence, \
-                     plot_network_colorbar
+                     plot_colorbar_only
 
 import numpy as np
 import networkx as nx
@@ -307,14 +307,15 @@ v_max_eff_curr = max([
 charts_path = os.path.join(my_path, 'charts')
 example_name = 'small_network'
 
+# plot relative color bar
+plot_colorbar_only(
+    file_path=os.path.join(charts_path, example_name + '_' + 'colorbar.png'),
+)
+exit()
+
 # plotting results for ergodic, infinite-time case
 graphs = [nx.Graph(P)]
 
-plot_network_colorbar(
-    v_min=v_min_dens,
-    v_max=v_max_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'colorbar.png'),
-)
 plot_density(
     data=np.array([stat_dens]),
     graphs=graphs,

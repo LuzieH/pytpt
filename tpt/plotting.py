@@ -10,19 +10,24 @@ NETWORK_CMAP = mpl.colors.ListedColormap(
     PLASMA(np.linspace(0.40, 0.90, 256))
 )
 
-def plot_network_colorbar(v_min, v_max, file_path):
+def plot_colorbar_only(file_path):
+    # https://matplotlib.org/examples/api/colorbar_only.html
+
     fig, ax = plt.subplots(figsize=(0.15, 2))
 
     cmap = NETWORK_CMAP
-    norm = mpl.colors.Normalize(vmin=v_min, vmax=v_max)
+    #norm = mpl.colors.Normalize(vmin=v_min, vmax=v_max)
 
-    cb1 = mpl.colorbar.ColorbarBase(
+    cb = mpl.colorbar.ColorbarBase(
         ax,
         cmap=cmap,
-        norm=norm,
         orientation='vertical',
     )
-    cb1.ax.tick_params(length=4, width=0.5, labelsize=8)
+    # remove ticks and values
+    cb.set_ticks([])
+    
+    # ticks size and label size 
+    #cb1.ax.tick_params(length=4, width=0.5, labelsize=8)
     
     fig.subplots_adjust(hspace=0.1)
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')  
