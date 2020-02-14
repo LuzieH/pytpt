@@ -280,8 +280,9 @@ grid = AxesGrid(fig, 111,
                 )
  
 for ax in grid: #i in range(timeframe):
-    im = ax.imshow(pot.reshape((xdim2,ydim2)), cmap='inferno_r', origin='lower', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1]))
-    ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.15, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+    ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=1, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+    im = ax.imshow(pot.reshape((xdim2,ydim2)), cmap='inferno_r', alpha=0.9, origin='lower', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1]))
+
     ax.plot(traj_ab_upper[:,0], traj_ab_upper[:,1],'k', alpha=0.7, linewidth=0.5)
     ax.plot(traj_ab_lower[:,0], traj_ab_lower[:,1],'r', alpha=1, linewidth=0.5)
     ax.set_title('$V(x,y)$')  
