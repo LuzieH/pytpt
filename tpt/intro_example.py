@@ -162,7 +162,7 @@ for k in np.arange(4):
     for ax in grid:
 
         im = ax.quiver(xn,yn,list(data[k][:,0]),list(data[k][:,1]),colorsar[k],cmap='inferno_r', width=0.02, scale=25 )   
-        ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.3, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+        ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=1, vmin=0, vmax=3, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
         ax.plot(trajec[k][:,0], trajec[k][:,1],'r', alpha=0.3, linewidth=0.5)
         ax.set_title(title[k])  
  
@@ -254,7 +254,7 @@ for k in np.arange(3):
  
     for ax in grid: #i in range(timeframe):
         im = ax.imshow(pot.reshape((xdim2,ydim2)), origin='lower', cmap='inferno_r', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1]))
-        ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.15, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+        ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.15,origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
         ax.plot(trajec[k][:,0], trajec[k][:,1],'k', alpha=0.7, linewidth=0.5)
         ax.set_title(title[k])  
  

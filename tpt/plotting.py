@@ -496,7 +496,7 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
     i=0
     for ax in grid:
         if np.isnan(eff_vectors_unit[i,:,:]).all()==False: #if not all values are nan
-            ax.imshow(background.reshape(datashape), cmap='Greys', alpha=.4, origin='lower', extent=extent)
+            ax.imshow(background.reshape(datashape), alpha=1, vmin=0, vmax=3, cmap='Greys', origin='lower', extent=extent)
             im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap='inferno_r', width=0.02, scale=25)             
             ax.set_title(titles[i])  
         i = i + 1
