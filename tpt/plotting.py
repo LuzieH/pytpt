@@ -30,7 +30,7 @@ def plot_colorbar_only(file_path):
     #cb1.ax.tick_params(length=4, width=0.5, labelsize=8)
     
     fig.subplots_adjust(hspace=0.1)
-    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')  
+    fig.savefig(file_path, format='eps', dpi=300, bbox_inches='tight')  
 
 
 def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
@@ -80,7 +80,7 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
         hspace=0.1,
     ) 
 
-    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')  
+    fig.savefig(file_path, format='eps', dpi=300, bbox_inches='tight')  
 
     
 def plot_network_effective_current(eff_current, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
@@ -142,7 +142,7 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, v_max, file_
         fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
 
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight') 
+    fig.savefig(file_path, format='eps', dpi=300,bbox_inches='tight') 
 
 
 def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
@@ -224,7 +224,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
         hspace=0.1,
     )
 
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')  
+    fig.savefig(file_path, format='eps', dpi=300,bbox_inches='tight')  
 
 
 def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}$', time_av_rate=None):                                          
@@ -286,7 +286,7 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')  
+    fig.savefig(file_path, format='eps', dpi=300,bbox_inches='tight')  
 
 
 def plot_reactiveness(reac_norm_factor, file_path, title):
@@ -319,7 +319,7 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight') 
+    fig.savefig(file_path, format='eps', dpi=300,bbox_inches='tight') 
 
 
 def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title):
@@ -364,7 +364,7 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight') 
+    fig.savefig(file_path, format='eps', dpi=300,bbox_inches='tight') 
 
 
 def plot_3well_potential(potential, file_path, title, subtitles=None):
@@ -397,6 +397,7 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
             vmin=potential.min(),
             vmax=potential.max(),
             origin='lower',
+            cmap='inferno_r',
             extent=[-2, 2, -1, 2],
         )
         grid[i].title.set_text(subtitles[i])
@@ -407,7 +408,7 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
     
     # save figure
     fig.subplots_adjust(top=0.8)
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight') 
+    fig.savefig(file_path, format='eps', dpi=300,bbox_inches='tight') 
 
 def plot_3well_vector_field(vector_field, vector_field_forced,
                                    file_path, title, subtitles=None):
@@ -460,7 +461,7 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
             Us[i],
             Vs[i],
             norms[i],
-            cmap='coolwarm',
+            cmap='inferno_r',
             width=0.02,
             scale=25, 
         )             
@@ -472,7 +473,7 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
 
     # save figure
     fig.subplots_adjust(top=0.8)
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')   
+    fig.savefig(file_path, format='eps', dpi=300,bbox_inches='tight')   
 
 
 def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashape, extent, timeframe, size,titles):
@@ -496,10 +497,12 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
     for ax in grid:
         if np.isnan(eff_vectors_unit[i,:,:]).all()==False: #if not all values are nan
             ax.imshow(background.reshape(datashape), cmap='Greys', alpha=.4, origin='lower', extent=extent)
-            im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap='coolwarm', width=0.02, scale=25)             
+            im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap='inferno_r', width=0.02, scale=25)             
             ax.set_title(titles[i])  
         i = i + 1
     #fig.suptitle(title)
+    #'inferno_r
+    #coolwarm
     fig.subplots_adjust(top=0.8)
     sfmt=ScalarFormatter(useMathText=True) 
     sfmt.set_powerlimits((0, 0))
@@ -530,7 +533,7 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles,ba
     for ax in grid: #i in range(timeframe):
         if np.isnan(data[i,:]).all()==False: #if not all values are nan
             ax.imshow(background.reshape(datashape), cmap='Greys', alpha=1, origin='lower', extent=extent)
-            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, origin='lower', alpha=0.9, extent=extent)
+            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, cmap = 'inferno_r', origin='lower', alpha=0.9, extent=extent)
  
             ax.set_title(titles[i])  
         i = i + 1

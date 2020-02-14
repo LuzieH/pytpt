@@ -36,7 +36,7 @@ subtitles=[
 ]
 plot_3well_potential(
     potential=V0,
-    file_path=os.path.join(charts_path, example_name + '_' + 'potential.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'potential.eps'),
     title=title,
     subtitles=subtitles,
 )
@@ -49,7 +49,7 @@ subtitles=[
 plot_3well_vector_field(
     vector_field=dV0,
     vector_field_forced=dV_forced,
-    file_path=os.path.join(charts_path, example_name + '_' + 'vector_field.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'vector_field.eps'),
     title=title,
     subtitles=subtitles,
 )

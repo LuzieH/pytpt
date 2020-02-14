@@ -111,7 +111,7 @@ for i in np.arange(dim_st):
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i] 
             
 #fig = plot_3well_effcurrent(np.array([eff_vectors_unit]), np.array([colors]), xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), 1, (3*1,3),['$f^+$'])
-#fig.savefig(os.path.join(charts_path, 'triplewell_eff_intro.png'), dpi=100,bbox_inches='tight')
+#fig.savefig(os.path.join(charts_path, 'triplewell_eff_intro.eps'), dpi=100,bbox_inches='tight')
 #
 
 
@@ -133,7 +133,7 @@ for i in np.arange(dim_st):
     
    
 #fig = plot_3well_effcurrent(np.array([eff_vectors_unit_f]), np.array([colors_f]), xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), 1, (3*1,3),['$f^+$('+str(n)+'), N = '+str(N)])
-#fig.savefig(os.path.join(charts_path, 'triplewell_eff_intro_finite.png'), dpi=100,bbox_inches='tight')
+#fig.savefig(os.path.join(charts_path, 'triplewell_eff_intro_finite.eps'), dpi=100,bbox_inches='tight')
 #
 
 
@@ -161,7 +161,7 @@ for k in np.arange(4):
     
     for ax in grid:
 
-        im = ax.quiver(xn,yn,list(data[k][:,0]),list(data[k][:,1]),colorsar[k],cmap='coolwarm', width=0.02, scale=25 )   
+        im = ax.quiver(xn,yn,list(data[k][:,0]),list(data[k][:,1]),colorsar[k],cmap='inferno_r', width=0.02, scale=25 )   
         ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.3, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
         ax.plot(trajec[k][:,0], trajec[k][:,1],'r', alpha=0.3, linewidth=0.5)
         ax.set_title(title[k])  
@@ -172,7 +172,7 @@ for k in np.arange(4):
     cbar = ax.cax.colorbar(im, format=sfmt)
     cbar = grid.cbar_axes[0].colorbar(im)
     
-    fig.savefig(os.path.join(charts_path, save[k]+'_intro.png'), dpi=150,bbox_inches='tight')
+    fig.savefig(os.path.join(charts_path, save[k]+'_intro.eps'), dpi=150,bbox_inches='tight')
     
 ######################################## V0
 #state space
@@ -193,7 +193,7 @@ data = np.array([pot])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim2,ydim2), (interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1]) , 1, (3*1,3), v_min, v_max, ['$V(x,y)$'])
-#fig.savefig(os.path.join(charts_path, 'V_intro.png'), dpi=100,bbox_inches='tight')
+#fig.savefig(os.path.join(charts_path, 'V_intro.eps'), dpi=100,bbox_inches='tight')
 
 #plt.imshow(pot.reshape((xdim2,ydim2)), origin='lower', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1])) 
 ######################trajectory
@@ -253,9 +253,9 @@ for k in np.arange(3):
                     )
  
     for ax in grid: #i in range(timeframe):
-        im = ax.imshow(pot.reshape((xdim2,ydim2)), origin='lower', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1]))
-        ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.05, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
-        ax.plot(trajec[k][:,0], trajec[k][:,1],'w', alpha=0.3, linewidth=0.5)
+        im = ax.imshow(pot.reshape((xdim2,ydim2)), origin='lower', cmap='inferno_r', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1]))
+        ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.15, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+        ax.plot(trajec[k][:,0], trajec[k][:,1],'k', alpha=0.7, linewidth=0.5)
         ax.set_title(title[k])  
  
             
@@ -266,7 +266,7 @@ for k in np.arange(3):
     cbar = ax.cax.colorbar(im, format=sfmt)#%.0e')
     cbar = grid.cbar_axes[0].colorbar(im)
     
-    fig.savefig(os.path.join(charts_path, save[k]+'_intro.png'), dpi=150,bbox_inches='tight')
+    fig.savefig(os.path.join(charts_path, save[k]+'_intro.eps'), dpi=150,bbox_inches='tight')
 
 #####################plotting
     
@@ -280,10 +280,10 @@ grid = AxesGrid(fig, 111,
                 )
  
 for ax in grid: #i in range(timeframe):
-    im = ax.imshow(pot.reshape((xdim2,ydim2)), origin='lower', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1]))
-    ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.05, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
-    ax.plot(traj_ab_upper[:,0], traj_ab_upper[:,1],'w', alpha=0.3, linewidth=0.5)
-    ax.plot(traj_ab_lower[:,0], traj_ab_lower[:,1],'r', alpha=0.6, linewidth=0.5)
+    im = ax.imshow(pot.reshape((xdim2,ydim2)), cmap='inferno_r', origin='lower', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1]))
+    ax.imshow(densAB.reshape((xdim,ydim)), cmap='Greys', alpha=.15, origin='lower', extent=(interval[0,0],interval[0,1],interval[1,0],interval[1,1]))
+    ax.plot(traj_ab_upper[:,0], traj_ab_upper[:,1],'k', alpha=0.7, linewidth=0.5)
+    ax.plot(traj_ab_lower[:,0], traj_ab_lower[:,1],'r', alpha=1, linewidth=0.5)
     ax.set_title('$V(x,y)$')  
  
         
@@ -294,4 +294,4 @@ sfmt.set_powerlimits((0, 0))
 cbar = ax.cax.colorbar(im, format=sfmt)#%.0e')
 cbar = grid.cbar_axes[0].colorbar(im)
 
-fig.savefig(os.path.join(charts_path, 'trajlower_upper'+'_intro.png'), dpi=150,bbox_inches='tight')
+fig.savefig(os.path.join(charts_path, 'trajlower_upper'+'_intro.eps'), dpi=150,bbox_inches='tight')
