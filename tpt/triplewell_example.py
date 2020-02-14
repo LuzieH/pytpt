@@ -290,7 +290,7 @@ data = norm_reac_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , M, (3*M,3), v_min, v_max,np.array(['$\hat{\mu}^{AB}_0$','$\hat{\mu}^{AB}_1$','$\hat{\mu}^{AB}_2$','$\hat{\mu}^{AB}_3$','$\hat{\mu}^{AB}_4$','$\hat{\mu}^{AB}_5$']),background=densAB) 
-fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.eps'), dpi=100,bbox_inches='tight')
+fig.savefig(os.path.join(charts_path, 'triplewell_reac_dens_p.png'), dpi=100,bbox_inches='tight')
 
 #define AB sets
 densAB = np.zeros(dim_st)
@@ -316,13 +316,13 @@ for m in np.arange(M):
  
             
 fig = plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), M, (3*M,3), subtitles_m('$f^+_{}$',M)) 
-fig.savefig(os.path.join(charts_path, 'triplewell_eff_p.eps'), dpi=100,bbox_inches='tight')
+fig.savefig(os.path.join(charts_path, 'triplewell_eff_p.png'), dpi=100,bbox_inches='tight')
 
 
 plot_rate(
     rate=rate_p,
     time_av_rate=time_av_rate_p,                                                               
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.eps'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.png'),
     title='',xlabel = 'm', average_rate_legend=r'$ \bar{k}^{AB}_M $'
 )
  
