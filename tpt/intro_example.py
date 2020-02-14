@@ -295,4 +295,4 @@ sfmt.set_powerlimits((0, 0))
 cbar = ax.cax.colorbar(im, format=sfmt)#%.0e')
 cbar = grid.cbar_axes[0].colorbar(im)
 
-fig.savefig(os.path.join(charts_path, 'trajlower_upper'+'_intro.eps'), dpi=150,bbox_inches='tight')
+fig.savefig(os.path.join(charts_path, 'trajlower_upper'+'_intro.png'), dpi=300,bbox_inches='tight')
