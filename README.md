@@ -1,5 +1,11 @@
 # transitions
 
+Implementation of Transition Path Theory for:
+- stationary Markov chains (transition_paths.py),
+- for periodically varying Markov chains (transition_paths_periodic.py),
+- for time-inhomogenous Markov chains over finite time intervals (transition_paths_finite.py).
+
+
 ## Quick Start
 1. Clone the project in a local repository:
 ```
