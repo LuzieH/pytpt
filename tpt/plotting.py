@@ -9,6 +9,11 @@ PLASMA = mpl.cm.get_cmap('plasma', 512)
 NETWORK_CMAP = mpl.colors.ListedColormap(
     PLASMA(np.linspace(0.40, 0.90, 256))
 )
+TRIPLEWELL_CMAP = mpl.cm.get_cmap('inferno_r', 512)
+#INFERNO_REV = mpl.cm.get_cmap('inferno_r')
+#TRIPLEWELL_CMAP = mpl.colors.ListedColormap(
+#    INFERNO_REV(np.linspace(0.40, 0.90, 256))
+#)
 
 def plot_colorbar_only(file_path):
     # https://matplotlib.org/examples/api/colorbar_only.html
@@ -397,7 +402,7 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
             vmin=potential.min(),
             vmax=potential.max(),
             origin='lower',
-            cmap='inferno_r',
+            cmap=TRIPLEWELL_CMAP,
             extent=[-2, 2, -1, 2],
         )
         grid[i].title.set_text(subtitles[i])
@@ -461,7 +466,7 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
             Us[i],
             Vs[i],
             norms[i],
-            cmap='inferno_r',
+            cmap=TRIPLEWELL_CMAP,
             width=0.02,
             scale=25, 
         )             
@@ -497,7 +502,7 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
     for ax in grid:
         if np.isnan(eff_vectors_unit[i,:,:]).all()==False: #if not all values are nan
             ax.imshow(background.reshape(datashape), alpha=1, vmin=0, vmax=3, cmap='Greys', origin='lower', extent=extent)
-            im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap='inferno_r', width=0.02, scale=25)             
+            im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap=TRIPLEWELL_CMAP, width=0.02, scale=25)             
             ax.set_title(titles[i])  
         i = i + 1
     #fig.suptitle(title)
@@ -533,7 +538,7 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles,ba
     for ax in grid: #i in range(timeframe):
         if np.isnan(data[i,:]).all()==False: #if not all values are nan
             ax.imshow(background.reshape(datashape), cmap='Greys', alpha=1, origin='lower', extent=extent)
-            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, cmap = 'inferno_r', origin='lower', alpha=0.9, extent=extent)
+            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, cmap =TRIPLEWELL_CMAP, origin='lower', alpha=0.9, extent=extent)
  
             ax.set_title(titles[i])  
         i = i + 1
