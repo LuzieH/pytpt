@@ -5,14 +5,14 @@ import networkx as nx
 from mpl_toolkits.axes_grid1 import AxesGrid
 from matplotlib.ticker import ScalarFormatter
 
-PLASMA = mpl.cm.get_cmap('plasma', 512)
+PLASMA = mpl.cm.get_cmap('plasma_r', 500)
 NETWORK_CMAP = mpl.colors.ListedColormap(
-    PLASMA(np.linspace(0.40, 0.90, 256))
+    PLASMA(np.linspace(0.10, 0.65, 275))
 )
 TRIPLEWELL_CMAP = mpl.cm.get_cmap('inferno_r', 512)
-#INFERNO_REV = mpl.cm.get_cmap('inferno_r')
+#INFERNO_REV = mpl.cm.get_cmap('inferno_r', 512)
 #TRIPLEWELL_CMAP = mpl.colors.ListedColormap(
-#    INFERNO_REV(np.linspace(0.40, 0.90, 256))
+#    INFERNO_REV(np.linspace(0.05, 0.925, 448))
 #)
 
 def plot_colorbar_only(file_path):
