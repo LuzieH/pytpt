@@ -26,10 +26,6 @@ ind_A = np.load(os.path.join(my_path, 'data/triplewell_ind_A.npy'))
 ind_B = np.load(os.path.join(my_path, 'data/triplewell_ind_B.npy'))
 ind_C = np.load(os.path.join(my_path, 'data/triplewell_ind_C.npy'))
 
-#define AB sets
-densAB = np.zeros(dim_st)
-densAB[ind_A]=1
-densAB[ind_B]=1
 ############################################################################
 #state space
 x = np.arange(interval[0,0],interval[0,1]+dx, dx) #box centers in x and y direction
@@ -42,6 +38,11 @@ dim_st = xdim*ydim # dimension of the statespace
 xn=np.reshape(xv,(xdim*ydim,1))
 yn=np.reshape(yv,(xdim*ydim,1))
 grid = np.squeeze(np.array([xn,yn]))
+
+#define AB sets
+densAB = np.zeros(dim_st)
+densAB[ind_A]=1
+densAB[ind_B]=1
 
 example_name = 'triplewell'
 #############################################################################
