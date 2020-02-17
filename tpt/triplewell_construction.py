@@ -158,5 +158,3 @@ np.save(os.path.join(my_path, 'data/triplewell_dx.npy'), dx)
 np.save(os.path.join(my_path, 'data/triplewell_ind_A.npy'), ind_A)
 np.save(os.path.join(my_path, 'data/triplewell_ind_B.npy'), ind_B)
 np.save(os.path.join(my_path, 'data/triplewell_ind_C.npy'), ind_C)
-
-

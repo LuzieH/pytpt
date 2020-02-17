@@ -33,8 +33,9 @@ class transitions_finite_time:
             initial density at time 0
         '''
 
-        assert isfunction(P) == True, "The transition matrices need to be inputted \
-        as a function mapping time to the corresponding transition matrix."
+        assert isfunction(P) == True, "The transition matrices need to be \
+        inputted as a function mapping time to the corresponding transition \
+        matrix."
 
         self._init_dens = init_dens
         self._ind_A = ind_A
@@ -144,7 +145,7 @@ class transitions_finite_time:
     def reac_density(self):
         '''
         '''
-        assert self._q_f.all() != None, "The committor functions need \
+        assert self._q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
         reac_dens = np.zeros((self._N, self._S))
@@ -167,14 +168,12 @@ class transitions_finite_time:
     def reac_norm_factor(self):
         '''
         '''
-        if type(self._reac_dens) != None:
-            reac_dens = self.reac_density()
-        else:
-            reac_dens = self._reac_dens
+        if self._reac_dens is None:
+            self._reac_dens = self.reac_density()
 
         reac_norm_factor = np.zeros(self._N)
         for n in range(0, self._N):
-            reac_norm_factor[n] = np.sum(reac_dens[n, :])
+            reac_norm_factor[n] = np.sum(self._reac_dens[n, :])
 
         self._reac_norm_factor = reac_norm_factor
         return self._reac_norm_factor
@@ -190,20 +189,17 @@ class transitions_finite_time:
         the normalized density is not defined for these times. 
         '''
 
-        if type(self._reac_dens) != None:
-            reac_dens = self.reac_density()
-        else:
-            reac_dens = self._reac_dens
+        if self._reac_dens is None:
+            self._reac_dens = self.reac_density()
 
-        if type(self._reac_norm_factor) != None:
-            reac_norm_factor = self.reac_norm_factor()
-        else:
-            reac_norm_factor = self._reac_norm_factor
+        if self._reac_norm_factor is None:
+            self._reac_norm_factor = self.reac_norm_factor()
 
         norm_reac_dens = np.zeros((self._N, self._S))
         for n in range(0, self._N):
-            if reac_norm_factor[n] != 0:
-                norm_reac_dens[n, :] = reac_dens[n, :] / reac_norm_factor[n] 
+            if self._reac_norm_factor[n] != 0:
+                norm_reac_dens[n, :] = self._reac_dens[n, :] /\
+                                       self._reac_norm_factor[n] 
             else:
                 norm_reac_dens[n] = np.nan 
 
@@ -218,7 +214,7 @@ class transitions_finite_time:
         from i to j during one time step. Only defined for n=0,..,N-2
         '''
 
-        assert self._q_f.all() != None, "The committor functions  need \
+        assert self._q_f is not None, "The committor functions  need \
         first to be computed by using the method committor"
 
         current = np.zeros((
@@ -263,7 +259,7 @@ class transitions_finite_time:
         rate array and the time averaged transition rate array
         '''
 
-        assert self._current.all() != None, "The reactive current first needs \
+        assert self._current is not None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
         rate = np.zeros((self._N, 2))
@@ -292,10 +288,11 @@ class transitions_finite_time:
         the reac_norm_factor and the transition rate.
         '''
 
-        assert self._reac_norm_factor.all() != None, "The normalization factor first needs \
-        to be computed by using the method reac_norm_factor"
+        assert self._reac_norm_factor is not None, "The normalization \
+        factor first needs to be computed by using the method \
+        reac_norm_factor"
         
-        assert self._rate.all() != None, "The transition rate first needs \
+        assert self._rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
         self._av_length = np.nansum(self._reac_norm_factor)/np.nansum(self._rate[:, 0])
@@ -308,7 +305,7 @@ class transitions_finite_time:
         currents over all neighbours of the node.
         '''
 
-        assert self._current.all() != None, "The reactive current first needs \
+        assert self._current is not None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
         current_dens = np.zeros((self._N, self._S))

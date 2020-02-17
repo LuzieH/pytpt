@@ -119,7 +119,7 @@ class transitions_mcs:
         density, we can compute the density of reactive trajectories,
         i.e. the probability to be at x in St and to be reactive.
         '''
-        assert self._q_f.all() != None , "The committor functions need \
+        assert self._q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
         self._reac_dens = np.multiply(
@@ -130,15 +130,20 @@ class transitions_mcs:
     def reac_norm_factor(self):
         '''
         '''
-        self._reac_dens = self.reac_density()
+        if self._reac_dens is None:                                                          
+            self._reac_dens = self.reac_density()                                                        
+        
         self._reac_norm_factor = np.sum(self._reac_dens)
         return self._reac_norm_factor
 
     def norm_reac_density(self):
         '''
         '''
-        self._reac_dens = self.reac_density()
-        self._reac_norm_factor = self.reac_norm_factor()
+        if self._reac_dens is None:
+            self._reac_dens = self.reac_density()
+        if self._reac_norm_factor is None:
+            self._reac_norm_factor = self.reac_norm_factor()
+
         self._norm_reac_dens = self._reac_dens / self._reac_norm_factor
         return self._norm_reac_dens
 
@@ -147,7 +152,7 @@ class transitions_mcs:
         and j, as the flow of reactive trajectories from i to j during
         one time step. 
         '''
-        assert self._q_f.all() != None, "The committor functions  need \
+        assert self._q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
         current = np.zeros(np.shape(self._P))
@@ -173,8 +178,8 @@ class transitions_mcs:
         into B
         '''
 
-        assert self._current.all() != None, "The reactive current first needs \
-        to be computed by using the method reac_current"
+        assert self._current is not None, "The reactive current first \
+        needs to be computed by using the method reac_current"
 
         self._rate = np.sum(self._current[self._ind_A, :])
         return self._rate
@@ -184,10 +189,11 @@ class transitions_mcs:
         the reac_norm_factor and the transition rate.
         '''
 
-        assert self._reac_norm_factor.all() != None, "The normalization factor first needs \
-        to be computed by using the method reac_norm_factor"
+        assert self._reac_norm_factor is not None, "The normalization \
+        factor first needs to be computed by using the method \
+        reac_norm_factor"
         
-        assert self._rate.all() != None, "The transition rate first needs \
+        assert self._rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
         self._length = self._reac_norm_factor / self._rate
@@ -199,8 +205,8 @@ class transitions_mcs:
         over all neighbours of the node.
         '''
 
-        assert self._current.all() != None, "The reactive current first needs \
-        to be computed by using the method reac_current"
+        assert self._current is not None, "The reactive current first \
+        needs to be computed by using the method reac_current"
 
         current_dens = np.zeros(self._S)
         for i in range(self._S):

@@ -194,7 +194,7 @@ class transitions_periodic:
     def reac_density(self):
         '''
         '''
-        assert self._q_f.all() != None, "The committor functions need \
+        assert self._q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
         reac_dens = np.zeros((self._M, self._S))
@@ -209,14 +209,12 @@ class transitions_periodic:
     def reac_norm_factor(self):
         '''
         '''
-        if type(self._reac_dens) != None:                                                          
-            reac_dens = self.reac_density()                                                        
-        else:                                                                                      
-            reac_dens = self._reac_dens                                                            
+        if self._reac_dens is None:
+            self._reac_dens = self.reac_density()
 
         reac_norm_factor = np.zeros(self._M)
         for m in range(0, self._M):
-            reac_norm_factor[m] = np.sum(reac_dens[m, :])
+            reac_norm_factor[m] = np.sum(self._reac_dens[m, :])
 
         self._reac_norm_factor = reac_norm_factor
         return self._reac_norm_factor
@@ -230,20 +228,17 @@ class transitions_periodic:
         array).
         '''
         
-        if type(self._reac_dens) != None:                                                          
-            reac_dens = self.reac_density()                                                        
-        else:                                                                                      
-            reac_dens = self._reac_dens                                                            
+        if self._reac_dens is None:                                                          
+            self._reac_dens = self.reac_density()                                                        
         
-        if type(self._reac_norm_factor) != None:                                                   
-            reac_norm_factor = self.reac_norm_factor()                                             
-        else:                                                                                      
-            reac_norm_factor = self._reac_norm_factor
+        if self._reac_norm_factor is None:                                                   
+            self._reac_norm_factor = self.reac_norm_factor()                                             
 
         norm_reac_dens = np.zeros((self._M, self._S))
         for m in range(self._M):
-            if reac_norm_factor[m] != 0:
-                norm_reac_dens[m, :] = reac_dens[m, :] / reac_norm_factor[m]
+            if self._reac_norm_factor[m] != 0:
+                norm_reac_dens[m, :] = self._reac_dens[m, :] /\
+                                       self._reac_norm_factor[m]
             else:
                 norm_reac_dens[m, :] = np.nan
 
@@ -255,7 +250,7 @@ class transitions_periodic:
         and j, as the flow of reactive trajectories from i to j during
         one time step. 
         '''
-        assert self._q_f.all() != None, "The committor functions  need \
+        assert self._q_f is not None, "The committor functions  need \
         first to be computed by using the method committor"
 
         current = np.zeros((self._M, self._S, self._S))
@@ -289,8 +284,8 @@ class transitions_periodic:
         time averaged transition rate array
         '''
 
-        assert self._current.all() != None, "The reactive current first needs \
-        to be computed by using the method reac_current"
+        assert self._current is not None, "The reactive current first \
+        needs to be computed by using the method reac_current"
 
         rate = np.zeros((self._M, 2))
 
@@ -319,10 +314,11 @@ class transitions_periodic:
         the reac_norm_factor and the transition rate.
         '''
 
-        assert self._reac_norm_factor.all() != None, "The normalization factor first needs \
-        to be computed by using the method reac_norm_factor"
+        assert self._reac_norm_factor is not None, "The normalization \
+        factor first needs to be computed by using the method \
+        reac_norm_factor"
         
-        assert self._rate.all() != None, "The transition rate first needs \
+        assert self._rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
         self._av_length = np.nansum(self._reac_norm_factor) / \
@@ -335,7 +331,7 @@ class transitions_periodic:
         currents over all neighbours of the node.
         '''
 
-        assert self._current.all() != None, "The reactive current first needs \
+        assert self._current is not None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
         current_dens = np.zeros((self._M, self._S))
