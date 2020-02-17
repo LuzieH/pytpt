@@ -2,16 +2,15 @@ import numpy as np
 
 
 class transitions_periodic:
-    """Calculates committor probabilities and transition statistics of 
-    Markov chain models with periodic forcing"""
+    '''Calculates committor probabilities and transition statistics of
+    Markov chain models with periodic forcing'''
 
     def __init__(self, P, M, ind_A, ind_B,  ind_C):
-        """
-        Initialize an instance by defining the periodically forced transition matrix
-        and the sets
-        between which the transition statistics should be computed.
+        '''Initialize an instance by defining the periodically forced
+        transition matrix and the sets between which the transition
+        statistics should be computed.
 
-        Parameters:
+        Args:
         P: function mapping time modulo (0,1,...,M-1) to the corresponding transition matirx
            (row-stochastic (rows sum to 1) transition matrix  
             of size S x S, S is the size of the state space St = {1,2,...,S})
@@ -25,7 +24,7 @@ class transitions_periodic:
         ind_C: array
             set of indices of the state space that belong to the transition 
             region C, i.e. the set C  =  St\(A u B)        
-        """
+        '''
 
         assert np.isclose(P(0), P(M)).all(), "The transition matrix function \
         needs to the time modulo M to the corresponding transition matrix."
@@ -55,10 +54,9 @@ class transitions_periodic:
         self._current_dens = None  # density of the effective current
 
     def stationary_density(self):
-        """
-        Computes the periodically varying stationary densities of 
+        '''Computes the periodically varying stationary densities of
         the transition matrix and returns them.
-        """
+        '''
 
         stat_dens = np.zeros((self._M, self._S))
 
@@ -72,8 +70,9 @@ class transitions_periodic:
         # get index of eigenvector with eigenvalue 1
         index = np.where(np.isclose(eigv, 1))[0]
         # normalize
-        stat_dens[0, :] = (np.real(eig[:, index]) /
-                           np.sum(np.real(eig[:, index]))).flatten()
+        stat_dens[0, :] = (
+            np.real(eig[:, index]) / np.sum(np.real(eig[:, index]))
+        ).flatten()
 
         # compute remaining densities
         for m in np.arange(1, self._M):
@@ -82,37 +81,37 @@ class transitions_periodic:
         return stat_dens
 
     def backward_transitions(self):
-        """
-        Computes the transition matrix backwards in time. Returns a function 
-        that for each time assigs the correct backward transition matrix modulo M.
-        When the stationary density in j is zero, the corresponding transition
-        matrix entries (row j) are set to 0.
-        """
+        '''Computes the transition matrix backwards in time. Returns a
+        function that for each time assigs the correct backward
+        transition matrix modulo M. When the stationary density in j is
+        zero, the corresponding transition matrix entries (row j) are
+        set to 0.
+        '''
         P_back_m = np.zeros((self._M, self._S, self._S))
 
         for m in range(self._M):
             # compute backward transition matrix
             for i in np.arange(self._S):
                 for j in np.arange(self._S):
-                    if self._stat_dens[np.mod(m, self._M), j]>0:
-                        P_back_m[m, j, i] = self._P(m-1)[i, j] *\
-                            self._stat_dens[np.mod(
-                                m-1, self._M), i]/self._stat_dens[np.mod(m, self._M), j]
+                    if self._stat_dens[np.mod(m, self._M), j] > 0:
+                        P_back_m[m, j, i] = self._P(m-1)[i, j] * \
+                            self._stat_dens[np.mod(m-1, self._M), i] / \
+                            self._stat_dens[np.mod(m, self._M), j]
 
-        # store backward matrix in a function that assigns each time point to the
-        # corresponding transition matrix
+        # store backward matrix in a function that assigns each time point
+        # to the corresponding transition matrix
         def P_back(k):
             return P_back_m[np.mod(k, self._M), :, :]
 
         return P_back
 
     def committor(self):
-        """
-        Function that computes the forward committor q_f (probability that the 
-        particle will next go to B rather than A) and backward commitor q_b 
-        (probability that the system last came from A rather than B) of the periodic 
-        system by using the stacked equations.
-        """
+        '''Function that computes the forward committor q_f (probability
+        that the particle will next go to B rather than A) and backward
+        commitor q_b (probability that the system last came from A
+        rather than B) of the periodic system by using the stacked
+        equations.
+        '''
 
         # dimension of sets A, B, C
         dim_A = np.size(self._ind_A)
@@ -128,10 +127,10 @@ class transitions_periodic:
 
         # filling D and b
         for m in np.arange(self._M):
-
             b = b + \
-                (D.dot(self._P(m)[np.ix_(self._ind_C, self._ind_B)])).dot(
-                    np.ones(dim_B))
+                (D.dot(
+                    self._P(m)[np.ix_(self._ind_C, self._ind_B)]
+                )).dot(np.ones(dim_B))
             D = D.dot(self._P(m)[np.ix_(self._ind_C, self._ind_C)])
 
         # B = I-D
@@ -146,31 +145,31 @@ class transitions_periodic:
         # on B: q^+ = 1
         q_f[:, self._ind_B] = 1
 
-        #q_f[self._M-1,self._ind_C] = self._P(self._M-1)[self._ind_C,:].dot(q_f[0,:])
-
         # compute committors at remaining times
         for m in np.arange(1, self._M)[::-1]:
             q_f[m, self._ind_C] = self._P(m)[self._ind_C, :].dot(
-                q_f[np.mod(m+1, self._M), :])
+                q_f[np.mod(m + 1, self._M), :]
+            )
 
         self._q_f = q_f
 
         # backward committor q^-_0 at time 0
         # to solve (I-D_back)q^-_0 = a
-
         # multiplied bakward transition matrix over all times with only transitions in C
         D_back = np.diag(np.ones(dim_C))
         a = np.zeros(dim_C)  # remaining part of the equation
 
-        times = np.arange(1, self._M+1)[::-1]
+        times = np.arange(1, self._M + 1)[::-1]
         times[0] = 0
 
         for m in times:
-
-            a = a + (D_back.dot(self._P_back(m)
-                                [np.ix_(self._ind_C, self._ind_A)])).dot(np.ones(dim_A))
-            D_back = D_back.dot(self._P_back(
-                m)[np.ix_(self._ind_C, self._ind_C)])
+            a = a + \
+                (D_back.dot(
+                    self._P_back(m)[np.ix_(self._ind_C, self._ind_A)]
+                )).dot(np.ones(dim_A))
+            D_back = D_back.dot(
+                self._P_back(m)[np.ix_(self._ind_C, self._ind_C)]
+            )
 
         # A = I-D_back
         A = np.diag(np.ones(dim_C)) - D_back
@@ -184,16 +183,17 @@ class transitions_periodic:
 
         # compute committor for remaining times
         for m in np.arange(1, self._M):
-            q_b[m, self._ind_C] = self._P_back(
-                m)[self._ind_C, :].dot(q_b[m-1, :])
+            q_b[m, self._ind_C] = self._P_back(m)[self._ind_C, :].dot(
+                q_b[m-1, :]
+            )
 
         self._q_b = q_b
 
         return self._q_f, self._q_b
     
     def reac_density(self):
-        """
-        """
+        '''
+        '''
         assert self._q_f.all() != None, "The committor functions need \
         first to be computed by using the method committor"
 
@@ -207,8 +207,8 @@ class transitions_periodic:
         return self._reac_dens
     
     def reac_norm_factor(self):
-        """
-        """
+        '''
+        '''
         if type(self._reac_dens) != None:                                                          
             reac_dens = self.reac_density()                                                        
         else:                                                                                      
@@ -222,13 +222,13 @@ class transitions_periodic:
         return self._reac_norm_factor
 
     def norm_reac_density(self):
-        """
-        Given the forward and backward committor and the density, 
-        we can compute the normalized density of reactive trajectories, 
-        i.e. the probability to be at x in S at time m, given the chain is reactive.
-        The function returns an array of the reactive density for each time 
-        (with time as the first index of the array).
-        """
+        '''Given the forward and backward committor and the density,
+        we can compute the normalized density of reactive trajectories,
+        i.e. the probability to be at x in S at time m, given the chain
+        is reactive. The function returns an array of the reactive
+        density for each time (with time as the first index of the
+        array).
+        '''
         
         if type(self._reac_dens) != None:                                                          
             reac_dens = self.reac_density()                                                        
@@ -251,10 +251,10 @@ class transitions_periodic:
         return self._norm_reac_dens
 
     def reac_current(self):
-        """
-        Computes the reactive current current[i,j] between nodes i and j, as the 
-        flow of reactive trajectories from i to j during one time step. 
-        """
+        '''Computes the reactive current current[i,j] between nodes i
+        and j, as the flow of reactive trajectories from i to j during
+        one time step. 
+        '''
         assert self._q_f.all() != None, "The committor functions  need \
         first to be computed by using the method committor"
 
@@ -266,9 +266,10 @@ class transitions_periodic:
             for i in np.arange(self._S):
                 for j in np.arange(self._S):
                     current[m, i, j] = self._stat_dens[m, i] * \
-                        self._q_b[m, i]*self._P(m)[i, j]*self._q_f[np.mod(m+1,self._M), j]
+                        self._q_b[m, i] * self._P(m)[i, j] * \
+                        self._q_f[np.mod(m+1,self._M), j]
 
-                    if i+1 > j:
+                    if i + 1 > j:
                         eff_current[m, i, j] = np.max(
                             [0, current[m, i, j]-current[m, j, i]])
                         eff_current[m, j, i] = np.max(
@@ -280,14 +281,13 @@ class transitions_periodic:
         return self._current, self._eff_current
 
     def transition_rate(self):
-        """
-        The transition rate is the average flow of reactive trajectories out of 
-        A at time m (first row) or into B at time m (second row)
-        The time-averaged transition rate is the averaged transition rate (out of A
-        and into B) over {0, ..., M-1}.        
-        This method returns a tuple with the transition rate array and the 
+        '''The transition rate is the average flow of reactive
+        trajectories out of A at time m (first row) or into B at time m
+        (second row). The time-averaged transition rate is the averaged
+        transition rate (out of A and into B) over {0, ..., M-1}. This
+        method returns a tuple with the transition rate array and the 
         time averaged transition rate array
-        """
+        '''
 
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
@@ -296,16 +296,18 @@ class transitions_periodic:
 
         # for each time m, sum of all currents out of A into S
         rate[:, 0] = np.sum(
-            self._current[:, self._ind_A, :], axis=(1, 2))
+            self._current[:, self._ind_A, :], axis=(1, 2)
+        )
 
         # for each time m, sum of all currents from S into B
         rate[:, 1] = np.sum(
-            self._current[:, :, self._ind_B], axis=(1, 2))
+            self._current[:, :, self._ind_B], axis=(1, 2)
+        )
 
         # averaged rate over the period
         time_av_rate = np.zeros(2)
-        time_av_rate[0] = sum(rate[:, 0])/(self._M) # out of A
-        time_av_rate[1] = sum(rate[:, 1])/(self._M) # into B
+        time_av_rate[0] = sum(rate[:, 0]) / (self._M) # out of A
+        time_av_rate[1] = sum(rate[:, 1]) / (self._M) # into B
         
         self._rate = rate 
         self._time_av_rate = time_av_rate
@@ -313,10 +315,9 @@ class transitions_periodic:
         return self._rate, self._time_av_rate
 
     def mean_transition_length(self):
-        """
-        The mean transition length can be computed as the ration of \
+        '''The mean transition length can be computed as the ration of
         the reac_norm_factor and the transition rate.
-        """
+        '''
 
         assert self._reac_norm_factor.all() != None, "The normalization factor first needs \
         to be computed by using the method reac_norm_factor"
@@ -324,15 +325,15 @@ class transitions_periodic:
         assert self._rate.all() != None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self._av_length = np.nansum(self._reac_norm_factor)/np.nansum(self._rate[:, 0])
+        self._av_length = np.nansum(self._reac_norm_factor) / \
+                np.nansum(self._rate[:, 0])
         
         return self._av_length 
 
     def current_density(self):
-        """
-        The current density in a node is the sum of effective currents 
-        over all neighbours of the node.
-        """
+        '''The current density in a node is the sum of effective
+        currents over all neighbours of the node.
+        '''
 
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"

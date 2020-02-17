@@ -2,15 +2,15 @@ import numpy as np
 
 
 class transitions_mcs:
-    """Calculates committor probabilities and transition statistics of 
-    Markov chain models"""
+    '''Calculates committor probabilities and transition statistics of
+    Markov chain models'''
 
     def __init__(self, P,  ind_A, ind_B,  ind_C, stat_dens=None):
-        """
-        Initialize an instance by defining the transition matrix and the sets 
-        between which the transition statistics should be computed.
+        '''Initialize an instance by defining the transition matrix and
+        the sets between which the transition statistics should be
+        computed.
 
-        Parameters:
+        Args:
         P: array
             irreducible and row-stochastic (rows sum to 1) transition matrix  
             of size S x S, S is the size of the state space St = {1,2,...,S} 
@@ -24,7 +24,7 @@ class transitions_mcs:
         stat_dens: array
             stationary distribution of P, normalized
             or if None, the density will be computed automatically
-        """
+        '''
 
         self._P = P
         self._stat_dens = stat_dens
@@ -50,41 +50,40 @@ class transitions_mcs:
             self._stat_dens = self.stationary_density()
 
     def stationary_density(self):
-        """
-        Computes the stationary density of the transition matrix as the eigenvector
-        of P with eigenvalue 1.
-        """
+        '''Computes the stationary density of the transition matrix as
+        the eigenvector of P with eigenvalue 1.
+        '''
 
         # compute stationary density
         eigv, eig = np.linalg.eig(np.transpose(self._P))
         # get index of eigenvector with eigenvalue 1 (up to small numerical error)
         index = np.where(np.isclose(eigv, 1))[0]
         # normalize
-        stat_dens = (np.real(eig[:, index]) /
-                     np.sum(np.real(eig[:, index]))).flatten()
+        stat_dens = (
+            np.real(eig[:, index]) / np.sum(np.real(eig[:, index]))
+        ).flatten()
 
         return stat_dens
 
     def committor(self):
-        """
-        Function that computes the forward committor q_f (probability that the 
-        particle will next go to B rather than A) and backward commitor q_b 
-        (probability that the system last came from A rather than B).
-        """
+        '''Function that computes the forward committor q_f
+        (probability that the particle will next go to B rather than A)
+        and backward commitor q_b (probability that the system last came
+        from A rather than B).
+        '''
 
         # compute backward transition matrix (if stat dens in state j is 0, 
         # the corresponding entries in the transition matrix are 0)
         P_back = np.zeros(np.shape(self._P))
         for i in np.arange(self._S):
             for j in np.arange(self._S):
-                if self._stat_dens[j]>0:
+                if self._stat_dens[j] > 0:
                     P_back[j, i] = self._P[i, j] * \
-                    self._stat_dens[i]/self._stat_dens[j]
+                    self._stat_dens[i] / self._stat_dens[j]
         self._P_back = P_back
 
-        # transition matrices from states in C to C
-        P_C = self._P[np.ix_(self._ind_C, self._ind_C)]  # forward
-        # backward in time
+        # forward and backward transition matrices from states in C to C
+        P_C = self._P[np.ix_(self._ind_C, self._ind_C)]
         P_back_C = self._P_back[np.ix_(self._ind_C, self._ind_C)]
 
         # amd from C to B
@@ -94,7 +93,7 @@ class transitions_mcs:
         q_f = np.zeros(self._S)
         # compute forward committor on C, the transition region
         b = np.sum(P_CB, axis=1)
-        inv1 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C)))-P_C)
+        inv1 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_C)
         q_f[np.ix_(self._ind_C)] = inv1.dot(b)
         # add entries to the forward committor vector on A, B
         # (i.e. q_f is 0 on A, 1 on B)
@@ -103,7 +102,7 @@ class transitions_mcs:
         q_b = np.zeros(self._S)
         # compute backward committor on C
         a = np.sum(P_back_CA, axis=1)
-        inv2 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C)))-P_back_C)
+        inv2 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_back_C)
         q_b[np.ix_(self._ind_C)] = inv2.dot(a)
         # add entries to forward committor vector on A, B
         # (i.e. q_b is 1 on A, 0 on B)
@@ -115,11 +114,11 @@ class transitions_mcs:
         return self._q_f, self._q_b
 
     def reac_density(self):
-        """
-        Given the forward and backward committor and the stationary density, 
-        we can compute the density of reactive trajectories, i.e. the probability
-        to be at x in St and to be reactive.
-        """
+        '''
+        Given the forward and backward committor and the stationary
+        density, we can compute the density of reactive trajectories,
+        i.e. the probability to be at x in St and to be reactive.
+        '''
         assert self._q_f.all() != None , "The committor functions need \
         first to be computed by using the method committor"
 
@@ -129,25 +128,25 @@ class transitions_mcs:
         return self._reac_dens
 
     def reac_norm_factor(self):
-        """
-        """
+        '''
+        '''
         self._reac_dens = self.reac_density()
         self._reac_norm_factor = np.sum(self._reac_dens)
         return self._reac_norm_factor
 
     def norm_reac_density(self):
-        """
-        """
+        '''
+        '''
         self._reac_dens = self.reac_density()
         self._reac_norm_factor = self.reac_norm_factor()
-        self._norm_reac_dens = self._reac_dens/self._reac_norm_factor
+        self._norm_reac_dens = self._reac_dens / self._reac_norm_factor
         return self._norm_reac_dens
 
     def reac_current(self):
-        """
-        Computes the reactive current current[i,j] between nodes i and j, as the 
-        flow of reactive trajectories from i to j during one time step. 
-        """
+        '''Computes the reactive current current[i,j] between nodes i
+        and j, as the flow of reactive trajectories from i to j during
+        one time step. 
+        '''
         assert self._q_f.all() != None, "The committor functions  need \
         first to be computed by using the method committor"
 
@@ -156,21 +155,23 @@ class transitions_mcs:
         for i in np.arange(self._S):
             for j in np.arange(self._S):
                 current[i, j] = self._stat_dens[i] * \
-                    self._q_b[i]*self._P[i, j]*self._q_f[j]
-                if i+1 > j:
+                    self._q_b[i] * self._P[i, j] * self._q_f[j]
+                if i + 1 > j:
                     eff_current[i, j] = np.max(
-                        [0, current[i, j]-current[j, i]])
+                        [0, current[i, j] - current[j, i]]
+                    )
                     eff_current[j, i] = np.max(
-                        [0, current[j, i]-current[i, j]])
+                        [0, current[j, i] - current[i, j]]
+                    )
         self._current = current
         self._eff_current = eff_current
         return self._current, self._eff_current
 
     def transition_rate(self):
-        """
-        The transition rate is the average flow of reactive trajectories out of A,
-        which is the same as the average rate into B
-        """
+        '''The transition rate is the average flow of reactive
+        trajectories out of A, which is the same as the average rate
+        into B
+        '''
 
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
@@ -179,10 +180,9 @@ class transitions_mcs:
         return self._rate
 
     def mean_transition_length(self):
-        """
-        The mean transition length can be computed as the ration of \
+        '''The mean transition length can be computed as the ration of
         the reac_norm_factor and the transition rate.
-        """
+        '''
 
         assert self._reac_norm_factor.all() != None, "The normalization factor first needs \
         to be computed by using the method reac_norm_factor"
@@ -190,26 +190,20 @@ class transitions_mcs:
         assert self._rate.all() != None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self._length = self._reac_norm_factor/self._rate
+        self._length = self._reac_norm_factor / self._rate
         return self._length
 
     def current_density(self):
-        """
+        '''
         The current density in a node is the sum of effective currents 
         over all neighbours of the node.
-        """
+        '''
 
         assert self._current.all() != None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
         current_dens = np.zeros(self._S)
-        for i in range(self._S):  # self._ind_C:
+        for i in range(self._S):
             current_dens[i] = np.sum(self._eff_current[i, :])
         self._current_dens = current_dens
         return self._current_dens
-
-
-# todo: def compute_all(self):
-# todo future: method to sample realizations -> get reactives densities thereof
-# it's also a check of all the quantities
-# todo: add to github repository
