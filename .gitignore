@@ -1,8 +1,5 @@
-# pycharm framework
-.idea
-
-# compiled pythonfiles
-*.pyc
+# virtual environment
+venv-transitions/
 
 # data directory
 tpt/data/
@@ -10,5 +7,11 @@ tpt/data/
 # charts directory
 tpt/charts/
 
-# virtual environment
-venv-transitions/
+# pycharm framework
+.idea
+
+# compiled pythonfiles
+*.pyc
+
+# swap files
+*.swp
