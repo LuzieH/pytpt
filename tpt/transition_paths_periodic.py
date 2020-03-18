@@ -3,7 +3,13 @@ import numpy as np
 
 class transitions_periodic:
     '''Calculates committor probabilities and transition statistics of
-    Markov chain models with periodic forcing'''
+    Markov chain models with periodic forcing.
+    
+    based on: 
+    Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). 
+    Extending Transition Path Theory: Periodically-Driven and Finite-Time 
+    Dynamics. arXiv preprint arXiv:2002.07474.
+    '''
 
     def __init__(self, P, M, ind_A, ind_B,  ind_C):
         '''Initialize an instance by defining the periodically forced
@@ -55,8 +61,8 @@ class transitions_periodic:
         self._current_dens = None  # density of the effective current
 
     def stationary_density(self):
-        '''Computes the periodically varying stationary densities of
-        the transition matrix and returns them.
+        '''Computes the periodically varying stationary densities at times
+        m=0,...,M-1 of the transition matrices and returns them.
         '''
 
         stat_dens = np.zeros((self._M, self._S))
@@ -108,8 +114,8 @@ class transitions_periodic:
 
     def committor(self):
         '''Function that computes the forward committor q_f (probability
-        that the particle will next go to B rather than A) and backward
-        commitor q_b (probability that the system last came from A
+        that the process will next go to B rather than A) and backward
+        committor q_b (probability that the system last came from A
         rather than B) of the periodic system by using the stacked
         equations.
         '''
@@ -156,7 +162,7 @@ class transitions_periodic:
 
         # backward committor q^-_0 at time 0
         # to solve (I-D_back)q^-_0 = a
-        # multiplied bakward transition matrix over all times with only 
+        # multiplied bakward transition matrix over all times with only
         # transitions in C
         D_back = np.diag(np.ones(dim_C))
         a = np.zeros(dim_C)  # remaining part of the equation
@@ -194,8 +200,15 @@ class transitions_periodic:
         return self._q_f, self._q_b
     
     def reac_density(self):
+        '''Given the forward and backward committor and the density,
+        we can compute the density of reactive trajectories,
+        i.e. the probability to be in a state in S at time m while 
+        being reactive. 
+        The function returns an array of the reactive
+        density for each time (with time as the first index of the
+        array).
         '''
-        '''
+        
         assert self._q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
@@ -210,6 +223,10 @@ class transitions_periodic:
     
     def reac_norm_factor(self):
         '''
+        This function returns the normalization factor of the reactive 
+        density, i.e. for each time m it returns the sum over S of
+        the reactive density at that time. This is nothing but the
+        probability to be reactive/on a transition at time m. 
         '''
         if self._reac_dens is None:
             self._reac_dens = self.reac_density()
@@ -222,10 +239,11 @@ class transitions_periodic:
         return self._reac_norm_factor
 
     def norm_reac_density(self):
-        '''Given the forward and backward committor and the density,
-        we can compute the normalized density of reactive trajectories,
-        i.e. the probability to be at x in S at time m, given the chain
-        is reactive. The function returns an array of the reactive
+        '''Given the reactive density and its normalization factor, 
+        this function returns the normalized reactive density, i.e. 
+        the probability to be at x in S at time m, given the chain
+        is reactive. 
+        The function returns an array of the reactive
         density for each time (with time as the first index of the
         array).
         '''

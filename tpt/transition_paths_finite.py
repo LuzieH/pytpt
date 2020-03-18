@@ -5,7 +5,12 @@ from inspect import isfunction
 class transitions_finite_time:
     '''Calculates committor probabilities and transition statistics of 
     Markov chain models over a finite time interval {0,...,N-1} of size
-    N
+    N.
+        
+    based on: 
+    Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). 
+    Extending Transition Path Theory: Periodically-Driven and Finite-Time 
+    Dynamics. arXiv preprint arXiv:2002.07474.
     '''
 
     def __init__(self, P, N, ind_A, ind_B,  ind_C, init_dens):
@@ -150,8 +155,15 @@ class transitions_finite_time:
 
 
     def reac_density(self):
+        '''Given the forward and backward committor and the density,
+        we can compute the density of reactive trajectories,
+        i.e. the probability to be in a state in S at time n=0,...,N-1 
+        while being reactive. 
+        The function returns an array of the reactive
+        density for each time (with time as the first index of the
+        array).
         '''
-        '''
+        
         assert self._q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
@@ -174,6 +186,12 @@ class transitions_finite_time:
 
     def reac_norm_factor(self):
         '''
+        This function returns the normalization factor of the reactive 
+        density, i.e. for each time n it returns the sum over S of
+        the reactive density at that time. This is nothing but the
+        probability to be reactive/on a transition at time m. 
+        Note that at times n=0 and N-1, the normalization factor is 0,
+        since there are no reactive trajectories yet.
         '''
         if self._reac_dens is None:
             self._reac_dens = self.reac_density()
@@ -187,13 +205,16 @@ class transitions_finite_time:
 
 
     def norm_reac_density(self):
-        '''Given the forward and backward committor and the density,
-        we can compute the normalized density of reactive trajectories,
-        i.e. the probability to be at x in S at time n, given the chain
-        is reactive. The function returns an array of the reactive
+        '''Given the reactive density and its normalization factor, 
+        this function returns the normalized reactive density, i.e. 
+        the probability to be at x in S at time n, given the chain
+        is reactive. 
+        The function returns an array of the reactive
         density for each time (with time as the first index of the
-        array). At times n=0 and n=N-1 the method returns None because
-        the normalized density is not defined for these times. 
+        array).
+        At times n=0 and n=N-1 the method returns None because
+        the normalized density is 0 for these times, and the 
+        normalized reactive density thus can't be computed.
         '''
 
         if self._reac_dens is None:

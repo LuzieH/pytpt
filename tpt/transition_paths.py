@@ -3,7 +3,13 @@ import numpy as np
 
 class transitions_mcs:
     '''Calculates committor probabilities and transition statistics of
-    Markov chain models in stationarity'''
+    Markov chain models in stationarity
+        
+    based on: 
+    Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). 
+    Extending Transition Path Theory: Periodically-Driven and Finite-Time 
+    Dynamics. arXiv preprint arXiv:2002.07474.
+    '''
 
     def __init__(self, P,  ind_A, ind_B,  ind_C, stat_dens=None):
         '''Initialize an instance by defining the transition matrix and
@@ -119,7 +125,7 @@ class transitions_mcs:
         '''
         Given the forward and backward committor and the stationary
         density, we can compute the density of reactive trajectories,
-        i.e. the probability to be at x in St and to be reactive.
+        i.e. the probability to be at x in St while being reactive.
         '''
         assert self._q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
@@ -131,6 +137,10 @@ class transitions_mcs:
 
     def reac_norm_factor(self):
         '''
+        This function returns the normalization factor of the reactive 
+        density, i.e. the sum over S of the reactive density. 
+        This is nothing but the probability to be reactive/on a 
+        transition at a certain time. 
         '''
         if self._reac_dens is None:                                                          
             self._reac_dens = self.reac_density()                                                        
@@ -139,7 +149,10 @@ class transitions_mcs:
         return self._reac_norm_factor
 
     def norm_reac_density(self):
-        '''
+        '''Given the reactive density and its normalization factor, 
+        this function returns the normalized reactive density, i.e. 
+        the probability to be at x in S, given the chain
+        is reactive. 
         '''
         if self._reac_dens is None:
             self._reac_dens = self.reac_density()
