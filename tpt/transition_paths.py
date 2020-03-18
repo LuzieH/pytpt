@@ -3,24 +3,25 @@ import numpy as np
 
 class transitions_mcs:
     '''Calculates committor probabilities and transition statistics of
-    Markov chain models'''
+    Markov chain models in stationarity'''
 
     def __init__(self, P,  ind_A, ind_B,  ind_C, stat_dens=None):
         '''Initialize an instance by defining the transition matrix and
-        the sets between which the transition statistics should be
-        computed.
+        the sets A and B between which the transition statistics should
+        be computed.
 
         Args:
         P: array
-            irreducible and row-stochastic (rows sum to 1) transition matrix  
-            of size S x S, S is the size of the state space St = {1,2,...,S} 
+            irreducible and row-stochastic (rows sum to 1) transition 
+            matrix of size S x S, S is the size of the state space 
+            St = {1,2,...,S} 
         ind_A: array
             set of indices of the state space that belong to the set A
         ind_B: array
             set of indices of the state space that belong to the set B
         ind_C: array
-            set of indices of the state space that belong to the transition 
-            region C, i.e. the set C  =  St\(A u B)        
+            set of indices of the state space that belong to the 
+            transition region C, i.e. the set C  =  St\(A u B)        
         stat_dens: array
             stationary distribution of P, normalized
             or if None, the density will be computed automatically
@@ -56,7 +57,8 @@ class transitions_mcs:
 
         # compute stationary density
         eigv, eig = np.linalg.eig(np.transpose(self._P))
-        # get index of eigenvector with eigenvalue 1 (up to small numerical error)
+        # get index of eigenvector with eigenvalue 1 (up to small numerical 
+        # error)
         index = np.where(np.isclose(eigv, 1))[0]
         # normalize
         stat_dens = (
@@ -93,8 +95,8 @@ class transitions_mcs:
         q_f = np.zeros(self._S)
         # compute forward committor on C, the transition region
         b = np.sum(P_CB, axis=1)
-        inv1 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_C)
-        q_f[np.ix_(self._ind_C)] = inv1.dot(b)
+        in1 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_C)
+        q_f[np.ix_(self._ind_C)] = in1.dot(b)
         # add entries to the forward committor vector on A, B
         # (i.e. q_f is 0 on A, 1 on B)
         q_f[np.ix_(self._ind_B)] = 1
@@ -102,8 +104,8 @@ class transitions_mcs:
         q_b = np.zeros(self._S)
         # compute backward committor on C
         a = np.sum(P_back_CA, axis=1)
-        inv2 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_back_C)
-        q_b[np.ix_(self._ind_C)] = inv2.dot(a)
+        in2 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_back_C)
+        q_b[np.ix_(self._ind_C)] = in2.dot(a)
         # add entries to forward committor vector on A, B
         # (i.e. q_b is 1 on A, 0 on B)
         q_b[np.ix_(self._ind_A)] = 1

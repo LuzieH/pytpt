@@ -11,10 +11,11 @@ class transitions_periodic:
         statistics should be computed.
 
         Args:
-        P: function mapping time modulo (0,1,...,M-1) to the corresponding transition matirx
-           (row-stochastic (rows sum to 1) transition matrix  
-            of size S x S, S is the size of the state space St = {1,2,...,S})
-           moreover the product of transition matrices should be irreducible
+        P:  function mapping time modulo (0,1,...,M-1) to the 
+            corresponding transition matrix (row-stochastic)  
+            of size S x S, S is the size of the state space 
+            St = {1,2,...,S}), moreover the product of transition 
+            matrices should be irreducible
         M: int
             size of the period
         ind_A: array
@@ -22,8 +23,8 @@ class transitions_periodic:
         ind_B: array
             set of indices of the state space that belong to the set B
         ind_C: array
-            set of indices of the state space that belong to the transition 
-            region C, i.e. the set C  =  St\(A u B)        
+            set of indices of the state space that belong to the 
+            transition region C, i.e. the set C  =  St\(A u B)        
         '''
 
         assert np.isclose(P(0), P(M)).all(), "The transition matrix function \
@@ -155,7 +156,8 @@ class transitions_periodic:
 
         # backward committor q^-_0 at time 0
         # to solve (I-D_back)q^-_0 = a
-        # multiplied bakward transition matrix over all times with only transitions in C
+        # multiplied bakward transition matrix over all times with only 
+        # transitions in C
         D_back = np.diag(np.ones(dim_C))
         a = np.zeros(dim_C)  # remaining part of the equation
 
