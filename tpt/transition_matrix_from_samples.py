@@ -52,7 +52,8 @@ def transitionmatrix_2D(force,  sigma, dt, lag, Nstep, interval,  x, y, \
                     new_X = current_X + (force(current_X[0],current_X[1]))*dt \ 
                     + sigma*np.sqrt(dt)*np.random.randn(2)
                     for d in range(dim): #dim=2
-                        if new_X[d] <interval[d,0]: #reflective boundary conditions
+                        #reflective boundary conditions
+                        if new_X[d] <interval[d,0]: 
                             new_X[d] = interval[d,0] \ 
                             + (interval[d,0]-new_X[d])
                         if new_X[d] >interval[d,1]:
