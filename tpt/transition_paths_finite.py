@@ -15,11 +15,13 @@ class transitions_finite_time:
 
         Args:
         P: array
-            #if the dynamics are time-independent:
-            #    irreducible and row-stochastic (rows sum to 1) transition matrix  
-            #    of size S x S, S is the size of the state space St={1,2,...,S} 
-            if the dynamics are time-dependent: 
-                function P(n) is a transition matrix defined for n=0,...,N
+            - if the dynamics are time-independent:
+            irreducible and row-stochastic (rows sum to 1) transition
+            matrix of size S x S, S is the size of the state space
+            St={1,2,...,S} 
+            - if the dynamics are time-dependent: 
+                function P(n) is a transition matrix defined for 
+                n=0,...,N-1
         N: int
             size of the time interval {0,1,...,N-1}
         ind_A: array
@@ -27,8 +29,8 @@ class transitions_finite_time:
         ind_B: array
             set of indices of the state space that belong to the set B
         ind_C: array
-            set of indices of the state space that belong to the transition 
-            region C, i.e. the set C = St\(A u B)        
+            set of indices of the state space that belong to the 
+            transition region C, i.e. the set C = St\(A u B)        
         init_dens: array
             initial density at time 0
         '''
@@ -54,7 +56,8 @@ class transitions_finite_time:
         self._eff_current = None  # effective reactive current
         self._rate = None  # rate of transitions from A to B
         self._av_length = None  # mean transition length from A to B
-        self._time_av_rate = None  # time-averaged rate of transitions from A to B
+        # time-averaged rate of transitions from A to B
+        self._time_av_rate = None  
         self._current_dens = None  # density of the effective current
 
 
@@ -69,7 +72,8 @@ class transitions_finite_time:
         dens_n[0, :] = self._init_dens
 
         for n in np.arange(self._N - 1):
-            # compute density at next time n+1 by applying the transition matrix
+            # compute density at next time n+1 by applying the 
+            # transition matrix
             dens_n[n + 1, :] = dens_n[n, :].dot(self._P(n))
 
         return dens_n
@@ -85,15 +89,18 @@ class transitions_finite_time:
         q_f = np.zeros((self._N, self._S))
         q_b = np.zeros((self._N, self._S))
 
-        # forward committor is 1 on B, 0 on A, at time N, q_f is additionally 0 on C
+        # forward committor is 1 on B, 0 on A, at time N, q_f is 
+        # additionally 0 on C
         q_f[self._N - 1, self._ind_B] = 1
-        # backward committor is 1 on A, 0 on B, at time 0, q_b is additionally 0 on C
+        # backward committor is 1 on A, 0 on B, at time 0, q_b is 
+        # additionally 0 on C
         q_b[0, self._ind_A] = 1
 
         # density at time n-1
         dens_nmin1 = self._init_dens
 
-        # iterate through all times n, backward in time for q_f, forward in time for q_b
+        # iterate through all times n, backward in time for q_f, forward 
+        # in time for q_b
         for n in range(1, self._N):
 
             # define the restricted transition matrices at time N-n-1
@@ -114,8 +121,8 @@ class transitions_finite_time:
             dens_n = dens_nmin1.dot(self._P(n - 1))
 
             # ensure that when dividing by the distribution and it's 0,
-            # we don't divide by zero, there is no contribution, thus we can replace
-            # the inverse by zero
+            # we don't divide by zero, there is no contribution, thus we 
+            # can replace the inverse by zero
             d_n_inv = dens_n[self._ind_C]
             for i in range(np.size(self._ind_C)):
                 if d_n_inv[i] > 0:
@@ -203,7 +210,8 @@ class transitions_finite_time:
             else:
                 norm_reac_dens[n] = np.nan 
 
-        # obs: at time 0 and N-1, the reactive density is zero, the event "to be reactive" is not possible
+        # obs: at time 0 and N-1, the reactive density is zero, the event "to 
+        # be reactive" is not possible
         self._norm_reac_dens = norm_reac_dens
         return self._norm_reac_dens
 
@@ -295,7 +303,8 @@ class transitions_finite_time:
         assert self._rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self._av_length = np.nansum(self._reac_norm_factor)/np.nansum(self._rate[:, 0])
+        self._av_length = np.nansum(self._reac_norm_factor) \
+            / np.nansum(self._rate[:, 0])
         
         return self._av_length
     
