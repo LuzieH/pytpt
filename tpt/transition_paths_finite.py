@@ -21,9 +21,9 @@ class transitions_finite_time:
         Args:
         P: array
             - if the dynamics are time-independent:
-            irreducible and row-stochastic (rows sum to 1) transition
-            matrix of size S x S, S is the size of the state space
-            St={1,2,...,S} 
+                irreducible and row-stochastic (rows sum to 1) 
+                transition matrix of size S x S, S is the size
+                of the state space St={1,2,...,S} 
             - if the dynamics are time-dependent: 
                 function P(n) is a transition matrix defined for 
                 n=0,...,N-1
