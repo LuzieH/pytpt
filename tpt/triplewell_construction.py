@@ -11,7 +11,7 @@ my_path = os.path.abspath(os.path.dirname(__file__))
 ##############################################################################
 #triple well in 2D energy landscape V and gradient dV
 factor = 0.25
-V_param = lambda x, y, p: -1 * factor*(3*np.exp(-x**2-(y-(1./3))**2) \ 
+V_param = lambda x, y, p: -1 * factor*(3*np.exp(-x**2-(y-(1./3))**2) \
                 - p*np.exp(-x**2-(y-(5./3))**2) - 5*np.exp(-(x-1)**2-y**2) \
                 - 5*np.exp(-(x+1)**2-y**2)  + 0.2*(x**4) + 0.2*(y-1./3)**4)
 
@@ -59,7 +59,7 @@ subtitles=[
 plot_3well_vector_field(
     vector_field=dV0,
     vector_field_forced=dV_forced,
-    file_path=os.path.join(charts_path, example_name + '_' \ 
+    file_path=os.path.join(charts_path, example_name + '_' \
                            + 'vector_field.png'),
     title=title,
     subtitles=subtitles,
@@ -102,7 +102,7 @@ T_small_noise=tms.transitionmatrix_2D(dV0, sigma_small, dt, lag, 4 * Nstep, \
 # transition matrix for triple well plus circular forcing
 T_m = np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
-    T_m[m, :, :] = tms.transitionmatrix_2D(lambda x, y : dV_forced(x, y, m), sigma, \ 
+    T_m[m, :, :] = tms.transitionmatrix_2D(lambda x, y : dV_forced(x, y, m), sigma, \
                                            dt, lag, Nstep, interval, x, y, dx, dim)
 
 ##############################################################################
