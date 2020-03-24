@@ -2,14 +2,6 @@ import transition_paths as tp
 import transition_paths_periodic as tpp
 import transition_paths_finite as tpf
 
-from plotting import plot_network_density as plot_density, \
-                     plot_network_effective_current as plot_effective_current, \
-                     plot_network_effcurrent_and_rate as plot_effcurrent_and_rate, \
-                     plot_rate, \
-                     plot_reactiveness, \
-                     plot_convergence, \
-                     plot_colorbar_only
-
 import pickle
 import numpy as np
 import networkx as nx
@@ -26,25 +18,17 @@ data_path = os.path.join(my_path, 'data')
 charts_path = os.path.join(my_path, 'charts')
 example_name = 'small_network'
 
-# load data about small network
-states = np.load(
-    os.path.join(data_path, example_name + '_' + 'states.npy'),
-    allow_pickle=True, 
-)
-states = states.item()
-labels = np.load(
-    os.path.join(data_path, example_name + '_' + 'labels.npy'),
-    allow_pickle=True, 
-)
-labels = labels.item()
-pos = np.load(
-    os.path.join(data_path, example_name + '_' + 'pos.npy'),
+# load small network construction data
+network_construction = np.load(
+    os.path.join(data_path, example_name + '_' + 'construction.npz'),
     allow_pickle=True,
 )
-pos = pos.item()
-T = np.load(os.path.join(data_path, example_name + '_' + 'T.npy'))
-L = np.load(os.path.join(data_path, example_name + '_' + 'L.npy'))
-K = np.load(os.path.join(data_path, example_name + '_' + 'K.npy'))
+states = network_construction['states'].item()
+labels = network_construction['labels'].item()
+pos = network_construction['pos'].item()
+T = network_construction['T']
+L = network_construction['L']
+K = network_construction['K']
 
 S = len(states)
 
@@ -219,7 +203,6 @@ for n in np.arange(1, N_max + 1):
 
 
 # save the transition statistics in npz files
-
 npz_path = os.path.join(data_path, example_name + '_' + 'ergodic.npz')
 np.savez(
     npz_path,

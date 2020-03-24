@@ -3,6 +3,8 @@ import numpy as np
 import os.path
 
 my_path = os.path.abspath(os.path.dirname(__file__))
+data_path = os.path.join(my_path, 'data')
+example_name = 'small_network'
 
 # classification of states
 states = {
@@ -53,7 +55,7 @@ T[4, 3] = 0.15
 T[4, 4] = 0.7
 
 # L: 0-rowsum matrix
-# L+T does not have the 1-2 connection and L-T does not have the 2-3 connection 
+# L+T does not have the 1-2 connection and L-T does not have the 2-3 connection
 L = np.zeros((S, S))
 L[0, 1] =  0.05
 L[0, 3] = -0.05
@@ -80,9 +82,14 @@ K[4, 1] =  0.2
 K[4, 3] =  0.1
 K[4, 4] = -0.3
 
-np.save(os.path.join(my_path, 'data/small_network_states.npy'), states)
-np.save(os.path.join(my_path, 'data/small_network_labels.npy'), labels)
-np.save(os.path.join(my_path, 'data/small_network_pos.npy'), pos)
-np.save(os.path.join(my_path, 'data/small_network_T.npy'), T)
-np.save(os.path.join(my_path, 'data/small_network_L.npy'), L)
-np.save(os.path.join(my_path, 'data/small_network_K.npy'), K)
+# save construction
+npz_path = os.path.join(data_path, example_name + '_' + 'construction.npz')
+np.savez(
+    npz_path,
+    states=states,
+    labels=labels,
+    pos=pos,
+    T=T,
+    L=L,
+    K=K,
+)

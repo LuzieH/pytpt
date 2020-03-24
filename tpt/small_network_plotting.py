@@ -37,28 +37,20 @@ data_path = os.path.join(my_path, 'data')
 charts_path = os.path.join(my_path, 'charts')
 example_name = 'small_network'
 
-# load data from small network construction
-states = np.load(
-    os.path.join(data_path, example_name + '_' + 'states.npy'),
-    allow_pickle=True, 
-)
-states = states.item()
-labels = np.load(
-    os.path.join(data_path, example_name + '_' + 'labels.npy'),
-    allow_pickle=True, 
-)
-labels = labels.item()
-pos = np.load(
-    os.path.join(data_path, example_name + '_' + 'pos.npy'),
+# load small network construction data
+network_construction = np.load(
+    os.path.join(data_path, example_name + '_' + 'construction.npz'),
     allow_pickle=True,
 )
-pos = pos.item()
-T = np.load(os.path.join(data_path, example_name + '_' + 'T.npy'))
-L = np.load(os.path.join(data_path, example_name + '_' + 'L.npy'))
-K = np.load(os.path.join(data_path, example_name + '_' + 'K.npy'))
+states = network_construction['states'].item()
+labels = network_construction['labels'].item()
+pos = network_construction['pos'].item()
+T = network_construction['T']
+L = network_construction['L']
+K = network_construction['K']
 P = T + L
 
-# load npz files 
+# load small network statistics data 
 network_ergodic = np.load(
     os.path.join(data_path, example_name + '_' + 'ergodic.npz')
 )
