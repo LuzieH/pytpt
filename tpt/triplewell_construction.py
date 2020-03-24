@@ -6,9 +6,10 @@ import numpy as np
 import os.path
 
 my_path = os.path.abspath(os.path.dirname(__file__))
+data_path = os.path.join(my_path, 'data')
+charts_path = os.path.join(my_path, 'charts')
+example_name = 'triplewell'
 
-
-##############################################################################
 #triple well in 2D energy landscape V and gradient dV
 factor = 0.25
 V_param = lambda x, y, p: -1 * factor*(3*np.exp(-x**2-(y-(1./3))**2) \
@@ -28,7 +29,6 @@ dV_param_y = lambda x, y, p: -1 * factor*((-2*3*(y-1./3)) \
 V0 = lambda x, y: -1 * V_param(x, y, 3)
 dV0 = lambda x, y: np.array([dV_param_x(x, y, 3), dV_param_y(x, y, 3)])
 
-##############################################################################
 # triple well in 2D gradient dV plus circular forcing
 M = 6 # length of period
 
@@ -38,8 +38,7 @@ factor_forced = 1.4
 dV_forced = lambda x, y, m: np.array([dV_param_x(x, y, 3), dV_param_y(x, y, 3)]) \
                 + factor_forced*np.cos(m*2.*np.pi/M)* np.array([-y, x])
 
-charts_path = os.path.join(my_path, 'charts')
-example_name = 'triplewell'
+# plot potential and gradient
 title = 'Triple well Potential'
 subtitles=[
     r'$V(x, y)$', 
@@ -65,7 +64,6 @@ plot_3well_vector_field(
     subtitles=subtitles,
 )
 
-##############################################################################
 #count matrix (triple well, no extra forcing)
 interval = np.array([[-2, 2], [-1.2, 2.2]]) #size of state space
 dim = np.shape(interval)[0] #dimension of state space
@@ -98,14 +96,13 @@ sigma_small = 0.26
 T_small_noise=tms.transitionmatrix_2D(dV0, sigma_small, dt, lag, 4 * Nstep, \
                                       interval, x, y, dx, dim)
 
-##############################################################################
+
 # transition matrix for triple well plus circular forcing
 T_m = np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
     T_m[m, :, :] = tms.transitionmatrix_2D(lambda x, y : dV_forced(x, y, m), sigma, \
                                            dt, lag, Nstep, interval, x, y, dx, dim)
 
-##############################################################################
 # defining A and B
 # define by center and radius!
 A_center = np.array([-1, 0])  
@@ -155,14 +152,16 @@ ind_A = np.argwhere(
         ).flatten()
  
  
-############################################################################## 
-# save
-np.save(os.path.join(my_path, 'data/triplewell_T.npy'), T)
-np.save(os.path.join(my_path, 'data/triplewell_T_m.npy'), T_m)
-np.save(os.path.join(my_path, 'data/triplewell_T_small_noise.npy'), \
-        T_small_noise)
-np.save(os.path.join(my_path, 'data/triplewell_interval.npy'), interval)
-np.save(os.path.join(my_path, 'data/triplewell_dx.npy'), dx)
-np.save(os.path.join(my_path, 'data/triplewell_ind_A.npy'), ind_A)
-np.save(os.path.join(my_path, 'data/triplewell_ind_B.npy'), ind_B)
-np.save(os.path.join(my_path, 'data/triplewell_ind_C.npy'), ind_C)
+# save construction
+npz_path = os.path.join(data_path, example_name + '_' + 'construction.npz')
+np.savez(
+    npz_path,
+    interval=interval,
+    dx=dx,
+    ind_A=ind_A,
+    ind_B=ind_B,
+    ind_C=ind_C,
+    T=T,
+    T_m=T_m,
+    T_small_noise=T_small_noise,
+)
