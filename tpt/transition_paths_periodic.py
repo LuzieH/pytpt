@@ -1,5 +1,9 @@
 import numpy as np
 
+import os.path
+
+MY_PATH = os.path.abspath(os.path.dirname(__file__))
+DATA_PATH = os.path.join(MY_PATH, 'data')
 
 class transitions_periodic:
     '''Calculates committor probabilities and transition statistics of
@@ -362,3 +366,31 @@ class transitions_periodic:
             self._current_dens = current_dens
 
         return self._current_dens
+    
+    def compute_statistics(self):
+        '''
+        '''
+        self.stationary_density()
+        self.backward_transitions()
+        self.committor()
+        self.norm_reac_density()
+        self.reac_current()
+        self.transition_rate()
+        self.mean_transition_length()
+
+    def save_statistics(self, example_name, dynamics):
+        '''
+        '''
+        npz_path = os.path.join(DATA_PATH, example_name + '_' + dynamics+ '.npz')
+        np.savez(
+            npz_path,
+            stat_dens=self._stat_dens,
+            q_f=self._q_f,
+            q_b=self._q_b,
+            reac_norm_factor=self._reac_norm_factor,
+            norm_reac_dens=self._norm_reac_dens,
+            eff_current=self._eff_current,
+            rate=self._rate,
+            time_av_rate=self._time_av_rate,
+            av_length=self._av_length,
+        )

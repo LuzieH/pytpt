@@ -73,31 +73,37 @@ q_b = network_ergodic['q_b']
 norm_reac_dens = network_ergodic['norm_reac_dens']
 eff_current = network_ergodic['eff_current']
 rate = network_ergodic['rate']
+length = network_ergodic['length']
 
 stat_dens_p = network_periodic['stat_dens']
 q_f_p = network_periodic['q_f']
 q_b_p = network_periodic['q_b']
+reac_norm_factor_p = network_periodic['reac_norm_factor']
 norm_reac_dens_p = network_periodic['norm_reac_dens']
 eff_current_p = network_periodic['eff_current']
 rate_p = network_periodic['rate']
+time_av_rate_p = network_periodic['time_av_rate']
+av_length_p = network_periodic['av_length']
 
-stat_dens_f = network_finite['stat_dens']
+dens_f = network_finite['dens']
 q_f_f = network_finite['q_f']
 q_b_f = network_finite['q_b']
-norm_reac_dens_f = network_finite['norm_reac_dens']
 reac_norm_factor_f = network_finite['reac_norm_factor']
+norm_reac_dens_f = network_finite['norm_reac_dens']
 eff_current_f = network_finite['eff_current']
 rate_f = network_finite['rate']
 time_av_rate_f = network_finite['time_av_rate']
+av_length_f = network_finite['av_length']
 
-stat_dens_inhom = network_inhom['stat_dens']
+dens_inhom = network_inhom['dens']
 q_f_inhom = network_inhom['q_f']
 q_b_inhom = network_inhom['q_b']
-norm_reac_dens_inhom = network_inhom['norm_reac_dens']
 reac_norm_factor_inhom = network_inhom['reac_norm_factor']
+norm_reac_dens_inhom = network_inhom['norm_reac_dens']
 eff_current_inhom = network_inhom['eff_current']
 rate_inhom = network_inhom['rate']
 time_av_rate_inhom = network_inhom['time_av_rate']
+av_length_inhom = network_inhom['av_length']
 
 q_f_conv = network_conv['q_f']
 q_b_conv = network_conv['q_b']
@@ -107,28 +113,26 @@ N = 5
 N_inhom = 5
 
 print("rate (infinite-time, stationary): %f" % rate)
-#print("periodic-averaged rate (infinite-time, periodic): %f" % time_av_rate_p[0])
+print("periodic-averaged rate (infinite-time, periodic): %f" % time_av_rate_p[0])
 print("time-averaged rate (finite-time, time-hom.): %f" % time_av_rate_f[0])
 print("time-averaged rate (finite-time, time-inhom.): %f" % time_av_rate_inhom[0])
 
-#print("mean length (infinite-time, stationary): %f" % mean_length)
-#print("mean length (infinite-time, periodic): %f" % mean_length_p)
-#print("mean length (finite-time, time-homogeneous): %f" % mean_length_f)
-#print("mean length (finite-time, time-inhomogeneous): %f" % mean_length_inhom)
-
-
+print("mean length (infinite-time, stationary): %f" % length)
+print("mean length (infinite-time, periodic): %f" % av_length_p)
+print("mean length (finite-time, time-homogeneous): %f" % av_length_f)
+print("mean length (finite-time, time-inhomogeneous): %f" % av_length_inhom)
 
 v_min_dens = min([
     np.min(stat_dens),
     np.min(stat_dens_p),
-    np.min(stat_dens_f),
-    np.min(stat_dens_inhom),
+    np.min(dens_f),
+    np.min(dens_inhom),
 ])
 v_max_dens = max([
     np.max(stat_dens),
     np.max(stat_dens_p),
-    np.max(stat_dens_f),
-    np.max(stat_dens_inhom),
+    np.max(dens_f),
+    np.max(dens_inhom),
 ])
 v_min_q_f = min([
     np.min(q_f),
@@ -311,7 +315,7 @@ shifted_rate_f[:, 0] = rate_f[:N-1, 0]
 shifted_rate_f[:, 1] = rate_f[1:, 1]
 
 plot_density(
-    data=stat_dens_f,
+    data=dens_f,
     graphs=graphs_f,
     pos=pos,
     labels=labels,
@@ -380,7 +384,7 @@ shifted_rate_inhom[:, 0] = rate_inhom[:N_inhom-1, 0]
 shifted_rate_inhom[:, 1] = rate_inhom[1:, 1]
 
 plot_density(
-    data=stat_dens_inhom,
+    data=dens_inhom,
     graphs=graphs_inhom,
     pos=pos,
     labels=labels,

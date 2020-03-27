@@ -38,37 +38,29 @@ ind_B = np.array([4])
 
 
 # TPT ergodic, infinite-time
-
+dynamics = 'ergodic'
 # transition matrix
 P = T + L
-
 # instantiate
 small = tp.transitions_mcs(P, ind_A, ind_B, ind_C)
-stat_dens = small.stationary_density()
-
-# compute committor probabilities
-[q_f, q_b] = small.committor()
-
-# therof compute the normalized reactive density
-norm_reac_dens = small.norm_reac_density()
-
-# and reactive currents
-[current, eff_current] = small.reac_current()
-rate = small.transition_rate()  # AB discrete transition rate
-
-mean_length = small.mean_transition_length()
+# compute statistics
+small.compute_statistics()
+# save statistics
+small.save_statistics(example_name, dynamics)
 
 #compute share along upper (1) and lower path (via 3)
-eff_out = eff_current[0,1]+eff_current[0,3]
-share_1 = eff_current[0,1]/eff_out
-share_3 = eff_current[0,3]/eff_out
-print('In the infinite-time, stationary case, a share of '+str(share_3)+' outflow is via 3, while a share of '+str(share_1)+' outflow is via 1')
+eff_current = small._eff_current
+eff_out = eff_current[0, 1] + eff_current[0, 3]
+share_1 = eff_current[0, 1] / eff_out
+share_3 = eff_current[0, 3] / eff_out
+print('In the infinite-time, stationary case, a share of ' + str(share_3) + ' outflow is via 3, while a share of '+str(share_1)+' outflow is via 1')
 
 
 # TPT periodisch
 # use as transition matrix T + wL, where w varies from 1..0..-1...0
 # either faster switching or slower dynamics
 
+dynamics = 'periodic'
 M = 6  # 6 size of period
 
 # transition matrix at time k
@@ -77,70 +69,51 @@ def P_p(k):
     # matrix L with weights 1..0..-1.. over one period
     return T + np.cos(k*2.*np.pi/M)*L
 
-
 # instantiate
 small_periodic = tpp.transitions_periodic(P_p, M, ind_A, ind_B, ind_C)
-stat_dens_p = small_periodic.stationary_density()
-
-[q_f_p, q_b_p] = small_periodic.committor()
-P_back_m = small_periodic.backward_transitions()
-
-# normalized reactive density
-norm_reac_dens_p = small_periodic.norm_reac_density()
-
-# and reactive currents
-[current_p, eff_current_p] = small_periodic.reac_current()
-
-[rate_p, time_av_rate_p] = small_periodic.transition_rate()
-
-mean_length_p = small_periodic.mean_transition_length()
+# compute statistics
+small_periodic.compute_statistics()
+# save statistics
+small_periodic.save_statistics(example_name, dynamics)
 
 
 # TPT finite time, time-homogeneous
+dynamics = 'finite'
 
 # transition matrix at time n
 def P_hom(n):
     return P
 
 # initial density
-init_dens_small = stat_dens
+init_dens_small = small.stationary_density()
+
 N = 5  # size of time interval
 
 # instantiate
 small_finite = tpf.transitions_finite_time(
     P_hom, N, ind_A, ind_B,  ind_C, init_dens_small)
-[q_f_f, q_b_f] = small_finite.committor()
-
-stat_dens_f = small_finite.density()
-
-# reactive density (zero at time 0 and N)
-reac_norm_factor_f = small_finite.reac_norm_factor()
-norm_reac_dens_f = small_finite.norm_reac_density()
-
-# and reactive currents
-[current_f, eff_current_f] = small_finite.reac_current()
-
-# first row, out rate of A, second row in rate for B
-[rate_f, time_av_rate_f] = small_finite.transition_rate()
-
-mean_length_f = small_finite.mean_transition_length()
+# compute statistics
+small_finite.compute_statistics()
+# save statistics
+small_finite.save_statistics(example_name, dynamics)
 
 
 # TPT finite time, time-inhomogeneous
+dynamics = 'inhom'
 # size of time interval
 N_inhom = 5 
 
 # transition matrix at time n
 
 def P_inhom(n):
-    if np.mod(n,2)==0:
+    if np.mod(n, 2) == 0:
         return P + K
     else: 
         return P - K
 
 def P_inhom_2(n):
     if n in [0, 1, 2, 7, 8, 9]: 
-        return P - K/3
+        return P - K / 3
     elif n in [3, 6]:
         return P
     else:
@@ -150,7 +123,7 @@ def P_inhom_3(n):
     return np.sin(n*2.*np.pi/N_inhom)*K
 
 # initial density
-init_dens_small_inhom = stat_dens
+init_dens_small_inhom = small.stationary_density()
 
 # instantiate
 small_inhom = tpf.transitions_finite_time(
@@ -161,20 +134,10 @@ small_inhom = tpf.transitions_finite_time(
     ind_C,
     init_dens_small_inhom,
 )
-[q_f_inhom, q_b_inhom] = small_inhom.committor()
-
-stat_dens_inhom = small_inhom.density()
-# reactive density (zero at time 0 and N)
-reac_norm_factor_inhom = small_inhom.reac_norm_factor()
-norm_reac_dens_inhom = small_inhom.norm_reac_density()
-
-# and reactive currents
-[current_inhom, eff_current_inhom] = small_inhom.reac_current()
-
-# first row, out rate of A, second row in rate for B
-[rate_inhom, time_av_rate_inhom] = small_inhom.transition_rate()
-
-mean_length_inhom = small_inhom.mean_transition_length()
+# compute statistics
+small_inhom.compute_statistics()
+# save statistics
+small_inhom.save_statistics(example_name, dynamics)
 
 
 # TPT finite time extension to infinite time, convergence analysis
@@ -201,52 +164,7 @@ for n in np.arange(1, N_max + 1):
     q_f_conv[n-1, :] = q_f_ex[n, :]
     q_b_conv[n-1, :] = q_b_ex[n, :]
 
-
 # save the transition statistics in npz files
-npz_path = os.path.join(data_path, example_name + '_' + 'ergodic.npz')
-np.savez(
-    npz_path,
-    stat_dens=stat_dens,
-    q_f=q_f,
-    q_b=q_b,
-    norm_reac_dens=norm_reac_dens,
-    eff_current=eff_current,
-    rate=rate,
-)
-npz_path = os.path.join(data_path, example_name + '_' + 'periodic.npz')
-np.savez(
-    npz_path,
-    stat_dens=stat_dens_p,
-    q_f=q_f_p,
-    q_b=q_b_p,
-    norm_reac_dens=norm_reac_dens_p,
-    eff_current=eff_current_p,
-    rate=rate_p,
-)
-npz_path = os.path.join(data_path, example_name + '_' + 'finite.npz')
-np.savez(
-    npz_path,
-    stat_dens=stat_dens_f,
-    q_f=q_f_f,
-    q_b=q_b_f,
-    norm_reac_dens=norm_reac_dens_f,
-    reac_norm_factor=reac_norm_factor_f,
-    eff_current=eff_current_f,
-    rate=rate_f,
-    time_av_rate=time_av_rate_f,
-)
-npz_path = os.path.join(data_path, example_name + '_' + 'inhom.npz')
-np.savez(
-    npz_path,
-    stat_dens=stat_dens_inhom,
-    q_f=q_f_inhom,
-    q_b=q_b_inhom,
-    norm_reac_dens=norm_reac_dens_inhom,
-    reac_norm_factor=reac_norm_factor_inhom,
-    eff_current=eff_current_inhom,
-    rate=rate_inhom,
-    time_av_rate=time_av_rate_inhom,
-)
 npz_path = os.path.join(data_path, example_name + '_' + 'conv.npz')
 np.savez(
     npz_path,

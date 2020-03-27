@@ -1,6 +1,10 @@
 import numpy as np
 from inspect import isfunction
 
+import os.path
+
+MY_PATH = os.path.abspath(os.path.dirname(__file__))
+DATA_PATH = os.path.join(MY_PATH, 'data')
 
 class transitions_finite_time:
     '''Calculates committor probabilities and transition statistics of 
@@ -52,6 +56,7 @@ class transitions_finite_time:
         self._P = P
         self._S = np.shape(P(0))[0]  # size of the state space
 
+        self._dens = None # density
         self._q_b = None  # backward committor
         self._q_f = None  # forward committor
         self._reac_dens = None  # reactive density
@@ -81,6 +86,7 @@ class transitions_finite_time:
             # transition matrix
             dens_n[n + 1, :] = dens_n[n, :].dot(self._P(n))
 
+        self._dens = dens_n
         return dens_n
 
 
@@ -348,3 +354,30 @@ class transitions_finite_time:
 
         self._current_dens = current_dens
         return self._current_dens
+    
+    def compute_statistics(self):
+        '''
+        '''
+        self.density()
+        self.committor()
+        self.norm_reac_density()
+        self.reac_current()
+        self.transition_rate()
+        self.mean_transition_length()
+
+    def save_statistics(self, example_name, dynamics):
+        '''
+        '''
+        npz_path = os.path.join(DATA_PATH, example_name + '_' + dynamics+ '.npz')
+        np.savez(
+            npz_path,
+            dens=self._dens,
+            q_f=self._q_f,
+            q_b=self._q_b,
+            reac_norm_factor=self._reac_norm_factor,
+            norm_reac_dens=self._norm_reac_dens,
+            eff_current=self._eff_current,
+            rate=self._rate,
+            time_av_rate=self._time_av_rate,
+            av_length=self._av_length,
+        )

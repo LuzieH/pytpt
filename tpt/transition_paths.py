@@ -1,5 +1,9 @@
 import numpy as np
 
+import os.path
+
+MY_PATH = os.path.abspath(os.path.dirname(__file__))
+DATA_PATH = os.path.join(MY_PATH, 'data')
 
 class transitions_mcs:
     '''Calculates committor probabilities and transition statistics of
@@ -10,6 +14,7 @@ class transitions_mcs:
     Extending Transition Path Theory: Periodically-Driven and Finite-Time 
     Dynamics. arXiv preprint arXiv:2002.07474.
     '''
+    
 
     def __init__(self, P,  ind_A, ind_B,  ind_C, stat_dens=None):
         '''Initialize an instance by defining the transition matrix and
@@ -228,3 +233,29 @@ class transitions_mcs:
             current_dens[i] = np.sum(self._eff_current[i, :])
         self._current_dens = current_dens
         return self._current_dens
+
+    def compute_statistics(self):
+        '''
+        '''
+        self.stationary_density()
+        self.committor()
+        self.norm_reac_density()
+        self.reac_current()
+        self.transition_rate()
+        self.mean_transition_length()
+
+    def save_statistics(self, example_name, dynamics):
+        '''
+        '''
+        npz_path = os.path.join(DATA_PATH, example_name + '_' + dynamics+ '.npz')
+        np.savez(
+            npz_path,
+            stat_dens=self._stat_dens,
+            q_f=self._q_f,
+            q_b=self._q_b,
+            reac_norm_factor=self._reac_norm_factor,
+            norm_reac_dens=self._norm_reac_dens,
+            eff_current=self._eff_current,
+            rate=self._rate,
+            length=self._length,
+        )
