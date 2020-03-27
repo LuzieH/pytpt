@@ -48,94 +48,58 @@ densAB = np.zeros(dim_st)
 densAB[ind_A] = 1
 densAB[ind_B] = 1
 
-#############################################################################
-# infinite-time ergodic
-
+# TPT ergodic, infinite-time
+dynamics = 'ergodic'
 # instantiate
 well3 = tp.transitions_mcs(T, ind_A, ind_B, ind_C)
-stat_dens = well3.stationary_density()
+# compute statistics
+well3.compute_statistics()
+# save statistics
+well3.save_statistics(example_name, dynamics)
 
-# compute committor probabilities
-[q_f, q_b] = well3.committor()
 
-# therof compute the normalized reactive density
-reac_norm_factor = well3.reac_norm_factor()
-norm_reac_dens = well3.norm_reac_density()
-
-# and reactive currents
-[current, eff_current] = well3.reac_current()
-rate = well3.transition_rate()  # AB discrete transition rate
-
-mean_length = well3.mean_transition_length()
-
-#############################################################################
-# periodic
+# TPT periodic
+dynamics = 'periodic'
 M = np.shape(T_m)[0]
 
 def Tm(m): 
-    return T_m[np.mod(m,M),:,:].squeeze()
+    return T_m[np.mod(m, M), :, :].squeeze()
 
 # instantiate
 well3_periodic = tpp.transitions_periodic(Tm, M, ind_A, ind_B, ind_C)
-stat_dens_p = well3_periodic.stationary_density()
+# compute statistics
+well3_periodic.compute_statistics()
+# save statistics
+well3_periodic.save_statistics(example_name, dynamics)
 
-[q_f_p, q_b_p] = well3_periodic.committor()
-P_back_m = well3_periodic.backward_transitions()
 
-# normalized reactive density
-reac_norm_factor_p = well3_periodic.reac_norm_factor()
-norm_reac_dens_p = well3_periodic.norm_reac_density()
-
-# and reactive currents
-[current_p, eff_current_p] = well3_periodic.reac_current()
- 
-[rate_p, time_av_rate_p] = well3_periodic.transition_rate()
-
-mean_length_p = well3_periodic.mean_transition_length()
-
-###################################
-#finite-time
+# TPT finite time, time-homogeneous
+dynamics = 'finite'
 
 def Tn(n):  
-    return T#T_m[np.mod(m,M),:,:].squeeze()
+    return T #T_m[np.mod(m,M),:,:].squeeze()
 
 N = 6 #time window
 
 # initial density
-init_dens_triple = stat_dens
-
+init_dens_well3_finite = well3._stat_dens
 # instantiate
-well3_finite = tpf.transitions_finite_time(Tn, N, ind_A, ind_B,  ind_C, init_dens_triple)
+well3_finite = tpf.transitions_finite_time(
+    Tn,
+    N,
+    ind_A,
+    ind_B,
+    ind_C,
+    init_dens_well3_finite,
+)
+# compute statistics
+well3_finite.compute_statistics()
+# save statistics
+well3_finite.save_statistics(example_name, dynamics)
  
-dens_f = well3_finite.density()
-[q_f_f, q_b_f] = well3_finite.committor()
- 
-# normalized reactive density
-reac_norm_factor_f = well3_finite.reac_norm_factor()
-norm_reac_dens_f = well3_finite.norm_reac_density()
-
-# and reactive currents
-[current_f, eff_current_f] = well3_finite.reac_current()
-
-[rate_f, time_av_rate_f] = well3_finite.transition_rate()
-
-mean_length_f = well3_finite.mean_transition_length()
 
 
-print("rate (infinite-time, stationary): %f" % rate)
-print("periodic-averaged rate (infinite-time, periodic): %f" % time_av_rate_p[0])
-print("time-averaged rate (finite-time, time-homogeneous): %f" % time_av_rate_f[0])
-
-print("mean length (infinite-time, stationary): %f" % mean_length)
-print("mean length (infinite-time, periodic): %f" % mean_length_p)
-print("mean length (finite-time, time-homogeneous): %f" % mean_length_f)
-
-
-
-###################################
 # finite time bifurcation analysis 
-
-#finite-time
 
 def Tn_small_noise(n):  
     return T_small_noise#T_m[np.mod(m,M),:,:].squeeze()
@@ -143,15 +107,15 @@ def Tn_small_noise(n):
 # compute stationary density of triple well with small noise to get initial density
 well3_small_noise = tp.transitions_mcs(T_small_noise, ind_A, ind_B, ind_C)
 stat_dens_small_noise = well3_small_noise.stationary_density()
-
 init_dens_triple_bif = stat_dens_small_noise
 
-#N_bif_array = np.array([20, 50, 100, 500])#time window 20-> lower channel only in stat dens, time window 50, lower channel in both
+#time window 20-> lower channel only in stat dens, time window 50, lower channel in both
+N_bif_array = np.array([20, 50, 100, 500])
 N_bif_size = np.shape(N_bif_array)[0]
 
-norm_reac_dens_f_bif_all = np.zeros((N_bif_size,dim_st))
-eff_current_f_bif_all = np.zeros((N_bif_size,dim_st,2))  
-color_current_f_bif_all = np.zeros((N_bif_size,dim_st))
+norm_reac_dens_f_bif_all = np.zeros((N_bif_size, dim_st))
+eff_current_f_bif_all = np.zeros((N_bif_size, dim_st, 2))  
+color_current_f_bif_all = np.zeros((N_bif_size, dim_st))
 
 subtitles_bif_dens = []
 subtitles_bif_eff = []
@@ -160,7 +124,14 @@ ind = 0
 for N_bif in N_bif_array:
     
     # instantiate
-    well3_finite_bif = tpf.transitions_finite_time(Tn_small_noise, N_bif, ind_A, ind_B,  ind_C, init_dens_triple_bif)
+    well3_finite_bif = tpf.transitions_finite_time(
+        Tn_small_noise,
+        N_bif,
+        ind_A,
+        ind_B,
+        ind_C,
+        init_dens_triple_bif,
+    )
      
     dens_f_bif = well3_finite_bif.density()
     [q_f_f_bif, q_b_f_bif] = well3_finite_bif.committor()
@@ -199,40 +170,6 @@ for N_bif in N_bif_array:
     ind = ind + 1
 
 # save the transition statistics in npz files
-npz_path = os.path.join(data_path, example_name + '_' + 'ergodic.npz')
-np.savez(
-    npz_path,
-    stat_dens=stat_dens,
-    q_f=q_f,
-    q_b=q_b,
-    norm_reac_dens=norm_reac_dens,
-    eff_current=eff_current,
-    rate=rate,
-)
-npz_path = os.path.join(data_path, example_name + '_' + 'periodic.npz')
-np.savez(
-    npz_path,
-    stat_dens=stat_dens_p,
-    q_f=q_f_p,
-    q_b=q_b_p,
-    norm_reac_dens=norm_reac_dens_p,
-    reac_norm_factor=reac_norm_factor_p,
-    eff_current=eff_current_p,
-    rate=rate_p,
-    time_av_rate=time_av_rate_p,
-)
-npz_path = os.path.join(data_path, example_name + '_' + 'finite.npz')
-np.savez(
-    npz_path,
-    stat_dens=dens_f,
-    q_f=q_f_f,
-    q_b=q_b_f,
-    norm_reac_dens=norm_reac_dens_f,
-    reac_norm_factor=reac_norm_factor_f,
-    eff_current=eff_current_f,
-    rate=rate_f,
-    time_av_rate=time_av_rate_f,
-)
 npz_path = os.path.join(data_path, example_name + '_' + 'bifurcation.npz')
 np.savez(
     npz_path,

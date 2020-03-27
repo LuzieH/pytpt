@@ -67,9 +67,11 @@ network_conv = np.load(
     os.path.join(data_path, example_name + '_' + 'conv.npz')
 )
 
+
 stat_dens = network_ergodic['stat_dens']
 q_f = network_ergodic['q_f']
 q_b = network_ergodic['q_b']
+reac_norm_factor = network_ergodic['reac_norm_factor']
 norm_reac_dens = network_ergodic['norm_reac_dens']
 eff_current = network_ergodic['eff_current']
 rate = network_ergodic['rate']

@@ -49,27 +49,31 @@ triplewell_bif = np.load(
 stat_dens = triplewell_ergodic['stat_dens']
 q_f = triplewell_ergodic['q_f']
 q_b = triplewell_ergodic['q_b']
+reac_norm_factor = triplewell_ergodic['reac_norm_factor']
 norm_reac_dens = triplewell_ergodic['norm_reac_dens']
 eff_current = triplewell_ergodic['eff_current']
 rate = triplewell_ergodic['rate']
+length = triplewell_ergodic['length']
 
 stat_dens_p = triplewell_periodic['stat_dens']
 q_f_p = triplewell_periodic['q_f']
 q_b_p = triplewell_periodic['q_b']
-norm_reac_dens_p = triplewell_periodic['norm_reac_dens']
 reac_norm_factor_p = triplewell_periodic['reac_norm_factor']
+norm_reac_dens_p = triplewell_periodic['norm_reac_dens']
 eff_current_p = triplewell_periodic['eff_current']
 rate_p = triplewell_periodic['rate']
 time_av_rate_p = triplewell_periodic['time_av_rate']
+av_length_p = triplewell_periodic['av_length']
 
-stat_dens_f = triplewell_finite['stat_dens']
+dens_f = triplewell_finite['dens']
 q_f_f = triplewell_finite['q_f']
 q_b_f = triplewell_finite['q_b']
-norm_reac_dens_f = triplewell_finite['norm_reac_dens']
 reac_norm_factor_f = triplewell_finite['reac_norm_factor']
+norm_reac_dens_f = triplewell_finite['norm_reac_dens']
 eff_current_f = triplewell_finite['eff_current']
 rate_f = triplewell_finite['rate']
 time_av_rate_f = triplewell_finite['time_av_rate']
+av_length_f = triplewell_finite['av_length']
 
 norm_reac_dens_f_bif_all = triplewell_bif['norm_reac_dens']
 eff_current_f_bif_all = triplewell_bif['eff_current']
@@ -92,6 +96,14 @@ grid = np.squeeze(np.array([xn,yn]))
 densAB = np.zeros(dim_st)
 densAB[ind_A] = 1
 densAB[ind_B] = 1
+
+print("rate (infinite-time, stationary): %f" % rate)
+print("periodic-averaged rate (infinite-time, periodic): %f" % time_av_rate_p[0])
+print("time-averaged rate (finite-time, time-homogeneous): %f" % time_av_rate_f[0])
+
+print("mean length (infinite-time, stationary): %f" % length)
+print("mean length (infinite-time, periodic): %f" % av_length_p)
+print("mean length (finite-time, time-homogeneous): %f" % av_length_f)
 
 
 # plots infinite-time, ergodic
@@ -220,7 +232,7 @@ plot_reactiveness(
 # plots finite-time
 N = 6 #time window
 
-data = stat_dens_f
+data = dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 fig = plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N, (3*N,3), v_min, v_max, subtitles_m('$\lambda({})$',N))
@@ -282,7 +294,8 @@ plot_reactiveness(
 )
 
 #plots bifurcation analysis, small noise
-N_bif_array = np.array([20, 50, 100, 500])#time window 20-> lower channel only in stat dens, time window 50, lower channel in both
+#time window 20-> lower channel only in stat dens, time window 50, lower channel in both
+N_bif_array = np.array([20, 50, 100, 500])
 N_bif_size = np.shape(N_bif_array)[0]
 subtitles_bif_dens = []
 subtitles_bif_eff = []

@@ -56,7 +56,7 @@ share_3 = eff_current[0, 3] / eff_out
 print('In the infinite-time, stationary case, a share of ' + str(share_3) + ' outflow is via 3, while a share of '+str(share_1)+' outflow is via 1')
 
 
-# TPT periodisch
+# TPT periodic
 # use as transition matrix T + wL, where w varies from 1..0..-1...0
 # either faster switching or slower dynamics
 
@@ -70,7 +70,13 @@ def P_p(k):
     return T + np.cos(k*2.*np.pi/M)*L
 
 # instantiate
-small_periodic = tpp.transitions_periodic(P_p, M, ind_A, ind_B, ind_C)
+small_periodic = tpp.transitions_periodic(
+    P_p,
+    M,
+    ind_A,
+    ind_B,
+    ind_C,
+)
 # compute statistics
 small_periodic.compute_statistics()
 # save statistics
@@ -84,14 +90,19 @@ dynamics = 'finite'
 def P_hom(n):
     return P
 
-# initial density
-init_dens_small = small.stationary_density()
-
 N = 5  # size of time interval
 
+# initial density
+init_dens_small_finite = small._stat_dens
 # instantiate
 small_finite = tpf.transitions_finite_time(
-    P_hom, N, ind_A, ind_B,  ind_C, init_dens_small)
+    P_hom,
+    N,
+    ind_A,
+    ind_B,
+    ind_C,
+    init_dens_small_finite,
+)
 # compute statistics
 small_finite.compute_statistics()
 # save statistics
@@ -123,8 +134,7 @@ def P_inhom_3(n):
     return np.sin(n*2.*np.pi/N_inhom)*K
 
 # initial density
-init_dens_small_inhom = small.stationary_density()
-
+init_dens_small_inhom = small._stat_dens
 # instantiate
 small_inhom = tpf.transitions_finite_time(
     P_inhom,
