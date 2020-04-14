@@ -2,10 +2,10 @@
 venv-transitions/
 
 # data directory
-transitions/examples/data/
+examples/data/
 
 # charts directory
-transitions/examples/charts/
+examples/charts/
 
 # pycharm framework
 .idea
