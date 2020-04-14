@@ -1,6 +1,6 @@
-import transition_paths as tp
-import transition_paths_periodic as tpp
-import transition_paths_finite as tpf
+from transitions import  transition_paths as tp
+from transitions import transition_paths_periodic as tpp
+from transitions import transition_paths_finite as tpf
 
 import pickle
 import numpy as np
