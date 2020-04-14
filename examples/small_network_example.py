@@ -1,14 +1,13 @@
-from transitions import  transition_paths as tp
+from transitions import transition_paths as tp
 from transitions import transition_paths_periodic as tpp
 from transitions import transition_paths_finite as tpf
-
+  
 import pickle
 import numpy as np
 import networkx as nx
 
 import os.path
-
-# TODO add colorbar to plots
+ 
 
 # general
 

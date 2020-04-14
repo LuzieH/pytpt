@@ -1,13 +1,9 @@
-import transition_paths as tp
-import transition_paths_periodic as tpp
-import transition_paths_finite as tpf
-
 from plotting import plot_3well, \
                      plot_3well_effcurrent, \
                      plot_rate, \
                      plot_reactiveness
 import numpy as np
-import matplotlib.pyplot as plt
+ 
 
 import os.path
 
