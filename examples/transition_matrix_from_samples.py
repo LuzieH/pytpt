@@ -1,7 +1,5 @@
 import numpy as np
  
-
-
  
 def sample_stat_trajectories_2D(force_function, sigma, dt, steps,\
                                 limits_x, limits_y):
