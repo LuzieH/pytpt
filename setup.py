@@ -14,5 +14,5 @@ setuptools.setup(
     url="https://github.com/LuzieH/transitions",
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=['numpy', 'scipy'],
+    install_requires=['numpy'],
 )
