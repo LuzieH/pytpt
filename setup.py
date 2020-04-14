@@ -6,13 +6,13 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="transitions",
     version="0.0.1",
-#    author=" ",
-#    author_email=" ",
-    description="Implementation of Transition Path Theory for stationary, periodically varying, as well as finite-time Markov chains.",
+    author="Luzie Helfmann and Enric Ribera Borrell",
+    author_email="luzie.helfmann@fu-berlin.de",
+    description="Implementation of Transition Path Theory for stationary, periodically varying, and finite-time Markov chains.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/LuzieH/transitions",
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=['numpy', 'scipy' , 'matplotlib'],
+    install_requires=['numpy', 'scipy'],
 )

@@ -83,7 +83,7 @@ yn = np.reshape(yv, (xdim*ydim, 1))
 
 grid = np.squeeze(np.array([xn, yn]))
 
-Nstep = 10000 # number of seeds per box for count matrix
+Nstep = 1000 # number of seeds per box for count matrix
 sigma = 1.0 
 dt= 0.02 # dt for Euler Maruyama discretization
 lag= 15 # lag time of transition matrix is lag*dt
