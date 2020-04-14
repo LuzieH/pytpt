@@ -15,3 +15,5 @@ tpt/charts/
 
 # swap files
 *.swp
+
+*.egg-info
