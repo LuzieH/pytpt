@@ -24,7 +24,7 @@ pip install -r requirements
 ```
 4. Create folders to store npy files and plots: 
 ```
-mkdir tpt/data
-mkdir tpt/charts
+mkdir examples/data
+mkdir examples/charts
 ```
 Rem: The above mentioned folders are ignored. 
