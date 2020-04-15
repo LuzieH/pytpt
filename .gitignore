@@ -7,6 +7,9 @@ examples/data/
 # charts directory
 examples/charts/
 
+# paper intro file
+examples/charts/intro_example.py
+
 # pycharm framework
 .idea
 
@@ -16,4 +19,5 @@ examples/charts/
 # swap files
 *.swp
 
+# egg info
 *.egg-info
