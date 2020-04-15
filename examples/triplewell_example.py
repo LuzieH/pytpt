@@ -1,6 +1,6 @@
-from transitions import transition_paths as tp
-from transitions import transition_paths_periodic as tpp
-from transitions import transition_paths_finite as tpf
+from transitions import stationary  
+from transitions import periodic  
+from transitions import finite  
 
 from plotting import plot_3well, \
                      plot_3well_effcurrent, \
@@ -50,7 +50,7 @@ densAB[ind_B] = 1
 # TPT ergodic, infinite-time
 dynamics = 'ergodic'
 # instantiate
-well3 = tp.transitions_mcs(T, ind_A, ind_B, ind_C)
+well3 = stationary.tpt(T, ind_A, ind_B, ind_C)
 # compute statistics
 well3.compute_statistics()
 # save statistics
@@ -65,7 +65,7 @@ def Tm(m):
     return T_m[np.mod(m, M), :, :].squeeze()
 
 # instantiate
-well3_periodic = tpp.transitions_periodic(Tm, M, ind_A, ind_B, ind_C)
+well3_periodic = periodic.tpt(Tm, M, ind_A, ind_B, ind_C)
 # compute statistics
 well3_periodic.compute_statistics()
 # save statistics
@@ -83,7 +83,7 @@ N = 6 #time window
 # initial density
 init_dens_well3_finite = well3._stat_dens
 # instantiate
-well3_finite = tpf.transitions_finite_time(
+well3_finite = finite.tpt(
     Tn,
     N,
     ind_A,
@@ -104,7 +104,7 @@ def Tn_small_noise(n):
     return T_small_noise#T_m[np.mod(m,M),:,:].squeeze()
 
 # compute stationary density of triple well with small noise to get initial density
-well3_small_noise = tp.transitions_mcs(T_small_noise, ind_A, ind_B, ind_C)
+well3_small_noise = stationary.tpt(T_small_noise, ind_A, ind_B, ind_C)
 stat_dens_small_noise = well3_small_noise.stationary_density()
 init_dens_triple_bif = stat_dens_small_noise
 
@@ -123,7 +123,7 @@ ind = 0
 for N_bif in N_bif_array:
     
     # instantiate
-    well3_finite_bif = tpf.transitions_finite_time(
+    well3_finite_bif = finite.tpt(
         Tn_small_noise,
         N_bif,
         ind_A,

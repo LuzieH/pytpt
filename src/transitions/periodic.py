@@ -5,7 +5,7 @@ import os.path
 MY_PATH = os.path.abspath(os.path.dirname(__file__))
 DATA_PATH = os.path.join(MY_PATH, 'data')
 
-class transitions_periodic:
+class tpt:
     '''Calculates committor probabilities and transition statistics of
     Markov chain models with periodic forcing.
     

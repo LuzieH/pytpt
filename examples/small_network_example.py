@@ -1,6 +1,6 @@
-from transitions import transition_paths as tp
-from transitions import transition_paths_periodic as tpp
-from transitions import transition_paths_finite as tpf
+from transitions import stationary  
+from transitions import periodic  
+from transitions import finite  
   
 import pickle
 import numpy as np
@@ -41,7 +41,7 @@ dynamics = 'ergodic'
 # transition matrix
 P = T + L
 # instantiate
-small = tp.transitions_mcs(P, ind_A, ind_B, ind_C)
+small = stationary.tpt(P, ind_A, ind_B, ind_C)
 # compute statistics
 small.compute_statistics()
 # save statistics
@@ -69,7 +69,7 @@ def P_p(k):
     return T + np.cos(k*2.*np.pi/M)*L
 
 # instantiate
-small_periodic = tpp.transitions_periodic(
+small_periodic = periodic.tpt(
     P_p,
     M,
     ind_A,
@@ -94,7 +94,7 @@ N = 5  # size of time interval
 # initial density
 init_dens_small_finite = small._stat_dens
 # instantiate
-small_finite = tpf.transitions_finite_time(
+small_finite = finite.tpt(
     P_hom,
     N,
     ind_A,
@@ -135,7 +135,7 @@ def P_inhom_3(n):
 # initial density
 init_dens_small_inhom = small._stat_dens
 # instantiate
-small_inhom = tpf.transitions_finite_time(
+small_inhom = finite.tpt(
     P_inhom,
     N_inhom,
     ind_A,
@@ -159,7 +159,7 @@ for n in np.arange(1, N_max + 1):
     N_ex = n*2 + 1
 
     # instantiate
-    small_finite_ex = tpf.transitions_finite_time(
+    small_finite_ex = finite.tpt(
         P_hom,
         N_ex,
         ind_A,
@@ -169,7 +169,7 @@ for n in np.arange(1, N_max + 1):
     )
     
     # compute statistics
-    [q_f_ex, q_b_ex] = small_finite_ex.committor()
+    [q_f_ex, q_b_ex] = small_ex.committor()
     q_f_conv[n-1, :] = q_f_ex[n, :]
     q_b_conv[n-1, :] = q_b_ex[n, :]
 

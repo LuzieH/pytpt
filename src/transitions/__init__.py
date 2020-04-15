@@ -1,4 +1,4 @@
-from transitions import transition_paths
-from transitions import transition_paths_finite
-from transitions import transition_paths_periodic
+from transitions import stationary
+from transitions import finite
+from transitions import periodic
 
