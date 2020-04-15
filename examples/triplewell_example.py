@@ -1,6 +1,6 @@
-from transitions import stationary  
-from transitions import periodic  
-from transitions import finite  
+from pytpt import stationary  
+from pytpt import periodic  
+from pytpt import finite  
 
 from plotting import plot_3well, \
                      plot_3well_effcurrent, \

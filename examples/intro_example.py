@@ -1,6 +1,6 @@
-import transition_paths as tp
-import transition_paths_periodic as tpp
-import transition_paths_finite as tpf
+from pytpt import stationary
+from pytpt import periodic
+from pytpt import finite
 
 from plotting import plot_3well, \
                      plot_3well_effcurrent, \
@@ -51,7 +51,7 @@ grid = np.squeeze(np.array([xn,yn]))
 # infinite-time ergodic
 
 # instantiate
-well3 = tp.transitions_mcs(T_small_noise, ind_A, ind_B, ind_C)
+well3 = stationary.tpt(T_small_noise, ind_A, ind_B, ind_C)
 stat_dens = well3.stationary_density()
 
 # compute committor probabilities
@@ -76,7 +76,7 @@ N = 20 #time window
 init_dens_triple = stat_dens
 
 # instantiate
-well3_finite = tpf.transitions_finite_time(Tn, N, ind_A, ind_B,  ind_C, init_dens_triple)
+well3_finite = finite.tpt(Tn, N, ind_A, ind_B,  ind_C, init_dens_triple)
  
 dens_f = well3_finite.density()
 [q_f_f, q_b_f] = well3_finite.committor()

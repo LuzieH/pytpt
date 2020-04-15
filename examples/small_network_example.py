@@ -1,6 +1,6 @@
-from transitions import stationary  
-from transitions import periodic  
-from transitions import finite  
+from pytpt import stationary  
+from pytpt import periodic  
+from pytpt import finite  
   
 import pickle
 import numpy as np

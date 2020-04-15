@@ -1,4 +1,4 @@
-# transitions
+﻿# pytpt
 
 Implementation of Transition Path Theory for:
 - stationary Markov chains (transition_paths.py),
@@ -11,7 +11,7 @@ Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). Extending T
 ## Quick Start
 1. Clone the project in a local repository:
 ```
-git clone https://github.com/LuzieH/transitions.git
+git clone https://github.com/LuzieH/pytpt.git
 ```
 2. Create Virtual Environment (Optional):
 ```

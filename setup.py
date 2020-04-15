@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="transitions",
+    name="pytpt",
     version="0.0.1",
     author="Luzie Helfmann and Enric Ribera Borrell",
     author_email="luzie.helfmann@fu-berlin.de",
