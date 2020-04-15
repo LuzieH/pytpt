@@ -203,7 +203,7 @@ fig = plot_3well(data, (xdim2,ydim2), (interval2[0,0],interval2[0,1],interval2[1
 #sigma_small = 0.5
 #limits_x = interval[0,:]
 #limits_y = interval[1,:]
-#traj2 = sample_stat_trajectories_2D(dV0, sigma_small, dt, steps, limits_x, limits_y)
+#traj2 = sampling.traj_2D(dV0, sigma_small, dt, steps, limits_x, limits_y)
 #plt.imshow(pot.reshape((xdim2,ydim2)), origin='lower', extent=(interval2[0,0],interval2[0,1],interval2[1,0],interval2[1,1])); plt.plot(traj2[:,0],traj2[:,1],'w', alpha=0.3, linewidth=0.5)
 ##
 #setABC = np.zeros((steps,3))

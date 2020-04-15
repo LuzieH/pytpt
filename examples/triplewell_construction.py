@@ -1,4 +1,4 @@
-import transition_matrix_from_samples as tms
+import sampling 
 from plotting import plot_3well_potential, plot_3well_vector_field
 
 import numpy as np
@@ -89,18 +89,18 @@ dt= 0.02 # dt for Euler Maruyama discretization
 lag= 15 # lag time of transition matrix is lag*dt
 
 # row stochastic transition matrix
-T = tms.transitionmatrix_2D(dV0, sigma, dt, lag, Nstep, interval, x, y, dx, dim)
+T = sampling.transitionmatrix_2D(dV0, sigma, dt, lag, Nstep, interval, x, y, dx, dim)
 
 # row stochastic transition matrix
 sigma_small = 0.26
-T_small_noise=tms.transitionmatrix_2D(dV0, sigma_small, dt, lag, 4 * Nstep, \
+T_small_noise=sampling.transitionmatrix_2D(dV0, sigma_small, dt, lag, 4 * Nstep, \
                                       interval, x, y, dx, dim)
 
 
 # transition matrix for triple well plus circular forcing
 T_m = np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
-    T_m[m, :, :] = tms.transitionmatrix_2D(lambda x, y : dV_forced(x, y, m), sigma, \
+    T_m[m, :, :] = sampling.transitionmatrix_2D(lambda x, y : dV_forced(x, y, m), sigma, \
                                            dt, lag, Nstep, interval, x, y, dx, dim)
 
 # defining A and B

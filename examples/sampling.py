@@ -1,6 +1,22 @@
 import numpy as np
 
 
+def traj_2D(force_function, sigma, dt, steps,\
+                                limits_x, limits_y):
+    '''returns a sampled trajectory of length steps and with an initial
+    position drawn uniformly from limits_x, limits_y. The trajectory is 
+    sampled from the diffusion process: dX = F(X) dt + sigma dW '''
+    traj = np.zeros((steps, 2))
+    traj[0, :] = np.array([
+        np.random.uniform(limits_x[0], limits_x[1]), \
+        np.random.uniform(limits_y[0], limits_y[1])
+    ])
+
+    for i in np.arange(1, steps):
+        traj[i, :] = traj[i-1, :] + force_function(traj[i-1, 0], traj[i-1, 1])*dt \
+        + np.sqrt(dt)*sigma*np.random.randn(2)
+    return traj
+
 def transitionmatrix_2D(force, sigma, dt, lag, Nstep, interval, x, y, \
                         dx, dim):
     ''' This function returns a row-stochastic transition matrix by 
