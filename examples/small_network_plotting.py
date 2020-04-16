@@ -8,7 +8,7 @@ from plotting import plot_network_density as plot_density, \
                      plot_convergence, \
                      plot_colorbar_only
 
-import pickle
+#import pickle
 
 import numpy as np
 import networkx as nx

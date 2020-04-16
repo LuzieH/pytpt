@@ -6,10 +6,17 @@ MY_PATH = os.path.abspath(os.path.dirname(__file__))
 DATA_PATH = os.path.join(MY_PATH, 'data')
 
 class tpt:
-    '''Calculates committor probabilities and transition statistics of
-    Markov chain models in stationarity
+    '''Calculates committor probabilities and A->B transition statistics of
+    discrete-time Markov chain models in stationarity.
         
     based on: 
+    Weinan, E., & Vanden-Eijnden, E. (2006). Towards a theory of 
+    transition paths. Journal of statistical physics, 123(3), 503.
+    
+    Metzner, P., Schütte, C., & Vanden-Eijnden, E. (2009). 
+    Transition path theory for Markov jump processes. Multiscale 
+    Modeling & Simulation, 7(3), 1192-1219.
+    
     Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). 
     Extending Transition Path Theory: Periodically-Driven and Finite-Time 
     Dynamics. arXiv preprint arXiv:2002.07474.
@@ -17,9 +24,9 @@ class tpt:
     
 
     def __init__(self, P,  ind_A, ind_B,  ind_C, stat_dens=None):
-        '''Initialize an instance by defining the transition matrix and
-        the sets A and B between which the transition statistics should
-        be computed.
+        '''Initialize an instance by defining the transition matrix P and
+        the subsets A and B (of the statespace) between which the 
+        transition statistics should be computed.
 
         Args:
         P: array
@@ -80,12 +87,12 @@ class tpt:
 
     def committor(self):
         '''Function that computes the forward committor q_f
-        (probability that the particle will next go to B rather than A)
+        (probability that the chain will next go to B rather than A)
         and backward commitor q_b (probability that the system last came
         from A rather than B).
         '''
 
-        # compute backward transition matrix (if stat dens in state j is 0, 
+        # compute backward transition matrix (if stat_dens in state j is 0, 
         # the corresponding entries in the transition matrix are 0)
         P_back = np.zeros(np.shape(self._P))
         for i in np.arange(self._S):
@@ -236,6 +243,7 @@ class tpt:
 
     def compute_statistics(self):
         '''
+        Function that runs all methods to compute transition statistics.
         '''
         self.stationary_density()
         self.committor()
@@ -246,6 +254,11 @@ class tpt:
 
     def save_statistics(self, example_name, dynamics):
         '''
+        Method that saves all the computed transition statistics, 
+        the not computed statistics are saved as None. 
+        
+        Args:
+            
         '''
         npz_path = os.path.join(DATA_PATH, example_name + '_' + dynamics+ '.npz')
         np.savez(

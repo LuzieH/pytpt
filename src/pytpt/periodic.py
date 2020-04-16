@@ -6,7 +6,7 @@ MY_PATH = os.path.abspath(os.path.dirname(__file__))
 DATA_PATH = os.path.join(MY_PATH, 'data')
 
 class tpt:
-    '''Calculates committor probabilities and transition statistics of
+    '''Calculates committor probabilities and A->B transition statistics of
     Markov chain models with periodic forcing.
     
     based on: 
@@ -17,7 +17,7 @@ class tpt:
 
     def __init__(self, P, M, ind_A, ind_B,  ind_C):
         '''Initialize an instance by defining the periodically forced
-        transition matrix and the sets between which the transition
+        transition matrix and the sets A and B between which the transition
         statistics should be computed.
 
         Args:
@@ -369,6 +369,7 @@ class tpt:
     
     def compute_statistics(self):
         '''
+        Function that runs all methods to compute transition statistics.
         '''
         self.stationary_density()
         self.backward_transitions()
@@ -380,6 +381,11 @@ class tpt:
 
     def save_statistics(self, example_name, dynamics):
         '''
+        Method that saves all the computed transition statistics, 
+        the not computed statistics are saved as None. 
+        
+        Args:
+            
         '''
         npz_path = os.path.join(DATA_PATH, example_name + '_' + dynamics+ '.npz')
         np.savez(

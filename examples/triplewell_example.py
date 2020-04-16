@@ -101,7 +101,7 @@ well3_finite.save_statistics(example_name, dynamics)
 # finite time bifurcation analysis 
 
 def Tn_small_noise(n):  
-    return T_small_noise#T_m[np.mod(m,M),:,:].squeeze()
+    return T_small_noise # T_m[np.mod(m,M),:,:].squeeze()
 
 # compute stationary density of triple well with small noise to get initial density
 well3_small_noise = stationary.tpt(T_small_noise, ind_A, ind_B, ind_C)

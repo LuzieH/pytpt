@@ -12,8 +12,8 @@ NETWORK_CMAP = mpl.colors.ListedColormap(
 TRIPLEWELL_CMAP = mpl.cm.get_cmap('inferno_r', 512)
 #INFERNO_REV = mpl.cm.get_cmap('inferno_r', 512)
 #TRIPLEWELL_CMAP = mpl.colors.ListedColormap(
-#    INFERNO_REV(np.linspace(0.05, 0.925, 448))
-#)
+#INFERNO_REV(np.linspace(0.05, 0.925, 448)))
+
 
 def plot_colorbar_only(file_path):
     # https://matplotlib.org/examples/api/colorbar_only.html

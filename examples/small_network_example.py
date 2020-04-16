@@ -2,10 +2,9 @@ from pytpt import stationary
 from pytpt import periodic  
 from pytpt import finite  
   
-import pickle
+#import pickle
 import numpy as np
-import networkx as nx
-
+ 
 import os.path
  
 
@@ -36,7 +35,7 @@ ind_C = np.arange(1, np.shape(T)[0] - 1)
 ind_B = np.array([4])
 
 
-# TPT ergodic, infinite-time
+# TPT for the ergodic, infinite-time case
 dynamics = 'ergodic'
 # transition matrix
 P = T + L
@@ -52,12 +51,14 @@ eff_current = small._eff_current
 eff_out = eff_current[0, 1] + eff_current[0, 3]
 share_1 = eff_current[0, 1] / eff_out
 share_3 = eff_current[0, 3] / eff_out
-print('In the infinite-time, stationary case, a share of ' + str(share_3) + ' outflow is via 3, while a share of '+str(share_1)+' outflow is via 1')
+print('In the infinite-time, stationary case, a share of ' + \
+      str(share_3) + ' outflow is via 3, while a share of '+ \
+      str(share_1)+' outflow is via 1')
 
 
-# TPT periodic
-# use as transition matrix T + wL, where w varies from 1..0..-1...0
-# either faster switching or slower dynamics
+# TPT for the periodic case
+# use as transition matrix T + wL, where w varies from 1..0..-1...0 
+# L is a zero-rowsum matrix, T is a transition matrix
 
 dynamics = 'periodic'
 M = 6  # 6 size of period
@@ -82,17 +83,17 @@ small_periodic.compute_statistics()
 small_periodic.save_statistics(example_name, dynamics)
 
 
-# TPT finite time, time-homogeneous
+# TPT for a finite time interval, time-homogeneous dynamics
 dynamics = 'finite'
 
 # transition matrix at time n
 def P_hom(n):
     return P
 
-N = 5  # size of time interval
+N = 5  # size of finite time interval
 
 # initial density
-init_dens_small_finite = small._stat_dens
+init_dens_small_finite = small._stat_dens()
 # instantiate
 small_finite = finite.tpt(
     P_hom,
@@ -108,7 +109,7 @@ small_finite.compute_statistics()
 small_finite.save_statistics(example_name, dynamics)
 
 
-# TPT finite time, time-inhomogeneous
+# TPT in finite time, time-inhomogeneous transition probabilities
 dynamics = 'inhom'
 # size of time interval
 N_inhom = 5 
@@ -154,6 +155,9 @@ N_max = 150  # max value of N
 q_f_conv = np.zeros((N_max, S))
 q_b_conv = np.zeros((N_max, S))
 
+# initial density
+init_dens_small = small._stat_dens()
+
 for n in np.arange(1, N_max + 1):
     # extended time interval
     N_ex = n*2 + 1
@@ -169,7 +173,7 @@ for n in np.arange(1, N_max + 1):
     )
     
     # compute statistics
-    [q_f_ex, q_b_ex] = small_ex.committor()
+    [q_f_ex, q_b_ex] = small_finite_ex.committor()
     q_f_conv[n-1, :] = q_f_ex[n, :]
     q_b_conv[n-1, :] = q_b_ex[n, :]
 

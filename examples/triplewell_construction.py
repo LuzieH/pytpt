@@ -5,6 +5,7 @@ import numpy as np
 
 import os.path
 
+# paths
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
 charts_path = os.path.join(my_path, 'charts')
@@ -66,7 +67,7 @@ plot_3well_vector_field(
 
 #count matrix (triple well, no extra forcing)
 interval = np.array([[-2, 2], [-1.2, 2.2]]) #size of state space
-dim = np.shape(interval)[0] #dimension of state space
+ 
 # discretization of state space into dx cells for transition matrix
 dx_power = 1 
 dx = 2./(10**dx_power)
@@ -89,19 +90,20 @@ dt= 0.02 # dt for Euler Maruyama discretization
 lag= 15 # lag time of transition matrix is lag*dt
 
 # row stochastic transition matrix
-T = sampling.transitionmatrix_2D(dV0, sigma, dt, lag, Nstep, interval, x, y, dx, dim)
+T = sampling.transitionmatrix_2D(dV0, sigma, dt, lag, Nstep, interval, x, y, \
+                                 dx)
 
 # row stochastic transition matrix
 sigma_small = 0.26
-T_small_noise=sampling.transitionmatrix_2D(dV0, sigma_small, dt, lag, 4 * Nstep, \
-                                      interval, x, y, dx, dim)
+T_small_noise=sampling.transitionmatrix_2D(dV0, sigma_small, dt, lag, \
+                                     4 * Nstep, interval, x, y, dx )
 
 
 # transition matrix for triple well plus circular forcing
 T_m = np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
-    T_m[m, :, :] = sampling.transitionmatrix_2D(lambda x, y : dV_forced(x, y, m), sigma, \
-                                           dt, lag, Nstep, interval, x, y, dx, dim)
+    T_m[m, :, :] = sampling.transitionmatrix_2D(lambda x, y : \
+         dV_forced(x, y, m), sigma, dt, lag, Nstep, interval, x, y, dx )
 
 # defining A and B
 # define by center and radius!

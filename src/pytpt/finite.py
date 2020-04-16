@@ -7,9 +7,9 @@ MY_PATH = os.path.abspath(os.path.dirname(__file__))
 DATA_PATH = os.path.join(MY_PATH, 'data')
 
 class tpt:
-    '''Calculates committor probabilities and transition statistics of 
-    Markov chain models over a finite time interval {0,...,N-1} of size
-    N.
+    '''Calculates committor probabilities and A->B transition statistics of 
+    time-homogeneous or time-inhomogeneous Markov chain models over a
+    finite time interval {0,...,N-1} of size N.
         
     based on: 
     Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). 
@@ -19,7 +19,7 @@ class tpt:
 
     def __init__(self, P, N, ind_A, ind_B,  ind_C, init_dens):
         '''Initialize an instance by defining the transition matrix and
-        the sets between which the transition statistics should be
+        the sets A and B between which the transition statistics should be
         computed.
 
         Args:
@@ -357,6 +357,7 @@ class tpt:
     
     def compute_statistics(self):
         '''
+        Function that runs all methods to compute transition statistics.
         '''
         self.density()
         self.committor()
@@ -366,7 +367,12 @@ class tpt:
         self.mean_transition_length()
 
     def save_statistics(self, example_name, dynamics):
-        '''
+        '''        
+        Method that saves all the computed transition statistics, 
+        the not computed statistics are saved as None. 
+        
+        Args:
+            
         '''
         npz_path = os.path.join(DATA_PATH, example_name + '_' + dynamics+ '.npz')
         np.savez(

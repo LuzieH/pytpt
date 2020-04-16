@@ -5,7 +5,23 @@ def traj_2D(force_function, sigma, dt, steps,\
                                 limits_x, limits_y):
     '''returns a sampled trajectory of length steps and with an initial
     position drawn uniformly from limits_x, limits_y. The trajectory is 
-    sampled from the diffusion process: dX = F(X) dt + sigma dW '''
+    sampled from the diffusion process: dX = F(X) dt + sigma dW 
+    
+    Args:
+        force_function: function of x and y
+            the forcing function F(x,y)=- (Grad V)(x,y) that defines the 
+            diffusion process
+        sigma: float>0
+            noise strength
+        dt: float
+            discrete time step size
+        steps: int
+            number of sampled dt time steps
+        limits_x: list
+            gives the boundary of the box in x direction
+        limits_y: list
+            gives the boundary of the box in y direction        
+    '''
     traj = np.zeros((steps, 2))
     traj[0, :] = np.array([
         np.random.uniform(limits_x[0], limits_x[1]), \
@@ -17,8 +33,7 @@ def traj_2D(force_function, sigma, dt, steps,\
         + np.sqrt(dt)*sigma*np.random.randn(2)
     return traj
 
-def transitionmatrix_2D(force, sigma, dt, lag, Nstep, interval, x, y, \
-                        dx, dim):
+def transitionmatrix_2D(force, sigma, dt, lag, Nstep, interval, x, y, dx):
     ''' This function returns a row-stochastic transition matrix by 
     counting transitions of the overdamped langevin process 
     dX = F(X) dt + sigma dW, e.g. with F = -dV. The state space is 
@@ -26,6 +41,29 @@ def transitionmatrix_2D(force, sigma, dt, lag, Nstep, interval, x, y, \
     
     Literature on count matrices: Frank Noe, 
     publications.imp.fu-berlin.de/1699/1/autocorrelation_counts.pdf
+    
+    Args:
+        force: function of x and y
+            the forcing function F(x,y)=- (Grad V)(x,y) that defines the 
+            diffusion process
+        sigma: float
+            noise strength
+        dt: float
+            size of time steps used for Euler-Maryama discretization
+        lag: int
+            the transition matrix maps forward lag*dt in time
+        Nstep: int
+            number of samples per box
+        interval: array of size 2x2
+           box limits
+        x: array
+            box centers in x direction
+        y: array
+            box centers in y direction
+        dx: float
+            space discretization
+ 
+        
     '''
  
     xy = [x,y]
@@ -33,7 +71,9 @@ def transitionmatrix_2D(force, sigma, dt, lag, Nstep, interval, x, y, \
     
     xdim = np.shape(xv)[1]
     ydim = np.shape(xv)[0]
-        
+       
+    dim = 2 # dimension of state space
+    
     xn = np.reshape(xv, (xdim*ydim, 1))
     yn = np.reshape(yv, (xdim*ydim, 1))
     
@@ -49,8 +89,8 @@ def transitionmatrix_2D(force, sigma, dt, lag, Nstep, interval, x, y, \
                 for l in range(lag):
                     new_X = current_X + (force(current_X[0],current_X[1]))*dt \
                     + sigma*np.sqrt(dt)*np.random.randn(2)
-                    for d in range(dim): #dim=2
-                        #reflective boundary conditions
+                    for d in range(dim): # dim=2
+                        # reflective boundary conditions
                         if new_X[d] <interval[d,0]: 
                             new_X[d] = interval[d,0] \
                             + (interval[d,0]-new_X[d])
