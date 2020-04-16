@@ -45,16 +45,19 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path,\
                          title=None, subtitles=None):
     """
     For a Markov chain on a network of nodes this function plots
-    in several subplots several densities, the values of the densities 
-    are indicated by the node color. 
+    in several subplots several densities (e.g. for different
+    times in a period/time interval), the values of the densities 
+    are indicated by the node colors. 
     
     Args:
-    data : ndarray of size (# subplots x # nodes)
+    data : ndarray of size (# subplots, # nodes of network)
         array of densities for each subplot
     graphs : list 
         list of networkx graphs for the different subplots
     pos : dict
-        positions of nodes
+        positions of node for each state
+    labels : dict
+        labels of the different states
     vmin : float
         minimum value of the colorbar
     vmax : float
@@ -102,12 +105,12 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, \
     two nodes is indicated by color and thickness of the edge.
     
     Args:
-    eff_current : ndarray of size (# subplots x # nodes # nodes)
-        array of currents for each subplot
+    eff_current : ndarray of size (# subplots, # nodes,  # nodes)
+        array of currents between states/nodes for each subplot
     pos : dict
-        positions of nodes
-    labels : 
-        ?
+        positions of node for each state
+    labels : dict
+        labels of the different states
     vmin : float
         minimum value of the colorbar
     vmax : float
@@ -190,12 +193,13 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
     Args:
     eff_current : ndarray of size (# subplots x # nodes # nodes)
         array of currents for each subplot
-    shifted_rate: list
-        ?
+    shifted_rate: ndarray of size (# subplots, 2)
+        for each subplot the out-of-A and into-B rate but with
+        shifted time indices to agree with the current's time
     pos : dict
-        positions of nodes
-    labels : 
-        ?
+        positions of node for each state
+    labels : dict
+        labels of the different states
     vmin : float
         minimum value of the colorbar
     vmax : float
@@ -289,7 +293,22 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
 
 def plot_rate(rate, file_path, title, xlabel, \
              average_rate_legend='$\hat{k}^{AB}$', time_av_rate=None):                                          
-    # TODO document method
+    """
+    This function plots/saves the out-of-A and into-B rate in time. 
+    
+    Args:
+    rate : ndarray of size (# times, 2)
+        out and in rate for each time point
+    file_path: string
+        path to where the file should be saved eg ".../plots/image.png""
+    title : string
+        overall title
+    xlabel : string
+        label of x axis
+    average_rate_legend : str
+    time_av_rate : float
+        time-averaged rate 
+    """
     ncol = 2
     timeframes = len(rate)
     fig, ax = plt.subplots(1, 1, figsize=(4*timeframes, 3))
@@ -351,7 +370,18 @@ def plot_rate(rate, file_path, title, xlabel, \
 
 
 def plot_reactiveness(reac_norm_factor, file_path, title):
-    # TODO document method
+    """
+    This function plots/saves the probability to be reactive (given by 
+    reac_norm_factor) in time. 
+    
+    Args:
+    rate : ndarray of size (# times, 1)
+        reac_norm_factor for each time point
+    file_path: string
+        path to where the file should be saved eg ".../plots/image.png""
+    title : string
+        overall title
+    """
     timeframes = len(reac_norm_factor)
 
     fig, ax = plt.subplots(1, 1, figsize=(5*timeframes, 5))
@@ -476,6 +506,7 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
 def plot_3well_vector_field(vector_field, vector_field_forced,
                                    file_path, title, subtitles=None):
 
+    
     #create mesh grid 
     delta = 0.20
     x = np.arange(-2.0, 2.0 + delta, delta)
@@ -547,15 +578,16 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,\
     in several subplots several vectorfields/effective currents. 
     
     Args:
-    eff_vectors_unit : ndarray of size (# subplots x # states x # 2)
-        array of normalized vector currents for each subplot
-    colors: ndarray of size (#subplots x # states)
-        the length of each not normalized vector
+    eff_vectors_unit : ndarray of size (# subplots, # states, 2)
+        array of normalized 2D vectors (effective currents) attached to 
+        each state and given for each subplot
+    colors: ndarray of size (#subplots, # states)
+        the length of the not normalized vectors
     xn: ndarray
         x values of all state centers
     yn: ndarray
         y values of all state centers
-    background: ndarray
+    background: ndarray of size # states
         if given, is plotted in the background and the foreground is slightly 
         transparent    
     datashape : (xdim, ydim)
@@ -604,11 +636,11 @@ def plot_3well(data,datashape, extent, timeframe, size, v_min, v_max, \
                titles,background=None):
     """
     For a Markov chain on discrete 2D statespace this function plots
-    in several subplots several densities, 
+    in several subplots (e.g. for several time points) several densities.
     
     Args:
-    data : ndarray of size (# subplots x # states)
-        array of densities for each subplot
+    data : ndarray of size (# subplots, # states)
+        array of densities for each subplot/time point
     datashape : (xdim, ydim)
         dimension (int) of statespace in x and y direction
     extent : (x_min, x_max, y_min, y_max)
@@ -623,7 +655,7 @@ def plot_3well(data,datashape, extent, timeframe, size, v_min, v_max, \
         maximum value of the colorbar
     titles : list of strings
         titles for the different subplots
-    background: ndarray
+    background: ndarray of size # states
         if given, is plotted in the background and the foreground is slightly 
         transparent
     """

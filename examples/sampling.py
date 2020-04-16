@@ -3,9 +3,10 @@ import numpy as np
 
 def traj_2D(force_function, sigma, dt, steps,\
                                 limits_x, limits_y):
-    '''returns a sampled trajectory of length steps and with an initial
-    position drawn uniformly from limits_x, limits_y. The trajectory is 
-    sampled from the diffusion process: dX = F(X) dt + sigma dW 
+    '''returns a sampled trajectory with an initial position drawn 
+    uniformly from limits_x, limits_y. The trajectory is 
+    sampled from the diffusion process: dX = F(X) dt + sigma dW by an 
+    Euler-Maruyama discretization.
     
     Args:
         force_function: function of x and y
@@ -34,10 +35,15 @@ def traj_2D(force_function, sigma, dt, steps,\
     return traj
 
 def transitionmatrix_2D(force, sigma, dt, lag, Nstep, interval, x, y, dx):
-    ''' This function returns a row-stochastic transition matrix by 
-    counting transitions of the overdamped langevin process 
-    dX = F(X) dt + sigma dW, e.g. with F = -dV. The state space is 
-    discretized into boxes and jumps from each box are counted. 
+    ''' This function returns a row-stochastic transition matrix giving 
+    the transition probabilities between spatial grid cells of a 
+    discretized state space. The dynamics are given by the overdamped 
+    langevin process dX = F(X) dt + sigma dW (e.g. with F = -dV). 
+    The transition matrix is estimated as follows: 
+        - first trajectory snippets (X_t, X_t+1) are sampled using an 
+        Euler-Maruyama discretization of the process
+        - then a count matrix between different boxes is constructed and
+        normalized to give a row-stochastic matrix. 
     
     Literature on count matrices: Frank Noe, 
     publications.imp.fu-berlin.de/1699/1/autocorrelation_counts.pdf
