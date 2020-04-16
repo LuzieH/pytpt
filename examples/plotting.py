@@ -21,7 +21,7 @@ def plot_colorbar_only(file_path):
     fig, ax = plt.subplots(figsize=(0.15, 2))
 
     cmap = NETWORK_CMAP
-    #norm = mpl.colors.Normalize(vmin=v_min, vmax=v_max)
+    # norm = mpl.colors.Normalize(vmin=v_min, vmax=v_max)
 
     cb = mpl.colorbar.ColorbarBase(
         ax,
@@ -32,13 +32,14 @@ def plot_colorbar_only(file_path):
     cb.set_ticks([])
     
     # ticks size and label size 
-    #cb1.ax.tick_params(length=4, width=0.5, labelsize=8)
+    # cb1.ax.tick_params(length=4, width=0.5, labelsize=8)
     
     fig.subplots_adjust(hspace=0.1)
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
-def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
+def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path,\
+                         title=None, subtitles=None):
     # TODO document method
     """
     plots bla bla
@@ -72,8 +73,9 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
     if num_plots == 1:
         ax = [ax]
     for i in range(num_plots):
-        nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i], node_size=500,
-                cmap=NETWORK_CMAP, ax=ax[i], vmin=v_min, vmax=v_max, alpha=0.8, font_size=12)
+        nx.draw(graphs[i], pos=pos, labels=labels, node_color=data[i],\
+                node_size=500, cmap=NETWORK_CMAP, ax=ax[i], \
+                vmin=v_min, vmax=v_max, alpha=0.8, font_size=12)
         if subtitles is not None:
             ax[i].set_title(subtitles[i], fontsize=14)
     
@@ -88,7 +90,8 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path, tit
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
     
-def plot_network_effective_current(eff_current, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
+def plot_network_effective_current(eff_current, pos, labels, v_min, \
+                        v_max, file_path, title=None, subtitles=None):
     # TODO document method
     
     num_plots = len(eff_current)
@@ -150,7 +153,8 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, v_max, file_
     fig.savefig(file_path, format='png', dpi=200,bbox_inches='tight')
 
 
-def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_min, v_max, file_path, title=None, subtitles=None):
+def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
+            labels, v_min, v_max, file_path, title=None, subtitles=None):
     # TODO document method
     
     num_plots = len(eff_current)
@@ -232,7 +236,8 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
     fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')
 
 
-def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}$', time_av_rate=None):                                          
+def plot_rate(rate, file_path, title, xlabel, \
+             average_rate_legend='$\hat{k}^{AB}$', time_av_rate=None):                                          
     # TODO document method
     ncol = 2
     timeframes = len(rate)
@@ -264,7 +269,7 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
             color='black',
             #s=20,
             linestyles='dashed',
-            label=average_rate_legend,#'$\hat{k}^{AB}_M$',
+            label=average_rate_legend, 
         )
 
     # add title and legend
@@ -327,7 +332,8 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight') 
 
 
-def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title):
+def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, \
+                     file_path, title):
     # TODO document method
     assert scale_type in ['linear', 'log', 'symlog', 'logit']
 
@@ -413,7 +419,7 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
     
     # save figure
     fig.subplots_adjust(top=0.8)
-    #fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')
+ 
     fig.savefig(file_path, format='png', dpi=300)
 
 def plot_3well_vector_field(vector_field, vector_field_forced,
@@ -479,11 +485,12 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
 
     # save figure
     fig.subplots_adjust(top=0.8)
-    #fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')
+ 
     fig.savefig(file_path, format='png', dpi=300)
 
 
-def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashape, extent, timeframe, size,titles):
+def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,\
+                          datashape, extent, timeframe, size,titles):
     # TODO document method
     
     fig = plt.figure(figsize=size)
@@ -495,21 +502,18 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
                 cbar_pad=0.1
                 )    
     
-    #if timeframe == 1:
-     #   ax=[ax]
-       # if np.isnan(eff_vectors_unit).all()==False: #if not all values are nan
-        #    plt.imshow(background.reshape(datashape), cmap='Greys', alpha=.4, ax=ax, origin='lower', extent=extent)
-         #   plt.quiver(xn,yn,list(eff_vectors_unit[:,0]),list(eff_vectors_unit[:,1]),colors,cmap='coolwarm', width=0.02, scale=25)    
     i=0
     for ax in grid:
-        if np.isnan(eff_vectors_unit[i,:,:]).all()==False: #if not all values are nan
-            ax.imshow(background.reshape(datashape), alpha=1, vmin=0, vmax=3, cmap='Greys', origin='lower', extent=extent)
-            im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),list(eff_vectors_unit[i,:,1]),colors[i],cmap=TRIPLEWELL_CMAP, width=0.02, scale=25)             
+        #if not all values are nan
+        if np.isnan(eff_vectors_unit[i,:,:]).all()==False: 
+            ax.imshow(background.reshape(datashape), alpha=1, vmin=0, vmax=3,\
+                      cmap='Greys', origin='lower', extent=extent)
+            im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),\
+                           list(eff_vectors_unit[i,:,1]),colors[i],\
+                           cmap=TRIPLEWELL_CMAP, width=0.02, scale=25)             
             ax.set_title(titles[i])  
         i = i + 1
-    #fig.suptitle(title)
-    #'inferno_r
-    #coolwarm
+ 
     fig.subplots_adjust(top=0.8)
     sfmt=ScalarFormatter(useMathText=True) 
     sfmt.set_powerlimits((0, 0))
@@ -518,7 +522,8 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background, datashap
     return fig
 
 
-def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles,background=None):
+def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, \
+               titles,background=None):
     # TODO document method
     if background is None: 
         background = np.ones(datashape[0]*datashape[1])
@@ -533,28 +538,23 @@ def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, titles,ba
                 cbar_pad=0.1
                 )
     
- 
-    #if timeframe == 1:
-     #   ax=[ax]
     i=0
-    for ax in grid: #i in range(timeframe):
+    for ax in grid: 
         if np.isnan(data[i,:]).all()==False: #if not all values are nan
-            ax.imshow(background.reshape(datashape), cmap='Greys', alpha=1, origin='lower', extent=extent)
-            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, vmax=v_max, cmap =TRIPLEWELL_CMAP, origin='lower', alpha=0.9, extent=extent)
+            ax.imshow(background.reshape(datashape), cmap='Greys', alpha=1, \
+                     origin='lower', extent=extent)
+            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, \
+                     vmax=v_max, cmap =TRIPLEWELL_CMAP, origin='lower', \
+                    alpha=0.9, extent=extent)
  
             ax.set_title(titles[i])  
         i = i + 1
-            
-    #fig.suptitle(title)
+ 
     fig.subplots_adjust(top=0.8)
     sfmt=ScalarFormatter(useMathText=True) 
     sfmt.set_powerlimits((0, 0))
-    cbar = ax.cax.colorbar(im, format=sfmt)#%.0e')
+    cbar = ax.cax.colorbar(im, format=sfmt) 
     cbar = grid.cbar_axes[0].colorbar(im)
-   # ticks = np.linspace(np.min(data),np.max(data), 4) 
-    #cb = grid.cbar_axes[0].colorbar(im, ticks=ticks)
-    #cb.ax.set_yticklabels(np.array(['1','2','3','4']))
-#    cb.ax.text(-0.25, 1, r'$\times$10$^{-1}$', va='bottom', ha='left')
-   # fig.colorbar(im, ax=ax[:], shrink=0.95)
+
  
     return fig
