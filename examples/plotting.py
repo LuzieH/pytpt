@@ -542,7 +542,34 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
 
 def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,\
                           datashape, extent, timeframe, size,titles):
-    # TODO document method
+    """
+    For a Markov chain on discrete 2D statespace this function plots
+    in several subplots several vectorfields/effective currents. 
+    
+    Args:
+    eff_vectors_unit : ndarray of size (# subplots x # states x # 2)
+        array of normalized vector currents for each subplot
+    colors: ndarray of size (#subplots x # states)
+        the length of each not normalized vector
+    xn: ndarray
+        x values of all state centers
+    yn: ndarray
+        y values of all state centers
+    background: ndarray
+        if given, is plotted in the background and the foreground is slightly 
+        transparent    
+    datashape : (xdim, ydim)
+        dimension (int) of statespace in x and y direction
+    extent : (x_min, x_max, y_min, y_max)
+        gives the limits of the statespace
+    timeframe : int
+        number of subplots/time frames
+    size: (xsize, ysize)
+        figure size in x and y direction
+        maximum value of the colorbar
+    titles : list of strings
+        titles for the different subplots
+    """
     
     fig = plt.figure(figsize=size)
     grid = AxesGrid(fig, 111,
@@ -573,9 +600,33 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,\
     return fig
 
 
-def plot_3well( data,datashape, extent, timeframe, size, v_min, v_max, \
+def plot_3well(data,datashape, extent, timeframe, size, v_min, v_max, \
                titles,background=None):
-    # TODO document method
+    """
+    For a Markov chain on discrete 2D statespace this function plots
+    in several subplots several densities, 
+    
+    Args:
+    data : ndarray of size (# subplots x # states)
+        array of densities for each subplot
+    datashape : (xdim, ydim)
+        dimension (int) of statespace in x and y direction
+    extent : (x_min, x_max, y_min, y_max)
+        gives the limits of the statespace
+    timeframe : int
+        number of subplots/time frames
+    size: (xsize, ysize)
+        figure size in x and y direction
+    v_min : float
+        minimum value of the colorbar
+    v_max : float
+        maximum value of the colorbar
+    titles : list of strings
+        titles for the different subplots
+    background: ndarray
+        if given, is plotted in the background and the foreground is slightly 
+        transparent
+    """
     if background is None: 
         background = np.ones(datashape[0]*datashape[1])
         
