@@ -16,6 +16,9 @@ TRIPLEWELL_CMAP = mpl.cm.get_cmap('inferno_r', 512)
 
 
 def plot_colorbar_only(file_path):
+    '''
+    Plots the colorbar and saves it under file_path.
+    '''
     # https://matplotlib.org/examples/api/colorbar_only.html
 
     fig, ax = plt.subplots(figsize=(0.15, 2))
@@ -40,27 +43,28 @@ def plot_colorbar_only(file_path):
 
 def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path,\
                          title=None, subtitles=None):
-    # TODO document method
     """
-    plots bla bla
+    For a Markov chain on a network of nodes this function plots
+    in several subplots several densities, the values of the densities 
+    are indicated by the node color. 
     
-    parameters
-    data : ndarray
-        bla
-    graphs : list
-        bla
-    pos :
-        bla
-    vmin :
-        bla
-    vmax :
-        bla
-    title :
-        bla
-    subtitles :
-        bla
-    file_path:
-        bla
+    Args:
+    data : ndarray of size (# subplots x # nodes)
+        array of densities for each subplot
+    graphs : list 
+        list of networkx graphs for the different subplots
+    pos : dict
+        positions of nodes
+    vmin : float
+        minimum value of the colorbar
+    vmax : float
+        maximum value of the colorbar
+    title : string
+        overall title
+    subtitles : list of strings
+        subtitles for the subplots
+    file_path: string
+        path to where the file should be saved eg ".../plots/image.png""
     """
     
     num_plots = len(graphs)
@@ -92,7 +96,29 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path,\
     
 def plot_network_effective_current(eff_current, pos, labels, v_min, \
                         v_max, file_path, title=None, subtitles=None):
-    # TODO document method
+    """
+    For a Markov chain on a network of nodes this function plots
+    in several subplots several currents, the value of the current between 
+    two nodes is indicated by color and thickness of the edge.
+    
+    Args:
+    eff_current : ndarray of size (# subplots x # nodes # nodes)
+        array of currents for each subplot
+    pos : dict
+        positions of nodes
+    labels : 
+        ?
+    vmin : float
+        minimum value of the colorbar
+    vmax : float
+        maximum value of the colorbar
+    file_path: string
+        path to where the file should be saved eg ".../plots/image.png""
+    subtitles : list of strings
+        subtitles for the subplots
+    title : string
+        overall title
+    """
     
     num_plots = len(eff_current)
     width_plot = 2
@@ -155,7 +181,32 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, \
 
 def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
             labels, v_min, v_max, file_path, title=None, subtitles=None):
-    # TODO document method
+    """
+    For a Markov chain on a network of nodes this function plots
+    in several subplots several currents, the value of the current between 
+    two nodes is indicated by color and thickness of the edge, also the 
+    outrate of A and inrate into B are shown in the corresponding nodes.
+    
+    Args:
+    eff_current : ndarray of size (# subplots x # nodes # nodes)
+        array of currents for each subplot
+    shifted_rate: list
+        ?
+    pos : dict
+        positions of nodes
+    labels : 
+        ?
+    vmin : float
+        minimum value of the colorbar
+    vmax : float
+        maximum value of the colorbar
+    file_path: string
+        path to where the file should be saved eg ".../plots/image.png""
+    subtitles : list of strings
+        subtitles for the subplots
+    title : string
+        overall title
+    """
     
     num_plots = len(eff_current)
     width_plot = 2
