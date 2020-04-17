@@ -1,4 +1,4 @@
-#from small_network_example import P_p, P_hom, P_inhom
+from small_network_example import P_p, P_hom, P_inhom
 
 from plotting import plot_network_density as plot_density, \
                      plot_network_effective_current as plot_effective_current, \
@@ -8,28 +8,12 @@ from plotting import plot_network_density as plot_density, \
                      plot_convergence, \
                      plot_colorbar_only
 
-#import pickle
 
+import functools
 import numpy as np
 import networkx as nx
 
 import os
-
-# transition matrix at time k
-def P_p(k):
-    # varies the transition matrices periodically, by weighting the added
-    # matrix L with weights 1..0..-1.. over one period
-    return T + np.cos(k*2.*np.pi/M)*L
-
-# transition matrix at time n
-def P_hom(n):
-    return P
-
-def P_inhom(n):
-    if np.mod(n,2)==0:
-        return P + K
-    else: 
-        return P - K
 
 # define directories path to save the data and figures 
 my_path = os.path.abspath(os.path.dirname(__file__))
@@ -113,9 +97,6 @@ av_length_inhom = network_inhom['av_length']
 q_f_conv = network_conv['q_f']
 q_b_conv = network_conv['q_b']
 
-M = 6
-N = 5
-N_inhom = 5
 
 print("rate (infinite-time, stationary): %f" % rate)
 print("periodic-averaged rate (infinite-time, periodic): %f" % time_av_rate_p[0])
@@ -251,6 +232,8 @@ plot_effcurrent_and_rate(
 
 # plotting results for periodic case
 example_name = 'small_network_periodic'
+M = 6
+P_p = functools.partial(P_p, M=M)
 graphs_p = [nx.Graph(P_p(m)) for m in np.arange(M)] 
 shifted_rate_p = np.zeros((M, 2))
 shifted_rate_p[:, 0] = rate_p[:, 0]
@@ -315,9 +298,9 @@ plot_rate(
     average_rate_legend=r'$\bar{k}^{AB}_M$',
 )
 
-
 # plotting results for finite-time, time-homogeneous case
 example_name = 'small_network_finite'
+N = 5
 graphs_f = [nx.Graph(P_hom(n)) for n in np.arange(N)] 
 shifted_rate_f = np.zeros((N-1, 2))
 shifted_rate_f[:, 0] = rate_f[:N-1, 0]
@@ -390,6 +373,7 @@ plot_reactiveness(
 
 # plotting results for finite-time, time-inhomogeneous case
 example_name = 'small_network_inhom'
+N_inhom = 5
 graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)] 
 shifted_rate_inhom = np.zeros((N_inhom-1, 2))
 shifted_rate_inhom[:, 0] = rate_inhom[:N_inhom-1, 0]
