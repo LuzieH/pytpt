@@ -2,12 +2,10 @@ from pytpt import stationary
 from pytpt import periodic  
 from pytpt import finite  
   
-#import pickle
 import numpy as np
  
 import os.path
  
-
 # general
 
 # define directories path to save the data and figures 
@@ -44,7 +42,8 @@ small = stationary.tpt(P, ind_A, ind_B, ind_C)
 # compute statistics
 small.compute_statistics()
 # save statistics
-small.save_statistics(example_name, dynamics)
+npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+small.save_statistics(npz_path)
 
 #compute share along upper (1) and lower path (via 3)
 eff_current = small._eff_current
@@ -80,7 +79,8 @@ small_periodic = periodic.tpt(
 # compute statistics
 small_periodic.compute_statistics()
 # save statistics
-small_periodic.save_statistics(example_name, dynamics)
+npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+small_periodic.save_statistics(npz_path)
 
 
 # TPT for a finite time interval, time-homogeneous dynamics
@@ -93,7 +93,7 @@ def P_hom(n):
 N = 5  # size of finite time interval
 
 # initial density
-init_dens_small_finite = small._stat_dens()
+init_dens_small_finite = small._stat_dens
 # instantiate
 small_finite = finite.tpt(
     P_hom,
@@ -106,7 +106,8 @@ small_finite = finite.tpt(
 # compute statistics
 small_finite.compute_statistics()
 # save statistics
-small_finite.save_statistics(example_name, dynamics)
+npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+small_finite.save_statistics(npz_path)
 
 
 # TPT in finite time, time-inhomogeneous transition probabilities
@@ -147,7 +148,8 @@ small_inhom = finite.tpt(
 # compute statistics
 small_inhom.compute_statistics()
 # save statistics
-small_inhom.save_statistics(example_name, dynamics)
+npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+small_inhom.save_statistics(npz_path)
 
 
 # TPT finite time extension to infinite time, convergence analysis
@@ -156,7 +158,7 @@ q_f_conv = np.zeros((N_max, S))
 q_b_conv = np.zeros((N_max, S))
 
 # initial density
-init_dens_small = small._stat_dens()
+init_dens_small = small._stat_dens
 
 for n in np.arange(1, N_max + 1):
     # extended time interval

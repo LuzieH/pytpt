@@ -3,9 +3,6 @@ from inspect import isfunction
 
 import os.path
 
-MY_PATH = os.path.abspath(os.path.dirname(__file__))
-DATA_PATH = os.path.join(MY_PATH, 'data')
-
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of 
     time-homogeneous or time-inhomogeneous Markov chain models over a
@@ -366,7 +363,7 @@ class tpt:
         self.transition_rate()
         self.mean_transition_length()
 
-    def save_statistics(self, example_name, dynamics):
+    def save_statistics(self, npz_path):
         '''        
         Method that saves all the computed transition statistics, 
         the not computed statistics are saved as None. 
@@ -374,7 +371,6 @@ class tpt:
         Args:
             
         '''
-        npz_path = os.path.join(DATA_PATH, example_name + '_' + dynamics+ '.npz')
         np.savez(
             npz_path,
             dens=self._dens,

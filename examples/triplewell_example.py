@@ -9,7 +9,7 @@ from plotting import plot_3well, \
 import numpy as np
 
 import os.path
- 
+
 # define directories path to save the data and figures 
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
@@ -54,7 +54,8 @@ well3 = stationary.tpt(T, ind_A, ind_B, ind_C)
 # compute statistics
 well3.compute_statistics()
 # save statistics
-well3.save_statistics(example_name, dynamics)
+npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+well3.save_statistics(npz_path)
 
 
 # TPT periodic
@@ -69,7 +70,8 @@ well3_periodic = periodic.tpt(Tm, M, ind_A, ind_B, ind_C)
 # compute statistics
 well3_periodic.compute_statistics()
 # save statistics
-well3_periodic.save_statistics(example_name, dynamics)
+npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+well3_periodic.save_statistics(npz_path)
 
 
 # TPT finite time, time-homogeneous
@@ -94,7 +96,8 @@ well3_finite = finite.tpt(
 # compute statistics
 well3_finite.compute_statistics()
 # save statistics
-well3_finite.save_statistics(example_name, dynamics)
+npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+well3_finite.save_statistics(npz_path)
  
 
 
@@ -110,6 +113,7 @@ init_dens_triple_bif = stat_dens_small_noise
 
 #time window 20-> lower channel only in stat dens, time window 50, lower channel in both
 N_bif_array = np.array([20, 50, 100, 500])
+#N_bif_array = np.array([5, 10])
 N_bif_size = np.shape(N_bif_array)[0]
 
 norm_reac_dens_f_bif_all = np.zeros((N_bif_size, dim_st))

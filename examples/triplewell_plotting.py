@@ -292,6 +292,7 @@ plot_reactiveness(
 # plots bifurcation analysis, small noise
 # time window 20-> lower channel only in stat dens, time window 50, lower channel in both
 N_bif_array = np.array([20, 50, 100, 500])
+#N_bif_array = np.array([5, 10])
 N_bif_size = np.shape(N_bif_array)[0]
 subtitles_bif_dens = []
 subtitles_bif_eff = []
