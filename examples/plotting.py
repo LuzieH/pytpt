@@ -50,10 +50,10 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path,\
     are indicated by the node colors. 
     
     Args:
-    data : ndarray of size (# subplots, # nodes of network)
+    data : ndarray of size (# subplots/time instances, # nodes of network)
         array of densities for each subplot
     graphs : list 
-        list of networkx graphs for the different subplots
+        list of networkx graphs for the different subplots/time instances
     pos : dict
         positions of node for each state
     labels : dict
@@ -106,7 +106,7 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, \
     
     Args:
     eff_current : ndarray of size (# subplots, # nodes,  # nodes)
-        array of currents between states/nodes for each subplot
+        array of currents between states/nodes for each subplot/time instance 
     pos : dict
         positions of node for each state
     labels : dict
@@ -192,7 +192,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
     
     Args:
     eff_current : ndarray of size (# subplots x # nodes # nodes)
-        array of currents for each subplot
+        array of currents for each subplot (e.g. different time instances)
     shifted_rate: ndarray of size (# subplots, 2)
         for each subplot the out-of-A and into-B rate but with
         shifted time indices to agree with the current's time
@@ -255,7 +255,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
             # edges
             nbr_edges = len(G_eff.edges())
             edge_eff_current = np.zeros(nbr_edges)
-            widths = np.zeros(nbr_edges)
+            # widths = np.zeros(nbr_edges)
             for j in np.arange(nbr_edges):
                 edge_eff_current[j] = eff_current[
                     n,
@@ -298,14 +298,15 @@ def plot_rate(rate, file_path, title, xlabel, \
     
     Args:
     rate : ndarray of size (# times, 2)
-        out and in rate for each time point
+        out and in rate for each time point (during a period or finite
+        time interval)
     file_path: string
         path to where the file should be saved eg ".../plots/image.png""
     title : string
         overall title
     xlabel : string
         label of x axis
-    average_rate_legend : str
+    average_rate_legend : string
     time_av_rate : float
         time-averaged rate 
     """
@@ -371,11 +372,11 @@ def plot_rate(rate, file_path, title, xlabel, \
 
 def plot_reactiveness(reac_norm_factor, file_path, title):
     """
-    This function plots/saves the probability to be reactive (given by 
+    This function plots the probability to be reactive (given by 
     reac_norm_factor) in time. 
     
     Args:
-    rate : ndarray of size (# times, 1)
+    reac_norm_factor : ndarray of size (# times, 1)
         reac_norm_factor for each time point
     file_path: string
         path to where the file should be saved eg ".../plots/image.png""
@@ -415,7 +416,30 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
 
 def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, \
                      file_path, title):
-    # TODO document method
+    '''
+    Plots (and saves the plot) the convergence of the forward and 
+    backward committor for a finite-time, stationary system to the forward 
+    and backward committor of an infinite-time, stationary system, 
+    when the time interval becomes very large.
+    
+    Args:
+    q_f : ndarray of the size (# states)
+        forward committor of the inf-time, stationary system
+    q_f_conv : ndarray of the size (# of time interval lenghts, # states)
+        forward committor at a middle time point of the finite-time interval 
+        for different time-interval lengths
+    q_b : ndarray of the size (# states)
+        backward committor of the inf-time, stationary system
+    q_b_conv : ndarray of the size (# of time interval lenghts, # states)
+        backward committor at a middle time point of the finite-time interval 
+        for different time-interval lengths
+    scale_type : 'linear', 'log', 'symlog' or 'logit'
+        y axis scaling
+    file_path : string
+        path to where the file should be saved eg ".../plots/image.png""
+    title : string
+        
+    '''
     assert scale_type in ['linear', 'log', 'symlog', 'logit']
 
     # compute errors 
@@ -460,7 +484,18 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, \
 
 
 def plot_3well_potential(potential, file_path, title, subtitles=None):
-    # create mesh grid
+    '''
+    Plots (and saves the plot) the triplewell potential.
+    
+    Args:
+    potential : function of x and y
+        defines the potential to be plotted in terms of x and y coordinates
+    file_path : string
+        path to where the file should be saved eg ".../plots/image.png""
+    title : string
+    subtitles : string
+        
+    '''
     delta = 0.01
     x = np.arange(-2.0, 2.0 + delta, delta)
     y = np.arange(-1.0, 2.0 + delta, delta)
@@ -505,8 +540,21 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
 
 def plot_3well_vector_field(vector_field, vector_field_forced,
                                    file_path, title, subtitles=None):
-
+    '''
+    Plots (and saves the plot) the vector field -grad V of the potential V, 
+    as well as two time instances (m=0, 3) of the forced vector field. 
     
+    Args:
+    vector_field : function of x and y
+        defines the vector field
+    vector_field_forced : function of x, y and time
+        defines the forced vector field at discrete times        
+    file_path : string
+        path to where the file should be saved eg ".../plots/image.png""
+    title : string
+    subtitles : string
+        
+    '''    
     #create mesh grid 
     delta = 0.20
     x = np.arange(-2.0, 2.0 + delta, delta)
