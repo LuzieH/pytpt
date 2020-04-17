@@ -70,10 +70,11 @@ interval = np.array([[-2, 2], [-1.2, 2.2]]) #size of state space
  
 # discretization of state space into dx cells for transition matrix
 dx_power = 1 
-dx = 2./(10**dx_power)
+dx = 2. / (10**dx_power)
+
 # box centers in x and y direction
-x = np.arange(interval[0, 0], interval[0, 1]+dx, dx) 
-y = np.arange(interval[1, 0], interval[1, 1]+dx, dx)
+x = np.arange(interval[0, 0], interval[0, 1] + dx, dx) 
+y = np.arange(interval[1, 0], interval[1, 1] + dx, dx)
 xv, yv = np.meshgrid(x, y)
 
 xdim = np.shape(xv)[0] # discrete dimension in x and y direction
@@ -84,20 +85,31 @@ yn = np.reshape(yv, (xdim*ydim, 1))
 
 grid = np.squeeze(np.array([xn, yn]))
 
-#Nstep = 10000 # number of seeds per box for count matrix
-Nstep = 100 # number of seeds per box for count matrix
-sigma = 1.0 
-dt= 0.02 # dt for Euler Maruyama discretization
-lag= 15 # lag time of transition matrix is lag*dt
+# row stochastic transition matrix
+T = sampling.transitionmatrix_2D(
+    force=dV0,
+    sigma=1.0, # lag time of transition matrix is lag*dt
+    dt=0.02, # dt for Euler Maruyama discretization
+    lag=15,
+    Nstep=10000, # number of seeds per box for count matrix
+    interval=interval,
+    x=x,
+    y=y,
+    dx=dx, 
+)
 
 # row stochastic transition matrix
-T = sampling.transitionmatrix_2D(dV0, sigma, dt, lag, Nstep, interval, x, y, \
-                                 dx)
-
-# row stochastic transition matrix
-sigma_small = 0.26
-T_small_noise=sampling.transitionmatrix_2D(dV0, sigma_small, dt, lag, \
-                                     4 * Nstep, interval, x, y, dx )
+T_small_noise = sampling.transitionmatrix_2D(
+    force=dV0,
+    sigma=0.26,
+    dt=0.02,
+    lag=15,
+    Nstep=40000,
+    interval=interval,
+    x=x,
+    y=y,
+    dx=dx, 
+)
 
 
 # transition matrix for triple well plus circular forcing
