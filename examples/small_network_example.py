@@ -43,17 +43,6 @@ def P_inhom(n):
     else: 
         return T + L - K
 
-def P_inhom_2(n):
-    if n in [0, 1, 2, 7, 8, 9]: 
-        return P - K / 3
-    elif n in [3, 6]:
-        return P
-    else:
-        return P + K
-
-def P_inhom_3(n):
-        return np.sin(n*2.*np.pi/N_inhom)*K
-
 def main():
     '''
     '''
