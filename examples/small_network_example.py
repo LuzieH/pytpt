@@ -12,11 +12,10 @@ import os.path
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
 charts_path = os.path.join(my_path, 'charts')
-example_name = 'small_network'
 
 # load small network construction data
 network_construction = np.load(
-    os.path.join(data_path, example_name + '_' + 'construction.npz'),
+    os.path.join(data_path, 'small_network_construction.npz'),
     allow_pickle=True,
 )
 states = network_construction['states'].item()
@@ -34,7 +33,7 @@ ind_B = np.array([4])
 
 
 # TPT for the ergodic, infinite-time case
-dynamics = 'ergodic'
+example_name = 'small_network_stationary'
 # transition matrix
 P = T + L
 # instantiate
@@ -42,7 +41,7 @@ small = stationary.tpt(P, ind_A, ind_B, ind_C)
 # compute statistics
 small.compute_statistics()
 # save statistics
-npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 small.save_statistics(npz_path)
 
 #compute share along upper (1) and lower path (via 3)
@@ -58,8 +57,8 @@ print('In the infinite-time, stationary case, a share of ' + \
 # TPT for the periodic case
 # use as transition matrix T + wL, where w varies from 1..0..-1...0 
 # L is a zero-rowsum matrix, T is a transition matrix
+example_name = 'small_network_periodic'
 
-dynamics = 'periodic'
 M = 6  # 6 size of period
 
 # transition matrix at time k
@@ -79,12 +78,12 @@ small_periodic = periodic.tpt(
 # compute statistics
 small_periodic.compute_statistics()
 # save statistics
-npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 small_periodic.save_statistics(npz_path)
 
 
 # TPT for a finite time interval, time-homogeneous dynamics
-dynamics = 'finite'
+example_name = 'small_network_finite'
 
 # transition matrix at time n
 def P_hom(n):
@@ -106,12 +105,12 @@ small_finite = finite.tpt(
 # compute statistics
 small_finite.compute_statistics()
 # save statistics
-npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 small_finite.save_statistics(npz_path)
 
 
 # TPT in finite time, time-inhomogeneous transition probabilities
-dynamics = 'inhom'
+example_name = 'small_network_inhom'
 # size of time interval
 N_inhom = 5 
 
@@ -148,11 +147,12 @@ small_inhom = finite.tpt(
 # compute statistics
 small_inhom.compute_statistics()
 # save statistics
-npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 small_inhom.save_statistics(npz_path)
 
 
 # TPT finite time extension to infinite time, convergence analysis
+example_name = 'small_network_conv'
 N_max = 150  # max value of N
 q_f_conv = np.zeros((N_max, S))
 q_b_conv = np.zeros((N_max, S))
@@ -180,7 +180,7 @@ for n in np.arange(1, N_max + 1):
     q_b_conv[n-1, :] = q_b_ex[n, :]
 
 # save the transition statistics in npz files
-npz_path = os.path.join(data_path, example_name + '_' + 'conv.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 np.savez(
     npz_path,
     q_f=q_f_conv,

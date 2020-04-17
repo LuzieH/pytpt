@@ -179,7 +179,7 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, \
         fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
 
-    fig.savefig(file_path, format='png', dpi=200,bbox_inches='tight')
+    fig.savefig(file_path, format='png', dpi=200, bbox_inches='tight')
 
 
 def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
@@ -288,7 +288,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
         hspace=0.1,
     )
 
-    fig.savefig(file_path, format='png', dpi=300,bbox_inches='tight')
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
 def plot_rate(rate, file_path, title, xlabel, \

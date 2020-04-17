@@ -14,11 +14,10 @@ import os.path
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
 charts_path = os.path.join(my_path, 'charts')
-example_name = 'triplewell'
 
 # load triple well construction data
 triplewell_construction = np.load(
-    os.path.join(data_path, example_name + '_' + 'construction.npz'),
+    os.path.join(data_path, 'triplewell_construction.npz'),
     allow_pickle=True,
 )
 interval = triplewell_construction['interval']
@@ -48,18 +47,18 @@ densAB[ind_A] = 1
 densAB[ind_B] = 1
 
 # TPT ergodic, infinite-time
-dynamics = 'ergodic'
+example_name = 'triplewell_stationary'
 # instantiate
 well3 = stationary.tpt(T, ind_A, ind_B, ind_C)
 # compute statistics
 well3.compute_statistics()
 # save statistics
-npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 well3.save_statistics(npz_path)
 
 
 # TPT periodic
-dynamics = 'periodic'
+example_name = 'triplewell_periodic'
 M = np.shape(T_m)[0]
 
 def Tm(m): 
@@ -70,12 +69,12 @@ well3_periodic = periodic.tpt(Tm, M, ind_A, ind_B, ind_C)
 # compute statistics
 well3_periodic.compute_statistics()
 # save statistics
-npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 well3_periodic.save_statistics(npz_path)
 
 
 # TPT finite time, time-homogeneous
-dynamics = 'finite'
+example_name = 'triplewell_finite'
 
 def Tn(n):  
     return T #T_m[np.mod(m,M),:,:].squeeze()
@@ -96,12 +95,13 @@ well3_finite = finite.tpt(
 # compute statistics
 well3_finite.compute_statistics()
 # save statistics
-npz_path = os.path.join(data_path, example_name + '_' + dynamics+ '.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 well3_finite.save_statistics(npz_path)
  
 
 
 # finite time bifurcation analysis 
+example_name = 'triplewell_bifurcation'
 
 def Tn_small_noise(n):  
     return T_small_noise # T_m[np.mod(m,M),:,:].squeeze()
@@ -112,8 +112,8 @@ stat_dens_small_noise = well3_small_noise.stationary_density()
 init_dens_triple_bif = stat_dens_small_noise
 
 #time window 20-> lower channel only in stat dens, time window 50, lower channel in both
-N_bif_array = np.array([20, 50, 100, 500])
-#N_bif_array = np.array([5, 10])
+#N_bif_array = np.array([20, 50, 100, 500])
+N_bif_array = np.array([5, 10])
 N_bif_size = np.shape(N_bif_array)[0]
 
 norm_reac_dens_f_bif_all = np.zeros((N_bif_size, dim_st))
@@ -173,7 +173,7 @@ for N_bif in N_bif_array:
     ind = ind + 1
 
 # save the transition statistics in npz files
-npz_path = os.path.join(data_path, example_name + '_' + 'bifurcation.npz')
+npz_path = os.path.join(data_path, example_name + '.npz')
 np.savez(
     npz_path,
     norm_reac_dens=norm_reac_dens_f_bif_all,

@@ -35,11 +35,10 @@ def P_inhom(n):
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
 charts_path = os.path.join(my_path, 'charts')
-example_name = 'small_network'
 
 # load small network construction data
 network_construction = np.load(
-    os.path.join(data_path, example_name + '_' + 'construction.npz'),
+    os.path.join(data_path, 'small_network_construction.npz'),
     allow_pickle=True,
 )
 states = network_construction['states'].item()
@@ -51,22 +50,26 @@ K = network_construction['K']
 P = T + L
 
 # load small network statistics data 
+example_name = 'small_network_stationary'
 network_ergodic = np.load(
-    os.path.join(data_path, example_name + '_' + 'ergodic.npz')
+    os.path.join(data_path, example_name + '.npz')
 )
+example_name = 'small_network_periodic'
 network_periodic = np.load(
-    os.path.join(data_path, example_name + '_' + 'periodic.npz')
+    os.path.join(data_path, example_name + '.npz')
 )
+example_name = 'small_network_finite'
 network_finite = np.load(
-    os.path.join(data_path, example_name + '_' + 'finite.npz')
+    os.path.join(data_path, example_name + '.npz')
 )
+example_name = 'small_network_inhom'
 network_inhom = np.load(
-    os.path.join(data_path, example_name + '_' + 'inhom.npz')
+    os.path.join(data_path, example_name + '.npz')
 )
+example_name = 'small_network_conv'
 network_conv = np.load(
-    os.path.join(data_path, example_name + '_' + 'conv.npz')
+    os.path.join(data_path, example_name + '.npz')
 )
-
 
 stat_dens = network_ergodic['stat_dens']
 q_f = network_ergodic['q_f']
@@ -186,13 +189,13 @@ v_max_eff_curr = max([
 ])
 
 
-
 # plot relative color bar
 plot_colorbar_only(
-    file_path=os.path.join(charts_path, example_name + '_' + 'colorbar.png'),
+    file_path=os.path.join(charts_path, 'small_network_colorbar.png'),
 )
 
 # plotting results for ergodic, infinite-time case
+example_name = 'small_network_stationary'
 graphs = [nx.Graph(P)]
 
 plot_density(
@@ -247,6 +250,7 @@ plot_effcurrent_and_rate(
 )
 
 # plotting results for periodic case
+example_name = 'small_network_periodic'
 graphs_p = [nx.Graph(P_p(m)) for m in np.arange(M)] 
 shifted_rate_p = np.zeros((M, 2))
 shifted_rate_p[:, 0] = rate_p[:, 0]
@@ -260,7 +264,7 @@ plot_density(
     labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'dens_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
     subtitles=['$\pi_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
@@ -270,7 +274,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_f_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
     subtitles=['$q^+_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
@@ -280,7 +284,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_b_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
     subtitles=['$q^-_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
@@ -290,7 +294,7 @@ plot_density(
     labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}_' + str(m) + '^{AB}$' for m in np.arange(M)]
 )
 plot_effcurrent_and_rate(
@@ -300,17 +304,20 @@ plot_effcurrent_and_rate(
     labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, example_name + '_' + 'eff_p.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
     subtitles=['$f^+_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_rate(
     rate=rate_p,
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates_p.png'),
-    title='Discrete M-periodic rates',xlabel = 'm', average_rate_legend=r'$\bar{k}^{AB}_M$'
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates.png'),
+    title='Discrete M-periodic rates',
+    xlabel = 'm',
+    average_rate_legend=r'$\bar{k}^{AB}_M$',
 )
 
 
 # plotting results for finite-time, time-homogeneous case
+example_name = 'small_network_finite'
 graphs_f = [nx.Graph(P_hom(n)) for n in np.arange(N)] 
 shifted_rate_f = np.zeros((N-1, 2))
 shifted_rate_f[:, 0] = rate_f[:N-1, 0]
@@ -323,7 +330,7 @@ plot_density(
     labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'dens_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
     subtitles=['$\pi(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
@@ -333,7 +340,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_f_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
     subtitles=['$q^+(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
@@ -343,7 +350,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_b_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
     subtitles=['$q^-(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
@@ -353,7 +360,7 @@ plot_density(
     labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}^{AB}(' + str(n) + ')$' for n in np.arange(1, N-1)]
 )
 plot_effcurrent_and_rate(
@@ -363,23 +370,26 @@ plot_effcurrent_and_rate(
     labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, example_name + '_' + 'eff_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
     subtitles=['$f^+(' + str(n) + ')$' for n in np.arange(N-1)]
 )
 plot_rate(
     rate=rate_f,
     time_av_rate=time_av_rate_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates_f.png'),
-    title='Discrete finite-time rates',xlabel = 'n', average_rate_legend=r'$\bar{k}^{AB}_N$'
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates.png'),
+    title='Discrete finite-time rates',
+    xlabel = 'n',
+    average_rate_legend=r'$\bar{k}^{AB}_N$',
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_f.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete finite-time reactiveness',
 )
 
 
 # plotting results for finite-time, time-inhomogeneous case
+example_name = 'small_network_inhom'
 graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)] 
 shifted_rate_inhom = np.zeros((N_inhom-1, 2))
 shifted_rate_inhom[:, 0] = rate_inhom[:N_inhom-1, 0]
@@ -392,7 +402,7 @@ plot_density(
     labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'dens_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
     subtitles=['$\lambda(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
@@ -402,7 +412,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_f_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
     subtitles=['$q^+(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
@@ -412,7 +422,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_b_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
     subtitles=['$q^-(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
@@ -422,7 +432,7 @@ plot_density(
     labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}^{AB}(' + str(n) + ')$' for n in np.arange(1, N_inhom-1)]
 )
 plot_effcurrent_and_rate(
@@ -432,29 +442,31 @@ plot_effcurrent_and_rate(
     labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, example_name + '_' + 'eff_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
     subtitles=['$f^+(' + str(n) + ')$' for n in np.arange(N_inhom-1)]
 )
 plot_rate(
     rate=rate_inhom,
     time_av_rate=time_av_rate_inhom,
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates_inhom.png'),
-    title='Discrete finite-time, time-inhomogeneous rates',xlabel = 'N', average_rate_legend=r'$\bar{k}^{AB}_n$'
+    file_path=os.path.join(charts_path, example_name + '_' + 'rates.png'),
+    title='Discrete finite-time, time-inhomogeneous rates',
+    xlabel = 'N',
+    average_rate_legend=r'$\bar{k}^{AB}_n$',
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_inhom,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness_inhom.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete finite-time, time-inhomogeneous reactiveness',
 )
 
 # extended finite-time -> large N=100
+example_name = 'small_network_conv'
 plot_convergence(
     q_f=q_f,
     q_f_conv=q_f_conv,
     q_b=q_b,
     q_b_conv=q_b_conv,
     scale_type='log',
-    file_path=os.path.join(charts_path, example_name + '_' + 'conv_finite.png'),
+    file_path=os.path.join(charts_path, example_name + '_' + 'conv.png'),
     title=None,#'Convergence of finite-time, stationary $q^+(n)$ and $q^-(n)$ on $\{-N,...,N\}$ for large $N$',
 )
-
