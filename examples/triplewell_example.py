@@ -112,8 +112,7 @@ stat_dens_small_noise = well3_small_noise.stationary_density()
 init_dens_triple_bif = stat_dens_small_noise
 
 #time window 20-> lower channel only in stat dens, time window 50, lower channel in both
-#N_bif_array = np.array([20, 50, 100, 500])
-N_bif_array = np.array([5, 10])
+N_bif_array = np.array([20, 50, 100, 500])
 N_bif_size = np.shape(N_bif_array)[0]
 
 norm_reac_dens_f_bif_all = np.zeros((N_bif_size, dim_st))

@@ -41,8 +41,8 @@ def plot_colorbar_only(file_path):
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
-def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path,\
-                         title=None, subtitles=None):
+def plot_network_density(data, graphs, pos, labels, v_min, v_max,
+                         file_path, title=None, subtitles=None):
     """
     For a Markov chain on a network of nodes this function plots
     in several subplots several densities (e.g. for different
@@ -97,8 +97,8 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max, file_path,\
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
     
-def plot_network_effective_current(eff_current, pos, labels, v_min, \
-                        v_max, file_path, title=None, subtitles=None):
+def plot_network_effective_current(eff_current, pos, labels, v_min, v_max,
+                                   file_path, title=None, subtitles=None):
     """
     For a Markov chain on a network of nodes this function plots
     in several subplots several currents, the value of the current between 
@@ -182,8 +182,8 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, \
     fig.savefig(file_path, format='png', dpi=200, bbox_inches='tight')
 
 
-def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
-            labels, v_min, v_max, file_path, title=None, subtitles=None):
+def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_min,
+                                     v_max, file_path, title=None, subtitles=None):
     """
     For a Markov chain on a network of nodes this function plots
     in several subplots several currents, the value of the current between 
@@ -291,8 +291,8 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, \
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
-def plot_rate(rate, file_path, title, xlabel, \
-             average_rate_legend='$\hat{k}^{AB}$', time_av_rate=None):                                          
+def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}$',
+              time_av_rate=None):                                          
     """
     This function plots/saves the out-of-A and into-B rate in time. 
     
@@ -414,8 +414,7 @@ def plot_reactiveness(reac_norm_factor, file_path, title):
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight') 
 
 
-def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, \
-                     file_path, title):
+def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title):
     '''
     Plots (and saves the plot) the convergence of the forward and 
     backward committor for a finite-time, stationary system to the forward 
@@ -535,11 +534,10 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
     
     # save figure
     fig.subplots_adjust(top=0.8)
- 
     fig.savefig(file_path, format='png', dpi=300)
 
 def plot_3well_vector_field(vector_field, vector_field_forced,
-                                   file_path, title, subtitles=None):
+                            file_path, title, subtitles=None):
     '''
     Plots (and saves the plot) the vector field -grad V of the potential V, 
     as well as two time instances (m=0, 3) of the forced vector field. 
@@ -619,8 +617,76 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
     fig.savefig(file_path, format='png', dpi=300)
 
 
-def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,\
-                          datashape, extent, timeframe, size,titles):
+def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max, 
+               titles, file_path, background=None):
+    """
+    For a Markov chain on discrete 2D statespace this function plots
+    in several subplots (e.g. for several time points) several densities.
+    
+    Args:
+    data : ndarray of size (# subplots, # states)
+        array of densities for each subplot/time point
+    datashape : (xdim, ydim)
+        dimension (int) of statespace in x and y direction
+    extent : (x_min, x_max, y_min, y_max)
+        gives the limits of the statespace
+    timeframe : int
+        number of subplots/time frames
+    size: (xsize, ysize)
+        figure size in x and y direction
+    v_min : float
+        minimum value of the colorbar
+    v_max : float
+        maximum value of the colorbar
+    titles : list of strings
+        titles for the different subplots
+    background: ndarray of size # states
+        if given, is plotted in the background and the foreground is slightly 
+        transparent
+    file_path: string
+        path to where the file should be saved eg ".../plots/image.png""
+    """
+    if background is None: 
+        background = np.ones(datashape[0]*datashape[1])
+        
+    fig = plt.figure(figsize=size)
+
+    grid = AxesGrid(fig, 111,
+                nrows_ncols=(1, timeframe),
+                axes_pad=0.13,
+                cbar_mode='single',
+                cbar_location='right',
+                cbar_pad=0.1
+                )
+    
+    i=0
+    for ax in grid: 
+        if np.isnan(data[i,:]).all()==False: #if not all values are nan
+            ax.imshow(background.reshape(datashape), cmap='Greys', alpha=1, \
+                     origin='lower', extent=extent)
+            im = ax.imshow(
+                data[i,:].reshape(datashape),
+                vmin=v_min,
+                vmax=v_max,
+                cmap=TRIPLEWELL_CMAP,
+                origin='lower',
+                alpha=0.9,
+                extent=extent,
+            )
+ 
+            ax.set_title(titles[i])  
+        i = i + 1
+ 
+    fig.subplots_adjust(top=0.8)
+    sfmt=ScalarFormatter(useMathText=True) 
+    sfmt.set_powerlimits((0, 0))
+    cbar = ax.cax.colorbar(im, format=sfmt) 
+    cbar = grid.cbar_axes[0].colorbar(im)
+    
+    fig.savefig(file_path, format='png', dpi=100, bbox_inches='tight')
+
+def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,datashape,
+                          extent, timeframe, size, titles, file_path):
     """
     For a Markov chain on discrete 2D statespace this function plots
     in several subplots several vectorfields/effective currents. 
@@ -649,6 +715,8 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,\
         maximum value of the colorbar
     titles : list of strings
         titles for the different subplots
+    file_path: string
+        path to where the file should be saved eg ".../plots/image.png""
     """
     
     fig = plt.figure(figsize=size)
@@ -677,66 +745,6 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,\
     sfmt.set_powerlimits((0, 0))
     cbar = ax.cax.colorbar(im, format=sfmt)
     cbar = grid.cbar_axes[0].colorbar(im)
-    return fig
 
+    fig.savefig(file_path, format='png', dpi=100, bbox_inches='tight')
 
-def plot_3well(data,datashape, extent, timeframe, size, v_min, v_max, \
-               titles,background=None):
-    """
-    For a Markov chain on discrete 2D statespace this function plots
-    in several subplots (e.g. for several time points) several densities.
-    
-    Args:
-    data : ndarray of size (# subplots, # states)
-        array of densities for each subplot/time point
-    datashape : (xdim, ydim)
-        dimension (int) of statespace in x and y direction
-    extent : (x_min, x_max, y_min, y_max)
-        gives the limits of the statespace
-    timeframe : int
-        number of subplots/time frames
-    size: (xsize, ysize)
-        figure size in x and y direction
-    v_min : float
-        minimum value of the colorbar
-    v_max : float
-        maximum value of the colorbar
-    titles : list of strings
-        titles for the different subplots
-    background: ndarray of size # states
-        if given, is plotted in the background and the foreground is slightly 
-        transparent
-    """
-    if background is None: 
-        background = np.ones(datashape[0]*datashape[1])
-        
-    fig = plt.figure(figsize=size)
-
-    grid = AxesGrid(fig, 111,
-                nrows_ncols=(1, timeframe),
-                axes_pad=0.13,
-                cbar_mode='single',
-                cbar_location='right',
-                cbar_pad=0.1
-                )
-    
-    i=0
-    for ax in grid: 
-        if np.isnan(data[i,:]).all()==False: #if not all values are nan
-            ax.imshow(background.reshape(datashape), cmap='Greys', alpha=1, \
-                     origin='lower', extent=extent)
-            im = ax.imshow(data[i,:].reshape(datashape), vmin=v_min, \
-                     vmax=v_max, cmap =TRIPLEWELL_CMAP, origin='lower', \
-                    alpha=0.9, extent=extent)
- 
-            ax.set_title(titles[i])  
-        i = i + 1
- 
-    fig.subplots_adjust(top=0.8)
-    sfmt=ScalarFormatter(useMathText=True) 
-    sfmt.set_powerlimits((0, 0))
-    cbar = ax.cax.colorbar(im, format=sfmt) 
-    cbar = grid.cbar_axes[0].colorbar(im)
-
- 
-    return fig
