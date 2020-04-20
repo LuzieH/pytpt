@@ -8,7 +8,7 @@ examples/data/
 examples/charts/
 
 # paper intro file
-examples/charts/intro_example.py
+examples/intro_example.py
 
 # pycharm framework
 .idea
