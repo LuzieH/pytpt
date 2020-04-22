@@ -13,7 +13,6 @@ import os.path
 # define directories path to save the data and figures 
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
-charts_path = os.path.join(my_path, 'charts')
 
 # load triple well construction data
 triplewell_construction = np.load(

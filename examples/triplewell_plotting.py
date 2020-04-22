@@ -10,7 +10,7 @@ import os.path
 # define directories path to save the data and figures 
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
-charts_path = os.path.join(my_path, 'charts')
+figures_path = os.path.join(my_path, 'figures')
 
 # load triple well construction data
 triplewell_construction = np.load(
@@ -111,25 +111,25 @@ example_name = 'triplewell_stationary'
 data = np.array([stat_dens])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'dens.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'dens.png')
 plot_3well(data, (xdim, ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), 1, (3*1,3), v_min, v_max, ['$\pi$'], file_path)
 
 data = np.array([q_f])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'q_f.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'q_f.png')
 plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1], interval[1,0], interval[1,1]), 1, (3*1,3), v_min, v_max, ['$q^+$'], file_path)
 
 data = np.array([q_b])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'q_b.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'q_b.png')
 plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), 1, (3*1,3), v_min, v_max, ['$q^-$'], file_path)
 
 data = np.array([norm_reac_dens])
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'reac_dens.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'reac_dens.png')
 plot_3well(data, (xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]) , 1, (3*1,3), v_min, v_max, ['$\hat{\mu}^{AB}$'], file_path, background=densAB)
 
 # define AB sets
@@ -150,7 +150,7 @@ for i in np.arange(dim_st):
     if colors[i] > 0:
         eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i] 
             
-file_path = os.path.join(charts_path, example_name + '_' + 'eff.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'eff.png')
 plot_3well_effcurrent(np.array([eff_vectors_unit]), np.array([colors]), xn, yn, densAB, (xdim, ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), 1, (3*1, 3), ['$f^+$'], file_path)
 
 # plots periodic
@@ -163,25 +163,25 @@ def subtitles_m(quant,M):
 data = stat_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'dens.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'dens.png')
 plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), v_min, v_max, subtitles_m('$\pi_{}$', M), file_path)#Periodic stationary density', subtitles = subtitles_p)
 
 data = q_f_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'q_f.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'q_f.png')
 plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), v_min, v_max, subtitles_m('$q^+_{}$', M), file_path)
 
 data = q_b_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'q_b.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'q_b.png')
 plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), v_min, v_max, subtitles_m('$q^-_{}$', M), file_path)
 
 data = norm_reac_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'reac_dens.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'reac_dens.png')
 plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), v_min, v_max,np.array(['$\hat{\mu}^{AB}_0$','$\hat{\mu}^{AB}_1$','$\hat{\mu}^{AB}_2$','$\hat{\mu}^{AB}_3$','$\hat{\mu}^{AB}_4$','$\hat{\mu}^{AB}_5$']), file_path, background=densAB) 
 
 # define AB sets
@@ -203,13 +203,13 @@ for m in np.arange(M):
         if colors_p[m,i]>0:
             eff_vectors_unit_p[m,i,:] = eff_vectors_p[m,i,:]/colors_p[m,i]
  
-file_path = os.path.join(charts_path, example_name + '_' + 'eff.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'eff.png')
 plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), subtitles_m('$f^+_{}$', M), file_path) 
 
 plot_rate(
     rate=rate_p,
     time_av_rate=time_av_rate_p,                                                               
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'rates.png'),
     title='',
     xlabel = 'm',
     average_rate_legend=r'$ \bar{k}^{AB}_M $',
@@ -217,7 +217,7 @@ plot_rate(
  
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_p,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete periodic reactiveness',
 )
 exit()
@@ -229,25 +229,25 @@ N = 6 # time window
 data = dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'dens.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'dens.png')
 plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N, (3*N,3), v_min, v_max, subtitles_m('$\lambda({})$',N), file_path)
 
 data = q_f_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'q_f.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'q_f.png')
 plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N, (3*N,3), v_min, v_max, subtitles_m('$q^+({})$',N), file_path)
 
 data = q_b_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'q_b.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'q_b.png')
 plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N, (3*N,3), v_min, v_max, subtitles_m('$q^-({})$',N), file_path)
 
 data = norm_reac_dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'dens.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'dens.png')
 plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N-2, (3*(N-2),3), v_min, v_max, np.array(['$\hat{\mu}^{AB}(1)$','$\hat{\mu}^{AB}(2)$','$\hat{\mu}^{AB}(3)$','$\hat{\mu}^{AB}(4)$']), file_path, background=densAB) 
 
 # calculation the effective vector for each state
@@ -267,20 +267,20 @@ for n in np.arange(N):
             eff_vectors_unit_f[n,i,:] = eff_vectors_f[n,i,:]/colors_f[n,i]
             
 
-file_path = os.path.join(charts_path, example_name + '_' + 'eff.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'eff.png')
 plot_3well_effcurrent(eff_vectors_unit_f[:N-1,:,:], colors_f[:N-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N-1, (3*(N-1),3), subtitles_m('$f^+({})$',N-1), file_path)
 
 plot_rate(
     rate=rate_f,
     time_av_rate=time_av_rate_f,                                                               
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'rates.png'),
     title='Discrete finite-time, time-homogeneous rates',
     xlabel = 'n',
     average_rate_legend=r'$\bar{k}^{AB}_N$',
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete finite-time, time-homogeneous reactiveness',
 )
 
@@ -298,8 +298,8 @@ for N_bif in N_bif_array:
 data = norm_reac_dens_f_bif_all
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
-file_path = os.path.join(charts_path, example_name + '_' + 'reac_dens.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'reac_dens.png')
 plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N_bif_size, (3*N_bif_size,3), v_min, v_max, subtitles_bif_dens, file_path, background=densAB)
 
-file_path = os.path.join(charts_path, example_name + '_' + 'eff.png')
+file_path = os.path.join(figures_path, example_name + '_' + 'eff.png')
 plot_3well_effcurrent(eff_current_f_bif_all,color_current_f_bif_all, xn, yn, densAB, (xdim, ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N_bif_size, (3*N_bif_size, 3), subtitles_bif_eff, file_path)

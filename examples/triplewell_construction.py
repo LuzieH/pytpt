@@ -8,7 +8,7 @@ import os.path
 # paths
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
-charts_path = os.path.join(my_path, 'charts')
+figures_path = os.path.join(my_path, 'figures')
 example_name = 'triplewell'
 
 #triple well in 2D energy landscape V and gradient dV
@@ -46,7 +46,7 @@ subtitles=[
 ]
 plot_3well_potential(
     potential=V0,
-    file_path=os.path.join(charts_path, example_name + '_' + 'potential.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'potential.png'),
     title=title,
     subtitles=subtitles,
 )
@@ -59,7 +59,7 @@ subtitles=[
 plot_3well_vector_field(
     vector_field=dV0,
     vector_field_forced=dV_forced,
-    file_path=os.path.join(charts_path, example_name + '_' \
+    file_path=os.path.join(figures_path, example_name + '_' \
                            + 'vector_field.png'),
     title=title,
     subtitles=subtitles,

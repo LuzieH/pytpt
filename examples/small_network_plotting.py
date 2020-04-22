@@ -18,7 +18,7 @@ import os
 # define directories path to save the data and figures 
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
-charts_path = os.path.join(my_path, 'charts')
+figures_path = os.path.join(my_path, 'figures')
 
 # load small network construction data
 network_construction = np.load(
@@ -172,7 +172,7 @@ v_max_eff_curr = max([
 
 # plot relative color bar
 plot_colorbar_only(
-    file_path=os.path.join(charts_path, 'small_network_colorbar.png'),
+    file_path=os.path.join(figures_path, 'small_network_colorbar.png'),
 )
 
 # plotting results for ergodic, infinite-time case
@@ -186,7 +186,7 @@ plot_density(
     labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'dens.png'),
     subtitles=['$\pi$']
 )
 plot_density(
@@ -196,7 +196,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'q_f.png'),
     subtitles=['$q^+$'],
 )
 plot_density(
@@ -206,7 +206,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'q_b.png'),
     subtitles=['$q^-$'],
 )
 plot_density(
@@ -216,7 +216,7 @@ plot_density(
     labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}^{AB}$'],
 )
 plot_effcurrent_and_rate(
@@ -226,7 +226,7 @@ plot_effcurrent_and_rate(
     labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'eff.png'),
     subtitles=['$f^+$'],
 )
 
@@ -247,7 +247,7 @@ plot_density(
     labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'dens.png'),
     subtitles=['$\pi_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
@@ -257,7 +257,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'q_f.png'),
     subtitles=['$q^+_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
@@ -267,7 +267,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'q_b.png'),
     subtitles=['$q^-_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_density(
@@ -277,7 +277,7 @@ plot_density(
     labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}_' + str(m) + '^{AB}$' for m in np.arange(M)]
 )
 plot_effcurrent_and_rate(
@@ -287,12 +287,12 @@ plot_effcurrent_and_rate(
     labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'eff.png'),
     subtitles=['$f^+_' + str(m) + '$' for m in np.arange(M)]
 )
 plot_rate(
     rate=rate_p,
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'rates.png'),
     title='Discrete M-periodic rates',
     xlabel = 'm',
     average_rate_legend=r'$\bar{k}^{AB}_M$',
@@ -313,7 +313,7 @@ plot_density(
     labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'dens.png'),
     subtitles=['$\pi(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
@@ -323,7 +323,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'q_f.png'),
     subtitles=['$q^+(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
@@ -333,7 +333,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'q_b.png'),
     subtitles=['$q^-(' + str(n) + ')$' for n in np.arange(N)]
 )
 plot_density(
@@ -343,7 +343,7 @@ plot_density(
     labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}^{AB}(' + str(n) + ')$' for n in np.arange(1, N-1)]
 )
 plot_effcurrent_and_rate(
@@ -353,20 +353,20 @@ plot_effcurrent_and_rate(
     labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'eff.png'),
     subtitles=['$f^+(' + str(n) + ')$' for n in np.arange(N-1)]
 )
 plot_rate(
     rate=rate_f,
     time_av_rate=time_av_rate_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'rates.png'),
     title='Discrete finite-time rates',
     xlabel = 'n',
     average_rate_legend=r'$\bar{k}^{AB}_N$',
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete finite-time reactiveness',
 )
 
@@ -386,7 +386,7 @@ plot_density(
     labels=labels,
     v_min=v_min_dens,
     v_max=v_max_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'dens.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'dens.png'),
     subtitles=['$\lambda(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
@@ -396,7 +396,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_f,
     v_max=v_max_q_f,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_f.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'q_f.png'),
     subtitles=['$q^+(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
@@ -406,7 +406,7 @@ plot_density(
     labels=labels,
     v_min=v_min_q_b,
     v_max=v_max_q_b,
-    file_path=os.path.join(charts_path, example_name + '_' + 'q_b.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'q_b.png'),
     subtitles=['$q^-(' + str(n) + ')$' for n in np.arange(N_inhom)]
 )
 plot_density(
@@ -416,7 +416,7 @@ plot_density(
     labels=labels,
     v_min=v_min_reac_dens,
     v_max=v_max_reac_dens,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reac_dens.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'reac_dens.png'),
     subtitles=['$\hat{\mu}^{AB}(' + str(n) + ')$' for n in np.arange(1, N_inhom-1)]
 )
 plot_effcurrent_and_rate(
@@ -426,20 +426,20 @@ plot_effcurrent_and_rate(
     labels=labels,
     v_min=v_min_eff_curr,
     v_max=v_max_eff_curr,
-    file_path=os.path.join(charts_path, example_name + '_' + 'eff.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'eff.png'),
     subtitles=['$f^+(' + str(n) + ')$' for n in np.arange(N_inhom-1)]
 )
 plot_rate(
     rate=rate_inhom,
     time_av_rate=time_av_rate_inhom,
-    file_path=os.path.join(charts_path, example_name + '_' + 'rates.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'rates.png'),
     title='Discrete finite-time, time-inhomogeneous rates',
     xlabel = 'N',
     average_rate_legend=r'$\bar{k}^{AB}_n$',
 )
 plot_reactiveness(
     reac_norm_factor=reac_norm_factor_inhom,
-    file_path=os.path.join(charts_path, example_name + '_' + 'reactiveness.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete finite-time, time-inhomogeneous reactiveness',
 )
 
@@ -451,6 +451,6 @@ plot_convergence(
     q_b=q_b,
     q_b_conv=q_b_conv,
     scale_type='log',
-    file_path=os.path.join(charts_path, example_name + '_' + 'conv.png'),
+    file_path=os.path.join(figures_path, example_name + '_' + 'conv.png'),
     title=None,#'Convergence of finite-time, stationary $q^+(n)$ and $q^-(n)$ on $\{-N,...,N\}$ for large $N$',
 )
