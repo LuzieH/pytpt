@@ -18,13 +18,7 @@ git clone https://github.com/LuzieH/pytpt.git
 python -m venv /path/to/new/virtual/environment
 source /path/to/new/virtual/environment/bin/activate
 ```
-3. Install requirements with the Package Installer for Python3:
+3. Add the package to your local python library:
 ```
-pip install -r requirements
-```
-4. Create folders to store npy files and plots: 
-```
-mkdir examples/data
-mkdir examples/charts
-```
-Rem: The above mentioned folders are ignored. 
+pip install -e pytpt
+ 
