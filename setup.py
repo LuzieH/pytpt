@@ -14,5 +14,9 @@ setuptools.setup(
     url="https://github.com/LuzieH/pytpt",
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=['numpy'],
+    install_requires=[
+        'numpy',
+        'matplotlib==3.1.3',
+        'networkx',
+    ],
 )
