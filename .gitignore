@@ -4,8 +4,8 @@ venv-pytpt/
 # data directory
 examples/data/
 
-# charts directory
-examples/charts/
+# figures directory
+examples/figures/
 
 # paper intro file
 examples/intro_example.py
