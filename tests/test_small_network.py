@@ -41,23 +41,41 @@ class TestStationary:
         ind_C = np.array([key for key in states if states[key] == 'C'])
         return stationary.tpt(P, ind_A, ind_B, ind_C)
 
-    def test_transition_matrix(self, P):
+    def test_transition_matrix(self, small_network):
+        P = small_network._P
+        S = small_network._S
+
+        assert P.shape == (S, S)
+        assert np.isnan(P).any() == False
         assert is_stochastic_matrix(P)
 
     def test_backward_transition_matrix(self, small_network):
         P_back = small_network.backward_transitions()
+        S = small_network._S
+
+        assert P_back.shape == (S, S)
+        assert np.isnan(P_back).any() == False
         assert is_stochastic_matrix(P_back)
 
     def test_stationary_density(self, small_network):
         stationary_density = small_network.stationary_density()
+        S = small_network._S
+
+        assert stationary_density.shape == (S,)
+        assert np.isnan(stationary_density).any() == False
         assert np.greater_equal(stationary_density.all(), 0) 
         assert np.less_equal(stationary_density.all(), 1) 
 
     def test_committors(self, small_network):
         q_f, q_b = small_network.committor()
+        S = small_network._S
+
+        assert q_f.shape == (S,)
+        assert np.isnan(q_f).any() == False
         assert np.greater_equal(q_f.all(), 0) 
         assert np.less_equal(q_f.all(), 1) 
+
+        assert q_b.shape == (S,)
+        assert np.isnan(q_b).any() == False
         assert np.greater_equal(q_b.all(), 0) 
         assert np.less_equal(q_b.all(), 1) 
-
-
