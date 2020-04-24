@@ -44,6 +44,10 @@ class TestStationary:
     def test_transition_matrix(self, P):
         assert is_stochastic_matrix(P)
 
+    def test_backward_transition_matrix(self, small_network):
+        P_back = small_network.backward_transitions()
+        assert is_stochastic_matrix(P_back)
+
     def test_stationary_density(self, small_network):
         stationary_density = small_network.stationary_density()
         assert np.greater_equal(stationary_density.all(), 0) 
@@ -55,3 +59,5 @@ class TestStationary:
         assert np.less_equal(q_f.all(), 1) 
         assert np.greater_equal(q_b.all(), 0) 
         assert np.less_equal(q_b.all(), 1) 
+
+
