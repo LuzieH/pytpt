@@ -8,17 +8,33 @@ Implementation of Transition Path Theory for:
 based on: 
 Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). Extending Transition Path Theory: Periodically-Driven and Finite-Time Dynamics. arXiv preprint arXiv:2002.07474.
 
-## Quick Start
+## Package Installation
 1. Clone the project in a local repository:
 ```
 git clone https://github.com/LuzieH/pytpt.git
 ```
-2. Create Virtual Environment (Optional):
-```
-python -m venv /path/to/new/virtual/environment
-source /path/to/new/virtual/environment/bin/activate
-```
-3. Add the package to your local python library:
+2. Add the package to your local python library:
 ```
 pip install -e pytpt
- 
+```
+## Quick Start (run examples)
+1. Clone the project in a local repository:
+```
+git clone https://github.com/LuzieH/pytpt.git
+```
+2. Install project requirements:
+```
+pip install -r requirements
+```
+3. Run small network example
+```
+python examples/small_network_construction.py
+python examples/small_network_example.py
+python examples/small_network_plotting.py
+``` 
+4. Run triplewell example
+```
+python examples/triplewell_construction.py
+python examples/triplewell_example.py
+python examples/triplewell_plotting.py
+``` 
