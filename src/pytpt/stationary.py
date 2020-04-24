@@ -82,15 +82,12 @@ class tpt:
 
         return stat_dens
 
-    def committor(self):
-        '''Function that computes the forward committor q_f
-        (probability that the chain will next go to B rather than A)
-        and backward commitor q_b (probability that the system last came
-        from A rather than B).
+    def backward_transitions(self): 
+        '''Computes the transition matrix backwards in time. Returns a
+        ndarray with shape (S, S). When the stationary density in j is
+        zero, the corresponding transition matrix entries (row j) are
+        set to 0.
         '''
-
-        # compute backward transition matrix (if stat_dens in state j is 0, 
-        # the corresponding entries in the transition matrix are 0)
         P_back = np.zeros(np.shape(self._P))
         for i in np.arange(self._S):
             for j in np.arange(self._S):
@@ -99,13 +96,24 @@ class tpt:
                     self._stat_dens[i] / self._stat_dens[j]
         self._P_back = P_back
 
+        return self._P_back
+
+    def committor(self):
+        '''Function that computes the forward committor q_f
+        (probability that the chain will next go to B rather than A)
+        and backward commitor q_b (probability that the system last came
+        from A rather than B).
+        '''
+        # compute backward transition matrix
+        self.backward_transitions()
+        
         # forward and backward transition matrices from states in C to C
         P_C = self._P[np.ix_(self._ind_C, self._ind_C)]
         P_back_C = self._P_back[np.ix_(self._ind_C, self._ind_C)]
 
         # amd from C to B
         P_CB = self._P[np.ix_(self._ind_C, self._ind_B)]
-        P_back_CA = P_back[np.ix_(self._ind_C, self._ind_A)]
+        P_back_CA = self._P_back[np.ix_(self._ind_C, self._ind_A)]
 
         q_f = np.zeros(self._S)
         # compute forward committor on C, the transition region
