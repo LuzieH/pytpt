@@ -16,7 +16,5 @@ setuptools.setup(
     package_dir={'': 'src'},
     install_requires=[
         'numpy',
-        'matplotlib==3.1.3',
-        'networkx',
     ],
 )
