@@ -1,7 +1,6 @@
 import numpy as np
 from inspect import isfunction
 
-import os.path
 
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of 

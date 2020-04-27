@@ -1,7 +1,5 @@
 import numpy as np
 
-import os.path
-
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of
     discrete-time Markov chain models in stationarity.

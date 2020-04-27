@@ -1,6 +1,5 @@
 import numpy as np
 
-import os.path
 
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of

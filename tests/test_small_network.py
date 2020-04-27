@@ -83,3 +83,21 @@ class TestStationary:
         assert np.isnan(q_b).any() == False
         assert np.greater_equal(q_b.all(), 0) 
         assert np.less_equal(q_b.all(), 1) 
+
+    def test_reac_density(self, small_network):
+        reac_dens = small_network.reac_density()
+        reac_norm_factor = small_network.reac_norm_factor()
+        norm_reac_dens = small_network.norm_reac_density()
+        S = small_network._S
+
+        assert reac_dens.shape == (S,)
+        assert np.isnan(reac_dens).any() == False
+        assert np.greater_equal(reac_dens.all(), 0) 
+        assert np.less_equal(reac_dens.all(), 1) 
+        
+        assert norm_reac_dens.shape == (S,)
+        assert np.isnan(norm_reac_dens).any() == False
+        assert np.greater_equal(norm_reac_dens.all(), 0) 
+        assert np.less_equal(norm_reac_dens.all(), 1)
+        
+        assert np.isclose(reac_dens, reac_norm_factor*norm_reac_dens)
