@@ -10,22 +10,27 @@ Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). Extending T
 
 ## pytpt Package Installation
 1. Clone the project in a local repository: 
-`git clone https://github.com/LuzieH/pytpt.git`
-2. Add the package to your local python library
+`
+git clone https://github.com/LuzieH/pytpt.git
+`
+2. Add the package to your local python library:
 ` 
 pip install -e pytpt
 ` 
  
 ## Quick Start (run examples)
-1. Clone the project in a local repository and install pytpt:
-```
+1. Clone the project in a local repository
+`
 git clone https://github.com/LuzieH/pytpt.git
+`
+and install pytpt: 
+`
 pip install -e pytpt
-```
+`
 2. Install project requirements:
-```
+` 
 pip install -r requirements
-```
+` 
 3. Run small network example
 ```
 python examples/small_network_construction.py
