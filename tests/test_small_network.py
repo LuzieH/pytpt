@@ -60,11 +60,15 @@ class TestStationary:
     def test_stationary_density(self, small_network):
         stationary_density = small_network.stationary_density()
         S = small_network._S
-
+        P = small_network._P
+        P_back = small_network.backward_transitions()
+        
         assert stationary_density.shape == (S,)
         assert np.isnan(stationary_density).any() == False
         assert np.greater_equal(stationary_density.all(), 0) 
         assert np.less_equal(stationary_density.all(), 1) 
+        assert np.isclose(stationary_density.dot(P),stationary_density).all() 
+        assert np.isclose(stationary_density.dot(P_back),stationary_density).all()  
 
     def test_committors(self, small_network):
         q_f, q_b = small_network.committor()
