@@ -23,6 +23,7 @@ pip install -e pytpt
 `
 git clone https://github.com/LuzieH/pytpt.git
 `
+\
 and install pytpt: 
 `
 pip install -e pytpt
