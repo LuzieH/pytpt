@@ -9,11 +9,12 @@ based on:
 Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). Extending Transition Path Theory: Periodically-Driven and Finite-Time Dynamics. arXiv preprint arXiv:2002.07474.
 
 ## pytpt Package Installation
-Clone the project in a local repository and add the package to your local python library:
-```
-git clone https://github.com/LuzieH/pytpt.git
+1. Clone the project in a local repository: 
+`git clone https://github.com/LuzieH/pytpt.git`
+2. Add the package to your local python library
+` 
 pip install -e pytpt
-```
+` 
  
 ## Quick Start (run examples)
 1. Clone the project in a local repository and install pytpt:
