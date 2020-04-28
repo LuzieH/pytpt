@@ -39,7 +39,11 @@ class TestStationary:
         ind_A = np.array([key for key in states if states[key] == 'A'])
         ind_B = np.array([key for key in states if states[key] == 'B'])
         ind_C = np.array([key for key in states if states[key] == 'C'])
-        return stationary.tpt(P, ind_A, ind_B, ind_C)
+        
+        small_network = stationary.tpt(P, ind_A, ind_B, ind_C)
+        q_f, q_b = small_network.committor()
+        
+        return small_network
 
     def test_transition_matrix(self, small_network):
         P = small_network._P
@@ -71,7 +75,7 @@ class TestStationary:
         assert np.isclose(stationary_density.dot(P_back),stationary_density).all()  
 
     def test_committors(self, small_network):
-        q_f, q_b = small_network.committor()
+        q_f, q_b = small_network._q_f,small_network._q_b
         S = small_network._S
 
         assert q_f.shape == (S,)
@@ -85,7 +89,6 @@ class TestStationary:
         assert np.less_equal(q_b.all(), 1) 
 
     def test_reac_density(self, small_network):
-        q_f, q_b = small_network.committor()
         reac_dens = small_network.reac_density()
         reac_norm_factor = small_network.reac_norm_factor()
         norm_reac_dens = small_network.norm_reac_density()
@@ -102,3 +105,19 @@ class TestStationary:
         assert np.less_equal(norm_reac_dens.all(), 1)
         
         assert np.isclose(reac_dens, reac_norm_factor*norm_reac_dens).all()
+        
+    def test_current(self, small_network):
+        reac_current, eff_current = small_network.reac_current()
+        S = small_network._S
+
+        assert reac_current.shape == (S,S)
+        assert np.isnan(reac_current).any() == False
+        assert np.greater_equal(reac_current.all(), 0) 
+        assert np.less_equal(reac_current.all(), 1) 
+        
+        assert eff_current.shape == (S,S)
+        assert np.isnan(eff_current).any() == False
+        assert np.greater_equal(eff_current.all(), 0) 
+        assert np.less_equal(eff_current.all(), 1)
+        
+        

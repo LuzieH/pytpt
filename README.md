@@ -1,14 +1,14 @@
-﻿# pyTPT
+﻿# PyTPT
 
 Implementation of Transition Path Theory for:
-- stationary Markov chains (stationary.py),
-- for periodically varying Markov chains (periodic.py),
-- for time-inhomogenous Markov chains over finite time intervals (finite.py).
+- stationary Markov chains (src/pytpt/stationary.py),
+- for periodically varying Markov chains (src/pytpt/periodic.py),
+- for time-inhomogenous Markov chains over finite time intervals (src/pytpt/finite.py).
 
 based on: 
 Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). Extending Transition Path Theory: Periodically-Driven and Finite-Time Dynamics. arXiv preprint arXiv:2002.07474.
 
-## pytpt Package Installation
+## PyTPT Package Installation
 1. Clone the project in a local repository: 
 `
 git clone https://github.com/LuzieH/pytpt.git
