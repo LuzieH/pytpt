@@ -5,7 +5,7 @@ Implementation of Transition Path Theory for:
 - for periodically varying Markov chains (pytpt/periodic.py),
 - for time-inhomogenous Markov chains over finite time intervals (pytpt/finite.py).
 
-based on: 
+Based on: 
 Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). Extending Transition Path Theory: Periodically-Driven and Finite-Time Dynamics. arXiv preprint arXiv:2002.07474.
 
 ## PyTPT Package Installation
