@@ -85,6 +85,7 @@ class TestStationary:
         assert np.less_equal(q_b.all(), 1) 
 
     def test_reac_density(self, small_network):
+        q_f, q_b = small_network.committor()
         reac_dens = small_network.reac_density()
         reac_norm_factor = small_network.reac_norm_factor()
         norm_reac_dens = small_network.norm_reac_density()
@@ -100,4 +101,4 @@ class TestStationary:
         assert np.greater_equal(norm_reac_dens.all(), 0) 
         assert np.less_equal(norm_reac_dens.all(), 1)
         
-        assert np.isclose(reac_dens, reac_norm_factor*norm_reac_dens)
+        assert np.isclose(reac_dens, reac_norm_factor*norm_reac_dens).all()
