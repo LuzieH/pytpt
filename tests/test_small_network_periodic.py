@@ -13,6 +13,7 @@ class TestPeriodic:
             dimension of the state space 
         '''
         M = 2
+        
         # create random matrix uniformly distributed over [0, 1) and normalize
         # at time point mod 0
         P0 = np.random.rand(S, S)
@@ -63,5 +64,35 @@ class TestPeriodic:
             assert np.isclose(P(m), P(M+m)).all()
             assert np.isnan(P(m)).any() == False
             assert is_stochastic_matrix(P(m))
+
+    def test_stationary_density(self, small_network_periodic):
+        S = small_network_periodic._S
+        stationary_density = small_network_periodic.stationary_density()
+        M = small_network_periodic._M
+        
+        for m in range(M):
+            assert stationary_density[m,:].shape == (S,)
+            assert np.isnan(stationary_density[m,:]).any() == False
+            assert np.greater_equal(stationary_density[m,:].all(), 0) 
+            assert np.less_equal(stationary_density[m,:].all(), 1) 
+            
+    def test_backward_transition_matrix(self, small_network_periodic):
+        S = small_network_periodic._S
+        stationary_density = small_network_periodic.stationary_density()
+        P = small_network_periodic._P
+        P_back = small_network_periodic.backward_transitions()
+        M = small_network_periodic._M        
+        
+        for m in range(M):
+            assert P_back(m).shape == (S, S)
+            assert np.isnan(P_back(m)).any() == False
+            assert is_stochastic_matrix(P_back(m))
+
+            for i in np.arange(S):
+                for j in np.arange(S):
+                    assert np.isclose(
+                        stationary_density[m,i] * P_back(m)[i, j],
+                        stationary_density[m-1,j] * P(m-1)[j, i],
+                    )
 
  
