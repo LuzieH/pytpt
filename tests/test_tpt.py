@@ -25,7 +25,6 @@ class TestStationary:
     def states(self, S):
         ''' States classification
         '''
-        }
         states = np.empty(S, dtype='str') 
 
         # sorted list of two elements chosen from the set of integers 
