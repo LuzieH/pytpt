@@ -238,10 +238,7 @@ class tpt:
         assert self._current is not None, "The reactive current first \
         needs to be computed by using the method reac_current"
 
-        current_dens = np.zeros(self._S)
-        for i in range(self._S):
-            current_dens[i] = np.sum(self._eff_current[i, :])
-        self._current_dens = current_dens
+        self._current_dens = np.sum(self._eff_current, axis=1)
         return self._current_dens
 
     def compute_statistics(self):

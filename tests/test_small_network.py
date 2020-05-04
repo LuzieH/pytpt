@@ -3,6 +3,7 @@ from validation import is_stochastic_matrix
 import numpy as np
 import pytest 
 from pytpt import stationary  
+import random
 
 class TestStationary:
     @pytest.fixture
@@ -24,23 +25,26 @@ class TestStationary:
     def states(self, S):
         ''' States classification
         '''
-        states = {
-            0: 'A',
-            1: 'B'
         }
-        
-        # remaining states are assigned to C
-        states.update({i : 'C' for i in range(2,S)})
-        
+        states = np.empty(S, dtype='str') 
+
+        # sorted list of two elements chosen from the set of integers 
+        # between 0 and S-1 without replacement
+        i, j = sorted(random.sample(range(0, S), 2))
+
+        states[:i] = 'A'
+        states[i:j] = 'B'
+        states[j:] = 'C'
+
         return states
 
     @pytest.fixture
     def small_network(self, states, P):
         ''' initialize the tpt object 
         '''
-        ind_A = np.array([key for key in states if states[key] == 'A'])
-        ind_B = np.array([key for key in states if states[key] == 'B'])
-        ind_C = np.array([key for key in states if states[key] == 'C'])
+        ind_A = np.where(states == 'A')[0]
+        ind_B = np.where(states == 'B')[0]
+        ind_C = np.where(states == 'C')[0]
         
         small_network = stationary.tpt(P, ind_A, ind_B, ind_C)
         small_network.committor()
@@ -130,5 +134,3 @@ class TestStationary:
         assert np.isnan(eff_current).any() == False
         assert np.greater_equal(eff_current.all(), 0) 
         assert np.less_equal(eff_current.all(), 1)
-        
-        
