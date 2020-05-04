@@ -70,11 +70,10 @@ class TestPeriodic:
         stationary_density = small_network_periodic.stationary_density()
         M = small_network_periodic._M
         
-        for m in range(M):
-            assert stationary_density[m,:].shape == (S,)
-            assert np.isnan(stationary_density[m,:]).any() == False
-            assert np.greater_equal(stationary_density[m,:].all(), 0) 
-            assert np.less_equal(stationary_density[m,:].all(), 1) 
+        assert stationary_density.shape == (M,S)
+        assert np.isnan(stationary_density).any() == False
+        assert np.greater_equal(stationary_density.all(), 0) 
+        assert np.less_equal(stationary_density.all(), 1) 
             
     def test_backward_transition_matrix(self, small_network_periodic):
         S = small_network_periodic._S
