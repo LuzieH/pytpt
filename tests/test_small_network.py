@@ -21,14 +21,17 @@ class TestStationary:
         return P
 
     @pytest.fixture
-    def states(self):
+    def states(self, S):
         ''' States classification
         '''
         states = {
             0: 'A',
-            1: 'C',
-            2: 'B',
+            1: 'B'
         }
+        
+        # remaining states are assigned to C
+        states.update({i : 'C' for i in range(2,S)})
+        
         return states
 
     @pytest.fixture
