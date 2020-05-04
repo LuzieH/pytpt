@@ -7,20 +7,17 @@ from pytpt import stationary
 class TestStationary:
     @pytest.fixture
     def P(self):
-        ''' Stationary transition matrix
+        ''' Random stationary transition matrix
         '''
-        P = np.zeros((3, 3))
-        P[0, 0] = 0.7
-        P[0, 1] = 0.2
-        P[0, 2] = 0.1
-        P[1, 0] = 0.5
-        P[1, 1] = 0
-        P[1, 2] = 0.5
-        P[2, 0] = 0.1
-        P[2, 1] = 0.2
-        P[2, 2] = 0.7
+        # define dimenstion of the state space
+        S = 3
+        # create random matrix uniformly distributed over [0, 1)
+        P = np.random.rand(S, S)
+        # normalize its values such that it is a stochastic matrix
+        P = np.divide(P, np.sum(P, axis=1).reshape(S, 1))
 
         return P
+
     @pytest.fixture
     def states(self):
         ''' States classification
@@ -33,37 +30,46 @@ class TestStationary:
         return states
 
     @pytest.fixture
-    def small_network(self, states, P):
+    def small_network(self, states, Q):
         ''' initialize the tpt object 
         '''
         ind_A = np.array([key for key in states if states[key] == 'A'])
         ind_B = np.array([key for key in states if states[key] == 'B'])
         ind_C = np.array([key for key in states if states[key] == 'C'])
         
-        small_network = stationary.tpt(P, ind_A, ind_B, ind_C)
-        q_f, q_b = small_network.committor()
+        small_network = stationary.tpt(Q, ind_A, ind_B, ind_C)
+        small_network.committor()
         
         return small_network
 
     def test_transition_matrix(self, small_network):
-        P = small_network._P
         S = small_network._S
+        P = small_network._P
 
         assert P.shape == (S, S)
         assert np.isnan(P).any() == False
         assert is_stochastic_matrix(P)
 
     def test_backward_transition_matrix(self, small_network):
-        P_back = small_network.backward_transitions()
         S = small_network._S
+        stationary_density = small_network.stationary_density()
+        P = small_network._P
+        P_back = small_network.backward_transitions()
 
         assert P_back.shape == (S, S)
         assert np.isnan(P_back).any() == False
         assert is_stochastic_matrix(P_back)
 
+        for i in np.arange(S):
+            for j in np.arange(S):
+                assert np.isclose(
+                    stationary_density[i] * P_back[i, j],
+                    stationary_density[j] * P[j, i],
+                )
+
     def test_stationary_density(self, small_network):
-        stationary_density = small_network.stationary_density()
         S = small_network._S
+        stationary_density = small_network.stationary_density()
         P = small_network._P
         P_back = small_network.backward_transitions()
         
@@ -71,11 +77,11 @@ class TestStationary:
         assert np.isnan(stationary_density).any() == False
         assert np.greater_equal(stationary_density.all(), 0) 
         assert np.less_equal(stationary_density.all(), 1) 
-        assert np.isclose(stationary_density.dot(P),stationary_density).all() 
-        assert np.isclose(stationary_density.dot(P_back),stationary_density).all()  
+        assert np.isclose(stationary_density.dot(P), stationary_density).all() 
+        assert np.isclose(stationary_density.dot(P_back), stationary_density).all()
 
     def test_committors(self, small_network):
-        q_f, q_b = small_network._q_f,small_network._q_b
+        q_f, q_b = small_network._q_f, small_network._q_b
         S = small_network._S
 
         assert q_f.shape == (S,)
@@ -104,7 +110,7 @@ class TestStationary:
         assert np.greater_equal(norm_reac_dens.all(), 0) 
         assert np.less_equal(norm_reac_dens.all(), 1)
         
-        assert np.isclose(reac_dens, reac_norm_factor*norm_reac_dens).all()
+        assert np.isclose(reac_dens, reac_norm_factor * norm_reac_dens).all()
         
     def test_current(self, small_network):
         reac_current, eff_current = small_network.reac_current()
