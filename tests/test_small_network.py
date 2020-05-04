@@ -6,13 +6,15 @@ from pytpt import stationary
 
 class TestStationary:
     @pytest.fixture
-    def P(self):
+    def P(self, S):
         ''' Random stationary transition matrix
+        Args:
+        S: int 
+            dimension of the state space 
         '''
-        # define dimenstion of the state space
-        S = 3
         # create random matrix uniformly distributed over [0, 1)
         P = np.random.rand(S, S)
+
         # normalize its values such that it is a stochastic matrix
         P = np.divide(P, np.sum(P, axis=1).reshape(S, 1))
 
@@ -30,14 +32,14 @@ class TestStationary:
         return states
 
     @pytest.fixture
-    def small_network(self, states, Q):
+    def small_network(self, states, P):
         ''' initialize the tpt object 
         '''
         ind_A = np.array([key for key in states if states[key] == 'A'])
         ind_B = np.array([key for key in states if states[key] == 'B'])
         ind_C = np.array([key for key in states if states[key] == 'C'])
         
-        small_network = stationary.tpt(Q, ind_A, ind_B, ind_C)
+        small_network = stationary.tpt(P, ind_A, ind_B, ind_C)
         small_network.committor()
         
         return small_network
