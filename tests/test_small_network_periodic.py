@@ -95,4 +95,18 @@ class TestPeriodic:
                         stationary_density[m-1,j] * P(m-1)[j, i],
                     )
 
+    def test_committors(self, small_network_periodic):
+        q_f, q_b = small_network_periodic._q_f, small_network_periodic._q_b
+        S = small_network_periodic._S
+        M = small_network_periodic._M     
+
+        assert q_f.shape == (M,S)
+        assert np.isnan(q_f).any() == False
+        assert np.greater_equal(q_f.all(), 0) 
+        assert np.less_equal(q_f.all(), 1) 
+
+        assert q_b.shape == (M,S)
+        assert np.isnan(q_b).any() == False
+        assert np.greater_equal(q_b.all(), 0) 
+        assert np.less_equal(q_b.all(), 1) 
  
