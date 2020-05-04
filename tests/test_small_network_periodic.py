@@ -3,6 +3,8 @@ from validation import is_stochastic_matrix
 import numpy as np
 import pytest 
 from pytpt import periodic
+import random
+
 
 class TestPeriodic:
     @pytest.fixture
@@ -30,12 +32,15 @@ class TestPeriodic:
     def states(self, S):
         ''' States classification
         '''
-        states = {
-            0: 'A',
-            1: 'B'
-        }
-        # remaining states are assigned to C
-        states.update({i : 'C' for i in range(2,S)})
+        states = np.empty(S, dtype='str') 
+
+        # sorted list of two elements chosen from the set of integers 
+        # between 0 and S-1 without replacement
+        i, j = sorted(random.sample(range(0, S), 2))
+
+        states[:i] = 'A'
+        states[i:j] = 'B'
+        states[j:] = 'C'
         
         return states
 
@@ -45,9 +50,9 @@ class TestPeriodic:
         '''
         M = 2
         
-        ind_A = np.array([key for key in states if states[key] == 'A'])
-        ind_B = np.array([key for key in states if states[key] == 'B'])
-        ind_C = np.array([key for key in states if states[key] == 'C'])
+        ind_A = np.where(states == 'A')[0]
+        ind_B = np.where(states == 'B')[0]
+        ind_C = np.where(states == 'C')[0]
         
         small_network_periodic = periodic.tpt(P, M, ind_A, ind_B, ind_C)
         small_network_periodic.committor()
@@ -108,4 +113,39 @@ class TestPeriodic:
         assert np.isnan(q_b).any() == False
         assert np.greater_equal(q_b.all(), 0) 
         assert np.less_equal(q_b.all(), 1) 
+        
+    def test_reac_density(self, small_network_periodic):
+        reac_dens = small_network_periodic.reac_density()
+        reac_norm_factor = small_network_periodic.reac_norm_factor()
+        norm_reac_dens = small_network_periodic.norm_reac_density()
+        S = small_network_periodic._S
+        M = small_network_periodic._M  
+        
+        assert reac_dens.shape == (M,S)
+        assert np.isnan(reac_dens).any() == False
+        assert np.greater_equal(reac_dens.all(), 0) 
+        assert np.less_equal(reac_dens.all(), 1) 
+        
+        assert norm_reac_dens.shape == (M,S)
+        assert np.isnan(norm_reac_dens).any() == False
+        assert np.greater_equal(norm_reac_dens.all(), 0) 
+        assert np.less_equal(norm_reac_dens.all(), 1)
+        
+        for m in range(M):
+            assert np.isclose(reac_dens[m,:], reac_norm_factor[m] * norm_reac_dens[m,:]).all()
+        
+    def test_current(self, small_network_periodic):
+        reac_current, eff_current = small_network_periodic.reac_current()
+        S = small_network_periodic._S
+        M = small_network_periodic._M  
+        
+        assert reac_current.shape == (M,S,S)
+        assert np.isnan(reac_current).any() == False
+        assert np.greater_equal(reac_current.all(), 0) 
+        assert np.less_equal(reac_current.all(), 1) 
+        
+        assert eff_current.shape == (M,S,S)
+        assert np.isnan(eff_current).any() == False
+        assert np.greater_equal(eff_current.all(), 0) 
+        assert np.less_equal(eff_current.all(), 1)
  
