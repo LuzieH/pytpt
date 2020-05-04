@@ -68,7 +68,7 @@ class tpt:
         the eigenvector of P with eigenvalue 1.
         '''
 
-        # compute stationary density
+        # compute eigenvectors and eigenvalues of P
         eigv, eig = np.linalg.eig(np.transpose(self._P))
         # get index of eigenvector with eigenvalue 1 (up to small numerical 
         # error)
@@ -91,7 +91,7 @@ class tpt:
             for j in np.arange(self._S):
                 if self._stat_dens[j] > 0:
                     P_back[j, i] = self._P[i, j] * \
-                    self._stat_dens[i] / self._stat_dens[j]
+                                   self._stat_dens[i] / self._stat_dens[j]
         self._P_back = P_back
 
         return self._P_back
@@ -185,21 +185,21 @@ class tpt:
         assert self._q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
-        current = np.zeros(np.shape(self._P))
-        eff_current = np.zeros(np.shape(self._P))
-        for i in np.arange(self._S):
-            for j in np.arange(self._S):
-                current[i, j] = self._stat_dens[i] * \
-                    self._q_b[i] * self._P[i, j] * self._q_f[j]
-                if i + 1 > j:
-                    eff_current[i, j] = np.max(
-                        [0, current[i, j] - current[j, i]]
-                    )
-                    eff_current[j, i] = np.max(
-                        [0, current[j, i] - current[i, j]]
-                    )
+        S = self._S
+
+        # compute current (see numpy broadcasting rules)
+        q_b = self._q_b.reshape(S, 1)
+        stat_dens = self._stat_dens.reshape(S, 1)
+        P = self._P
+        q_f = self._q_f
+        current = q_b * stat_dens * P * q_f
+        
+        # compute effective current
+        eff_current = np.maximum(np.zeros((S, S)), current - current.T)
+        
         self._current = current
         self._eff_current = eff_current
+                        
         return self._current, self._eff_current
 
     def transition_rate(self):
