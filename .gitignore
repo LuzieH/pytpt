@@ -1,5 +1,5 @@
 # virtual environment
-venv-pytpt/
+*-env/
 
 # data directory
 examples/data/
