@@ -4,29 +4,31 @@ import numpy as np
 import pytest 
 from pytpt import periodic
 import random
-
+import functools
 
 class TestPeriodic:
     @pytest.fixture
-    def P(self, S):
+    def P(self, S, M):
         ''' Random periodic stationary transition matrix
         Args:
         S: int 
             dimension of the state space 
         '''
-        M = 2
-        
+      
         # create random matrix uniformly distributed over [0, 1) and normalize
         # at time point mod 0
         P0 = np.random.rand(S, S)
         P0 = np.divide(P0, np.sum(P0, axis=1).reshape(S, 1))
-        # at time point mod 1
+        # at last time point 
         P1 = np.random.rand(S, S)
         P1 = np.divide(P1, np.sum(P1, axis=1).reshape(S, 1))
         
-        P = lambda k : P0 if np.mod(k,M)==0 else P1
+        # transition matrix interpolates between P0 and P1 during period
+        def P_M(k,M):
+            gamma = np.mod(k,M)/(M-1) # ranges from 0 to 1 during each period
+            return (1-gamma)*P0 + gamma*P1
 
-        return P 
+        return functools.partial(P_M, M=M) 
 
     @pytest.fixture
     def states(self, S):
@@ -45,11 +47,10 @@ class TestPeriodic:
         return states
 
     @pytest.fixture
-    def small_network_periodic(self, states, P):
+    def small_network_periodic(self, states, P, M):
         ''' initialize the tpt object 
         '''
-        M = 2
-        
+ 
         ind_A = np.where(states == 'A')[0]
         ind_B = np.where(states == 'B')[0]
         ind_C = np.where(states == 'C')[0]

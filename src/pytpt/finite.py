@@ -40,9 +40,9 @@ class tpt:
             initial density at time 0
         '''
 
-        assert isfunction(P) == True, "The transition matrices need to be \
-        inputted as a function mapping time to the corresponding transition \
-        matrix."
+        # assert isfunction(P) == True, "The transition matrices need to be \
+        # inputted as a function mapping time to the corresponding transition \
+        # matrix."
 
         self._init_dens = init_dens
         self._ind_A = ind_A
