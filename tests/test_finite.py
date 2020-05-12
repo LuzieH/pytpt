@@ -94,53 +94,53 @@ class TestFinite:
         assert np.less_equal(density.all(), 1) 
             
 
-    # def test_committors(self, small_network_finite):
-    #     q_f, q_b = small_network_finite._q_f, small_network_finite._q_b
-    #     S = small_network_finite._S
-    #     N = small_network_finite._N     
+    def test_committors(self, small_network_finite):
+        q_f, q_b = small_network_finite._q_f, small_network_finite._q_b
+        S = small_network_finite._S
+        N = small_network_finite._N     
 
-    #     assert q_f.shape == (N,S)
-    #     assert np.isnan(q_f).any() == False
-    #     assert np.greater_equal(q_f.all(), 0) 
-    #     assert np.less_equal(q_f.all(), 1) 
+        assert q_f.shape == (N,S)
+        assert np.isnan(q_f).any() == False
+        assert np.greater_equal(q_f.all(), 0) 
+        assert np.less_equal(q_f.all(), 1) 
 
-    #     assert q_b.shape == (N,S)
-    #     assert np.isnan(q_b).any() == False
-    #     assert np.greater_equal(q_b.all(), 0) 
-    #     assert np.less_equal(q_b.all(), 1) 
+        assert q_b.shape == (N,S)
+        assert np.isnan(q_b).any() == False
+        assert np.greater_equal(q_b.all(), 0) 
+        assert np.less_equal(q_b.all(), 1) 
         
-    # def test_reac_density(self, small_network_finite):
-    #     reac_dens = small_network_finite.reac_density()
-    #     reac_norm_factor = small_network_finite.reac_norm_factor()
-    #     norm_reac_dens = small_network_finite.norm_reac_density()
-    #     S = small_network_finite._S
-    #     N = small_network_finite._N  
+    def test_reac_density(self, small_network_finite):
+        reac_dens = small_network_finite.reac_density()
+        reac_norm_factor = small_network_finite.reac_norm_factor()
+        norm_reac_dens = small_network_finite.norm_reac_density()
+        S = small_network_finite._S
+        N = small_network_finite._N  
         
-    #     assert reac_dens.shape == (N,S)
-    #     assert np.isnan(reac_dens).any() == False
-    #     assert np.greater_equal(reac_dens.all(), 0) 
-    #     assert np.less_equal(reac_dens.all(), 1) 
+        assert reac_dens.shape == (N,S)
+        # assert np.isnan(reac_dens).any() == False
+        assert np.greater_equal(reac_dens.all(), 0) 
+        assert np.less_equal(reac_dens.all(), 1) 
         
-    #     assert norm_reac_dens.shape == (N,S)
-    #     assert np.isnan(norm_reac_dens).any() == False
-    #     assert np.greater_equal(norm_reac_dens.all(), 0) 
-    #     assert np.less_equal(norm_reac_dens.all(), 1)
+        assert norm_reac_dens.shape == (N,S)
+        # assert np.isnan(norm_reac_dens).any() == False
+        assert np.greater_equal(norm_reac_dens.all(), 0) 
+        assert np.less_equal(norm_reac_dens.all(), 1)
         
-    #     for n in range(N):
-    #         assert np.isclose(reac_dens[n,:], reac_norm_factor[n] * norm_reac_dens[n,:]).all()
+        # for n in range(N):
+        #     assert np.isclose(reac_dens[n,:], reac_norm_factor[n] * norm_reac_dens[n,:]).all()
         
-    # def test_current(self, small_network_finite):
-    #     reac_current, eff_current = small_network_finite.reac_current()
-    #     S = small_network_finite._S
-    #     N = small_network_finite._N  
+    def test_current(self, small_network_finite):
+        reac_current, eff_current = small_network_finite.reac_current()
+        S = small_network_finite._S
+        N = small_network_finite._N  
         
-    #     assert reac_current.shape == (N,S,S)
-    #     assert np.isnan(reac_current).any() == False
-    #     assert np.greater_equal(reac_current.all(), 0) 
-    #     assert np.less_equal(reac_current.all(), 1) 
+        assert reac_current.shape == (N,S,S)
+        # assert np.isnan(reac_current).any() == False
+        assert np.greater_equal(reac_current.all(), 0) 
+        assert np.less_equal(reac_current.all(), 1) 
         
-    #     assert eff_current.shape == (N,S,S)
-    #     assert np.isnan(eff_current).any() == False
-    #     assert np.greater_equal(eff_current.all(), 0) 
-    #     assert np.less_equal(eff_current.all(), 1)
+        assert eff_current.shape == (N,S,S)
+        # assert np.isnan(eff_current).any() == False
+        assert np.greater_equal(eff_current.all(), 0) 
+        assert np.less_equal(eff_current.all(), 1)
  
