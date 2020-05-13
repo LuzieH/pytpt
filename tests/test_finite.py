@@ -87,11 +87,15 @@ class TestFinite:
         S = small_network_finite._S
         density = small_network_finite.density()
         N = small_network_finite._N
+        P = small_network_finite._P
         
         assert density.shape == (N,S)
         assert np.isnan(density).any() == False
         assert np.greater_equal(density.all(), 0) 
         assert np.less_equal(density.all(), 1) 
+        
+        for n in range(N-1):
+            assert np.isclose(density[n,:].dot(P(n)),density[n+1,:]).all()
             
 
     def test_committors(self, small_network_finite):
