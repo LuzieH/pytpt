@@ -128,13 +128,10 @@ class TestPeriodic:
         assert np.less_equal(reac_dens.all(), 1) 
         
         assert norm_reac_dens.shape == (M,S)
-        assert np.isnan(norm_reac_dens).any() == False
         assert np.greater_equal(norm_reac_dens.all(), 0) 
         assert np.less_equal(norm_reac_dens.all(), 1)
         
-        for m in range(M):
-            assert np.isclose(reac_dens[m,:], reac_norm_factor[m] * norm_reac_dens[m,:]).all()
-        
+   
     def test_current(self, small_network_periodic):
         reac_current, eff_current = small_network_periodic.reac_current()
         S = small_network_periodic._S

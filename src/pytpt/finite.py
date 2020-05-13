@@ -247,29 +247,23 @@ class tpt:
 
         assert self._q_f is not None, "The committor functions  need \
         first to be computed by using the method committor"
-
-        current = np.zeros((
-            self._N, np.shape(self._P(0))[0],
-            np.shape(self._P(0))[0],
-        ))
-        eff_current = np.zeros((
-            self._N, np.shape(self._P(0))[0],
-            np.shape(self._P(0))[0],
-        ))
+        
+        S = self._S
+        
+        current = np.zeros((self._N, S, S))
+        eff_current = np.zeros((self._N, S, S))
 
         dens_n = self._init_dens
 
         for n in range(self._N-1):
-            for i in np.arange(self._S):
-                for j in np.arange(self._S):
-                    current[n, i, j] = dens_n[i] * self._q_b[n, i] * \
-                        self._P(n)[i, j] * self._q_f[n+1, j]
+            # compute reactive current
+            current[n,:,:] = dens_n.reshape(S, 1) * \
+                            self._q_b[n, :].reshape(S, 1) * \
+                                self._P(n) * self._q_f[n+1, :]
 
-                    if i + 1 > j:
-                        eff_current[n, i, j] = np.max(
-                            [0, current[n, i, j] - current[n, j, i]])
-                        eff_current[n, j, i] = np.max(
-                            [0, current[n, j, i] - current[n, i, j]])
+            # compute effective current
+            eff_current[n,:,:] = np.maximum(np.zeros((S, S)),\
+                                            current[n,:,:] - current[n,:,:].T)
 
             dens_n = dens_n.dot(self._P(n))
 

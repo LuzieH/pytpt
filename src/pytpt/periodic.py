@@ -272,23 +272,21 @@ class tpt:
         '''
         assert self._q_f is not None, "The committor functions  need \
         first to be computed by using the method committor"
-
-        current = np.zeros((self._M, self._S, self._S))
-        eff_current = np.zeros((self._M, self._S, self._S))
+        
+        S = self._S
+        
+        current = np.zeros((self._M, S, S))
+        eff_current = np.zeros((self._M, S, S))
 
         for m in range(self._M):
+            # compute current
+            current[m,:,:] = self._stat_dens[m, :].reshape(S,1) * \
+                        self._q_b[m,:].reshape(S,1) * self._P(m) * \
+                        self._q_f[np.mod(m+1,self._M), :]
 
-            for i in np.arange(self._S):
-                for j in np.arange(self._S):
-                    current[m, i, j] = self._stat_dens[m, i] * \
-                        self._q_b[m, i] * self._P(m)[i, j] * \
-                        self._q_f[np.mod(m+1,self._M), j]
-
-                    if i + 1 > j:
-                        eff_current[m, i, j] = np.max(
-                            [0, current[m, i, j]-current[m, j, i]])
-                        eff_current[m, j, i] = np.max(
-                            [0, current[m, j, i]-current[m, i, j]])
+            # compute effective current
+            eff_current[m,:,:] = np.maximum(np.zeros((S, S)),\
+                                            current[m,:,:] - current[m,:,:].T)
 
         self._current = current
         self._eff_current = eff_current

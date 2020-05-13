@@ -22,7 +22,6 @@ class tpt:
         '''Initialize an instance by defining the transition matrix P and
         the subsets A and B (of the statespace) between which the 
         transition statistics should be computed.
-
         Args:
         P: array
             irreducible and row-stochastic (rows sum to 1) transition 

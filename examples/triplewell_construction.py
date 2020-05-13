@@ -111,7 +111,7 @@ T_small_noise = sampling.transitionmatrix_2D(
     dx=dx, 
 )
 
-
+sigma=1.0
 # transition matrix for triple well plus circular forcing
 T_m = np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):

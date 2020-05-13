@@ -220,7 +220,7 @@ plot_reactiveness(
     file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete periodic reactiveness',
 )
-exit()
+#exit()
 
 # plots finite-time
 example_name = 'triplewell_finite'
