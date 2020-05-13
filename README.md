@@ -26,7 +26,7 @@ git clone https://github.com/LuzieH/pytpt.git
 \
 and install pytpt: 
 `
-pip install -e pytpt
+pip install -e .
 `
 2. Install project requirements:
 ` 
