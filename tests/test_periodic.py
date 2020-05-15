@@ -1,4 +1,4 @@
-from validation import is_stochastic_matrix
+from validation import is_stochastic_matrix, is_irreducible_matrix
 
 import numpy as np
 import pytest 
@@ -70,6 +70,7 @@ class TestPeriodic:
             assert np.isclose(P(m), P(M+m)).all()
             assert np.isnan(P(m)).any() == False
             assert is_stochastic_matrix(P(m))
+            assert is_irreducible_matrix(P(m))
 
     def test_stationary_density(self, small_network_periodic):
         S = small_network_periodic._S

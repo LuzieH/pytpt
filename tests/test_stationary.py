@@ -1,4 +1,4 @@
-from validation import is_stochastic_matrix
+from validation import is_stochastic_matrix, is_irreducible_matrix
 
 import numpy as np
 import pytest 
@@ -57,6 +57,7 @@ class TestStationary:
         assert P.shape == (S, S)
         assert np.isnan(P).any() == False
         assert is_stochastic_matrix(P)
+        assert is_irreducible_matrix(P)
 
     def test_backward_transition_matrix(self, small_network):
         S = small_network._S

@@ -1,4 +1,4 @@
-from validation import is_stochastic_matrix
+from validation import is_stochastic_matrix, is_irreducible_matrix
 
 import numpy as np
 import pytest 
@@ -82,6 +82,7 @@ class TestFinite:
             assert P(n).shape == (S, S)
             assert np.isnan(P(n)).any() == False
             assert is_stochastic_matrix(P(n))
+            assert is_irreducible_matrix(P(n))
 
     def test_density(self, small_network_finite):
         S = small_network_finite._S
