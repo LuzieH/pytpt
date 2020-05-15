@@ -22,6 +22,12 @@ def pytest_addoption(parser):
         default=3,
         help='Set length of finite-time interval. Default: 3',
     )
+    parser.addoption(
+        '--small-network',
+        dest='small_network',
+        action='store_true',
+        help='Test against the small network example. Default: False',
+    )
     
 @pytest.fixture
 def S(request):
@@ -34,3 +40,7 @@ def M(request):
 @pytest.fixture
 def N(request):
     return request.config.getoption('N')
+
+@pytest.fixture
+def small_network(request):
+    return request.config.getoption('small_network')
