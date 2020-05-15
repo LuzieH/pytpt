@@ -24,8 +24,8 @@ class TestPeriodic:
         P1 = np.divide(P1, np.sum(P1, axis=1).reshape(S, 1))
         
         # transition matrix interpolates between P0 and P1 during period
-        def P_M(k,M):
-            gamma = np.mod(k,M)/(M-1) # ranges from 0 to 1 during each period
+        def P_M(k, M):
+            gamma = np.mod(k, M)/(M-1) # ranges from 0 to 1 during each period
             return (1-gamma)*P0 + gamma*P1
 
         return functools.partial(P_M, M=M) 
@@ -38,7 +38,7 @@ class TestPeriodic:
 
         # sorted list of two elements chosen from the set of integers 
         # between 0 and S-1 without replacement
-        i, j = sorted(random.sample(range(0, S), 2))
+        i, j = sorted(random.sample(range(1, S), 2))
 
         states[:i] = 'A'
         states[i:j] = 'B'
