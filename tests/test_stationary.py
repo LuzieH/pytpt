@@ -29,7 +29,7 @@ class TestStationary:
 
         # sorted list of two elements chosen from the set of integers 
         # between 0 and S-1 without replacement
-        i, j = sorted(random.sample(range(0, S), 2))
+        i, j = sorted(random.sample(range(1, S), 2))
 
         states[:i] = 'A'
         states[i:j] = 'B'
