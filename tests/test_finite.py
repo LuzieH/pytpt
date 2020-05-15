@@ -24,9 +24,9 @@ class TestFinite:
         P1 = np.divide(P1, np.sum(P1, axis=1).reshape(S, 1))
         
         # transition matrix interpolates between P0 and P1 during time interval
-        def P_N(k,N):
-            gamma = k/(N-1) # ranges from 0 to 1 during time interval
-            return (1-gamma)*P0 + gamma*P1
+        def P_N(k, N):
+            gamma = k / (N-1) # ranges from 0 to 1 during time interval
+            return (1 - gamma) * P0 + gamma * P1
 
         return functools.partial(P_N, N=N) 
     

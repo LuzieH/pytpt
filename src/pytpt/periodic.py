@@ -1,4 +1,5 @@
 import numpy as np
+from inspect import isfunction
 
 
 class tpt:
@@ -32,6 +33,10 @@ class tpt:
             set of indices of the state space that belong to the 
             transition region C, i.e. the set C  =  St\(A u B)        
         '''
+
+        assert (isfunction(P) or isfunction(P.func)), "The transition \
+          matrices need to be inputted as a function mapping time to \
+          the corresponding transition matrix."
 
         assert np.isclose(P(0), P(M)).all(), "The transition matrix function \
         needs to the time modulo M to the corresponding transition matrix."
