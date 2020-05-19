@@ -154,13 +154,13 @@ class TestFinite:
 
         assert q_f.shape == (N,S)
         assert np.isnan(q_f).any() == False
-        assert np.greater_equal(q_f.all(), 0) 
-        assert np.less_equal(q_f.all(), 1) 
+        assert np.greater_equal(q_f, 0).all() 
+        assert np.less_equal(q_f, 1).all() 
 
         assert q_b.shape == (N,S)
         assert np.isnan(q_b).any() == False
-        assert np.greater_equal(q_b.all(), 0) 
-        assert np.less_equal(q_b.all(), 1) 
+        assert np.greater_equal(q_b, 0).all() 
+        assert np.less_equal(q_b, 1).all() 
         
     def test_reac_density(self, tpt_finite):
         reac_dens = tpt_finite.reac_density()
@@ -170,23 +170,23 @@ class TestFinite:
         
         assert reac_dens.shape == (N, S)
         assert np.isnan(reac_dens).any() == False
-        assert np.greater_equal(reac_dens.all(), 0) 
-        assert np.less_equal(reac_dens.all(), 1) 
+        assert (np.fmin(reac_dens,0)>=0).all() #np.greater_equal(reac_dens, 0).all() 
+        assert (np.fmin(reac_dens,1)<=1).all() #np.less_equal(reac_dens, 1).all() 
         
         assert norm_reac_dens.shape == (N, S)
-        assert np.greater_equal(norm_reac_dens.all(), 0) 
-        assert np.less_equal(norm_reac_dens.all(), 1)
+        assert (np.fmin(norm_reac_dens,0)>=0).all() #np.greater_equal(norm_reac_dens, 0).all() 
+        assert (np.fmin(norm_reac_dens,1)<=1).all() #np.less_equal(norm_reac_dens, 1).all()
         
  
     def test_current(self, tpt_finite):
-        reac_current, eff_current = tpt_finite.reac_current()
+        [reac_current, eff_current] = tpt_finite.reac_current()
         S = tpt_finite._S
         N = tpt_finite._N  
         
         assert reac_current.shape == (N, S, S)
-        assert np.greater_equal(reac_current.all(), 0) 
-        assert np.less_equal(reac_current.all(), 1) 
+        assert (np.fmin(reac_current,0)>=0).all() #np.greater_equal(reac_current, 0).all() 
+        assert (np.fmin(reac_current,1)<=1).all() #np.less_equal(reac_current, 1).all() 
         
         assert eff_current.shape == (N, S, S)
-        assert np.greater_equal(eff_current.all(), 0) 
-        assert np.less_equal(eff_current.all(), 1)
+        assert (np.fmin(eff_current,0)>=0).all() #np.greater_equal(eff_current, 0).all() 
+        assert (np.fmin(eff_current,1)<=1).all() #np.less_equal(eff_current, 1).all()

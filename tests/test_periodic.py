@@ -159,12 +159,12 @@ class TestPeriodic:
         
         assert reac_dens.shape == (M,S)
         assert np.isnan(reac_dens).any() == False
-        assert np.greater_equal(reac_dens.all(), 0) 
-        assert np.less_equal(reac_dens.all(), 1) 
+        assert np.greater_equal(reac_dens, 0).all() 
+        assert np.less_equal(reac_dens, 1).all() 
         
         assert norm_reac_dens.shape == (M,S)
-        assert np.greater_equal(norm_reac_dens.all(), 0) 
-        assert np.less_equal(norm_reac_dens.all(), 1)
+        assert np.greater_equal(norm_reac_dens, 0).all() 
+        assert np.less_equal(norm_reac_dens, 1).all()
         
    
     def test_current(self, tpt_periodic):
@@ -174,11 +174,11 @@ class TestPeriodic:
         
         assert reac_current.shape == (M,S,S)
         assert np.isnan(reac_current).any() == False
-        assert np.greater_equal(reac_current.all(), 0) 
-        assert np.less_equal(reac_current.all(), 1) 
+        assert np.greater_equal(reac_current, 0).all() 
+        assert np.less_equal(reac_current, 1).all() 
         
         assert eff_current.shape == (M,S,S)
         assert np.isnan(eff_current).any() == False
-        assert np.greater_equal(eff_current.all(), 0) 
-        assert np.less_equal(eff_current.all(), 1)
+        assert np.greater_equal(eff_current, 0).all() 
+        assert np.less_equal(eff_current, 1).all()
  
