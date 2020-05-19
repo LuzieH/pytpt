@@ -2,10 +2,7 @@ from pytpt import stationary
 from pytpt import periodic  
 from pytpt import finite  
 
-from plotting import plot_3well, \
-                     plot_3well_effcurrent, \
-                     plot_rate, \
-                     plot_reactiveness
+ 
 import numpy as np
 
 import os.path

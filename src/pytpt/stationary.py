@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.linalg import solve
 
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of
@@ -127,8 +128,14 @@ class tpt:
         q_f = np.zeros(self._S)
         # compute forward committor on C, the transition region
         b = np.sum(P_CB, axis=1)
-        in1 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_C)
-        q_f[np.ix_(self._ind_C)] = in1.dot(b)
+        
+        ######### old
+        # in1 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_C)
+        # q_f[np.ix_(self._ind_C)] = in1.dot(b)
+        ######## new
+        q_f[np.ix_(self._ind_C)] = solve(np.diag(np.ones(np.size(self._ind_C))) - P_C,b)
+        ##############
+        
         # add entries to the forward committor vector on A, B
         # (i.e. q_f is 0 on A, 1 on B)
         q_f[np.ix_(self._ind_B)] = 1
@@ -136,8 +143,14 @@ class tpt:
         q_b = np.zeros(self._S)
         # compute backward committor on C
         a = np.sum(P_back_CA, axis=1)
-        in2 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_back_C)
-        q_b[np.ix_(self._ind_C)] = in2.dot(a)
+        
+        ############old
+        # in2 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_back_C)
+        # q_b[np.ix_(self._ind_C)] = in2.dot(a)
+        ############new
+        q_b[np.ix_(self._ind_C)] = solve(np.diag(np.ones(np.size(self._ind_C))) - P_back_C,a)      
+        #############
+        
         # add entries to forward committor vector on A, B
         # (i.e. q_b is 1 on A, 0 on B)
         q_b[np.ix_(self._ind_A)] = 1
