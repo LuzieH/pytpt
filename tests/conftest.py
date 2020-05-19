@@ -25,7 +25,7 @@ def pytest_addoption(parser):
     parser.addoption(
         '--small-network',
         dest='small_network',
-        action='store_true',
+        action='store_false',
         help='Test against the small network example. Default: False',
     )
     
