@@ -116,8 +116,8 @@ class TestPeriodic:
         
         assert stationary_density.shape == (M,S)
         assert np.isnan(stationary_density).any() == False
-        assert np.greater_equal(stationary_density.all(), 0) 
-        assert np.less_equal(stationary_density.all(), 1) 
+        assert np.greater_equal(stationary_density, 0).all() 
+        assert np.less_equal(stationary_density, 1).all() 
             
     def test_backward_transition_matrix(self, tpt_periodic):
         S = tpt_periodic._S
@@ -145,13 +145,13 @@ class TestPeriodic:
 
         assert q_f.shape == (M,S)
         assert np.isnan(q_f).any() == False
-        assert np.greater_equal(q_f.all(), 0) 
-        assert np.less_equal(q_f.all(), 1) 
+        assert np.greater_equal(q_f, 0).all() 
+        assert np.less_equal(q_f, 1).all() 
 
         assert q_b.shape == (M,S)
         assert np.isnan(q_b).any() == False
-        assert np.greater_equal(q_b.all(), 0) 
-        assert np.less_equal(q_b.all(), 1) 
+        assert np.greater_equal(q_b, 0).all() 
+        assert np.less_equal(q_b, 1).all() 
         
     def test_reac_density(self, tpt_periodic):
         reac_dens = tpt_periodic.reac_density()

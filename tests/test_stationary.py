@@ -113,8 +113,8 @@ class TestStationary:
         
         assert stationary_density.shape == (S,)
         assert np.isnan(stationary_density).any() == False
-        assert np.greater_equal(stationary_density.all(), 0) 
-        assert np.less_equal(stationary_density.all(), 1) 
+        assert np.greater_equal(stationary_density, 0).all() 
+        assert np.less_equal(stationary_density, 1).all() 
         assert np.isclose(stationary_density.dot(P), stationary_density).all() 
         assert np.isclose(stationary_density.dot(P_back), stationary_density).all()
 
@@ -124,13 +124,13 @@ class TestStationary:
 
         assert q_f.shape == (S,)
         assert np.isnan(q_f).any() == False
-        assert np.greater_equal(q_f.all(), 0) 
-        assert np.less_equal(q_f.all(), 1) 
+        assert np.greater_equal(q_f, 0).all() 
+        assert np.less_equal(q_f, 1).all() 
 
         assert q_b.shape == (S,)
         assert np.isnan(q_b).any() == False
-        assert np.greater_equal(q_b.all(), 0) 
-        assert np.less_equal(q_b.all(), 1) 
+        assert np.greater_equal(q_b, 0).all() 
+        assert np.less_equal(q_b, 1).all() 
 
     def test_reac_density(self, tpt_stationary):
         reac_dens = tpt_stationary.reac_density()
@@ -140,13 +140,13 @@ class TestStationary:
 
         assert reac_dens.shape == (S,)
         assert np.isnan(reac_dens).any() == False
-        assert np.greater_equal(reac_dens.all(), 0) 
-        assert np.less_equal(reac_dens.all(), 1) 
+        assert np.greater_equal(reac_dens, 0).all() 
+        assert np.less_equal(reac_dens, 1).all() 
         
         assert norm_reac_dens.shape == (S,)
         assert np.isnan(norm_reac_dens).any() == False
-        assert np.greater_equal(norm_reac_dens.all(), 0) 
-        assert np.less_equal(norm_reac_dens.all(), 1)
+        assert np.greater_equal(norm_reac_dens, 0).all() 
+        assert np.less_equal(norm_reac_dens, 1).all()
         
         assert np.isclose(reac_dens, reac_norm_factor * norm_reac_dens).all()
         
@@ -156,10 +156,10 @@ class TestStationary:
 
         assert reac_current.shape == (S,S)
         assert np.isnan(reac_current).any() == False
-        assert np.greater_equal(reac_current.all(), 0) 
-        assert np.less_equal(reac_current.all(), 1) 
+        assert np.greater_equal(reac_current, 0).all() 
+        assert np.less_equal(reac_current, 1).all() 
         
         assert eff_current.shape == (S,S)
         assert np.isnan(eff_current).any() == False
-        assert np.greater_equal(eff_current.all(), 0) 
-        assert np.less_equal(eff_current.all(), 1)
+        assert np.greater_equal(eff_current, 0).all() 
+        assert np.less_equal(eff_current, 1).all()

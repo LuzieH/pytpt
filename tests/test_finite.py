@@ -143,8 +143,8 @@ class TestFinite:
         
         assert density.shape == (N, S)
         assert np.isnan(density).any() == False
-        assert np.greater_equal(density.all(), 0) 
-        assert np.less_equal(density.all(), 1) 
+        assert np.greater_equal(density, 0).all() 
+        assert np.less_equal(density, 1).all() 
         
         for n in range(N - 1):
             assert np.isclose(density[n, :].dot(P(n)), density[n + 1, :]).all()
