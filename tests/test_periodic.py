@@ -81,13 +81,16 @@ class TestPeriodic:
         if small_network:
             states = states_small_network
             P = P_small_network
+            ind_A = np.array([key for key in states if states[key] == 'A'])
+            ind_B = np.array([key for key in states if states[key] == 'B'])
+            ind_C = np.array([key for key in states if states[key] == 'C'])            
+            
         else:
             states = states_random
             P = P_random
- 
-        ind_A = np.where(states == 'A')[0]
-        ind_B = np.where(states == 'B')[0]
-        ind_C = np.where(states == 'C')[0]
+            ind_A = np.where(states == 'A')[0]
+            ind_B = np.where(states == 'B')[0]
+            ind_C = np.where(states == 'C')[0]
         
         tpt_periodic = periodic.tpt(P, M, ind_A, ind_B, ind_C)
         tpt_periodic.committor()

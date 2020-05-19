@@ -25,6 +25,7 @@ class TestFinite:
         def P_N(k, N):
             gamma = k / (N-1) # ranges from 0 to 1 during time interval
             return (1 - gamma) * P0 + gamma * P1
+        
         return functools.partial(P_N, N=N) 
     
     @pytest.fixture
@@ -78,9 +79,9 @@ class TestFinite:
         L = small_network_construction['L']
         states = small_network_construction['states'].item()
         
-        ind_A = np.where(states == 'A')[0]
-        ind_B = np.where(states == 'B')[0]
-        ind_C = np.where(states == 'C')[0]
+        ind_A = np.array([key for key in states if states[key] == 'A'])
+        ind_B = np.array([key for key in states if states[key] == 'B'])
+        ind_C = np.array([key for key in states if states[key] == 'C'])
 
         tpt_stationary = stationary.tpt(T + L, ind_A, ind_B, ind_C)
         init_dens = tpt_stationary.stationary_density()
@@ -107,14 +108,16 @@ class TestFinite:
             states = states_small_network
             P = P_small_network
             init_dens = init_dens_small_network
+            ind_A = np.array([key for key in states if states[key] == 'A'])
+            ind_B = np.array([key for key in states if states[key] == 'B'])
+            ind_C = np.array([key for key in states if states[key] == 'C'])
         else:
             states = states_random
             P = P_random
             init_dens = init_dens_random
- 
-        ind_A = np.where(states == 'A')[0]
-        ind_B = np.where(states == 'B')[0]
-        ind_C = np.where(states == 'C')[0]
+            ind_A = np.where(states == 'A')[0]
+            ind_B = np.where(states == 'B')[0]
+            ind_C = np.where(states == 'C')[0]
         
         tpt_finite = finite.tpt(P, N, ind_A, ind_B, ind_C, init_dens)
         tpt_finite.committor()
