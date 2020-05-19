@@ -39,6 +39,18 @@ class tpt:
             or if None, the density will be computed automatically
         '''
 
+        A = set(ind_A)
+        B = set(ind_B)
+        C = set(ind_C)
+        intersection_AB = A.intersection(B)
+        complement_AB = (C.difference(A)).difference(B)
+        
+        assert  (len(A)>0 and len(B)>0 and len(C)>0 and \
+                len(intersection_AB) == 0 and complement_AB==C),\
+                "A and B have to be non-empty and disjoint sets \
+                such that also their complement C is non-empty."
+        
+        
         self._P = P
         self._stat_dens = stat_dens
         self._ind_A = ind_A

@@ -43,6 +43,17 @@ class tpt:
           matrices need to be inputted as a function mapping time to \
           the corresponding transition matrix."
 
+        A = set(ind_A)
+        B = set(ind_B)
+        C = set(ind_C)
+        intersection_AB = A.intersection(B)
+        complement_AB = (C.difference(A)).difference(B)
+        
+        assert  (len(A)>0 and len(B)>0 and len(C)>0 and \
+                len(intersection_AB) == 0 and complement_AB==C),\
+                "A and B have to be non-empty and disjoint sets \
+                such that also their complement C is non-empty."
+                
         self._init_dens = init_dens
         self._ind_A = ind_A
         self._ind_B = ind_B
