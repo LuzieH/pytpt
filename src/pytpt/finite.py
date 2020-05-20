@@ -1,5 +1,7 @@
 import numpy as np
 from inspect import isfunction
+from scipy.linalg import solve
+from scipy.linalg import eig
 
 
 class tpt:

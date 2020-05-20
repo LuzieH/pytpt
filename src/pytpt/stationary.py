@@ -1,6 +1,7 @@
 import numpy as np
+# https://docs.scipy.org/doc/scipy-0.15.1/reference/tutorial/linalg.html
 from scipy.linalg import solve
-
+from scipy.linalg import eig
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of
     discrete-time Markov chain models in stationarity.
@@ -81,13 +82,13 @@ class tpt:
         '''
 
         # compute eigenvectors and eigenvalues of P
-        eigv, eig = np.linalg.eig(np.transpose(self._P))
+        eigv, eigvc = eig(np.transpose(self._P))
         # get index of eigenvector with eigenvalue 1 (up to small numerical 
         # error)
         index = np.where(np.isclose(eigv, 1))[0]
         # normalize
         stat_dens = (
-            np.real(eig[:, index]) / np.sum(np.real(eig[:, index]))
+            np.real(eigvc[:, index]) / np.sum(np.real(eigvc[:, index]))
         ).flatten()
 
         return stat_dens

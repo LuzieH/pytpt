@@ -16,5 +16,6 @@ setuptools.setup(
     package_dir={'': 'src'},
     install_requires=[
         'numpy',
+        'scipy',
     ],
 )
