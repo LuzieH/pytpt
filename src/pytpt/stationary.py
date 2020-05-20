@@ -117,46 +117,41 @@ class tpt:
         # compute backward transition matrix
         self.backward_transitions()
         
-        # forward and backward transition matrices from states in C to C
+        ### forward committor
+        
+        # forward  transition matrix from states in C to C
         P_C = self._P[np.ix_(self._ind_C, self._ind_C)]
-        P_back_C = self._P_back[np.ix_(self._ind_C, self._ind_C)]
-
         # amd from C to B
         P_CB = self._P[np.ix_(self._ind_C, self._ind_B)]
-        P_back_CA = self._P_back[np.ix_(self._ind_C, self._ind_A)]
 
         q_f = np.zeros(self._S)
         # compute forward committor on C, the transition region
         b = np.sum(P_CB, axis=1)
         
-        ######### old
-        # in1 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_C)
-        # q_f[np.ix_(self._ind_C)] = in1.dot(b)
-        ######## new
-        q_f[np.ix_(self._ind_C)] = solve(np.diag(np.ones(np.size(self._ind_C))) - P_C,b)
-        ##############
-        
+        q_f[self._ind_C] = solve(np.eye(np.size(self._ind_C)) - P_C,b)
+       
         # add entries to the forward committor vector on A, B
         # (i.e. q_f is 0 on A, 1 on B)
-        q_f[np.ix_(self._ind_B)] = 1
-
+        q_f[self._ind_B] = 1
+        
+        self._q_f = q_f
+        
+        ### backward committor
+        # backward transition matrix restricted to C to C and from C to A
+        P_back_C = self._P_back[np.ix_(self._ind_C, self._ind_C)]
+        P_back_CA = self._P_back[np.ix_(self._ind_C, self._ind_A)]
+        
         q_b = np.zeros(self._S)
         # compute backward committor on C
         a = np.sum(P_back_CA, axis=1)
-        
-        ############old
-        # in2 = np.linalg.inv(np.diag(np.ones(np.size(self._ind_C))) - P_back_C)
-        # q_b[np.ix_(self._ind_C)] = in2.dot(a)
-        ############new
-        q_b[np.ix_(self._ind_C)] = solve(np.diag(np.ones(np.size(self._ind_C))) - P_back_C,a)      
-        #############
-        
-        # add entries to forward committor vector on A, B
+
+        q_b[self._ind_C] = solve(np.eye(np.size(self._ind_C)) - P_back_C,a)      
+ 
+        # add entries to committor vector on A, B
         # (i.e. q_b is 1 on A, 0 on B)
-        q_b[np.ix_(self._ind_A)] = 1
+        q_b[self._ind_A] = 1
 
         self._q_b = q_b
-        self._q_f = q_f
 
         return self._q_f, self._q_b
 
