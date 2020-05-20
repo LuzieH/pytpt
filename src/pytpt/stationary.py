@@ -2,6 +2,7 @@ import numpy as np
 # https://docs.scipy.org/doc/scipy-0.15.1/reference/tutorial/linalg.html
 from scipy.linalg import solve
 from scipy.linalg import eig
+
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of
     discrete-time Markov chain models in stationarity.
@@ -41,6 +42,15 @@ class tpt:
             or if None, the density will be computed automatically
         '''
 
+        assert (isinstance(P,np.ndarray) and not isinstance(P,np.matrix)), \
+            "The inputted transition matrix P should be of an np.ndarray and \
+                not an np.matrix"
+                
+        assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
+                and isinstance(ind_C, np.ndarray)),"The index sets have to be \
+            given as np.ndarrays."
+
+        
         A = set(ind_A)
         B = set(ind_B)
         C = set(ind_C)

@@ -1,6 +1,6 @@
 import numpy as np
 from inspect import isfunction
-from scipy.linalg import solve
+#from scipy.linalg import solve
 from scipy.linalg import eig
 
 
@@ -42,6 +42,14 @@ class tpt:
 
         assert np.isclose(P(0), P(M)).all(), "The transition matrix function \
         needs to the time modulo M to the corresponding transition matrix."
+        
+        assert (isinstance(P(0),np.ndarray) and not isinstance(P(0),np.matrix)), \
+            "The inputted transition matrix function should map time to\
+                an np.ndarray and not an np.matrix"
+                
+        assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
+                and isinstance(ind_C, np.ndarray)),"The index sets have to be \
+            given as np.ndarrays."
 
         A = set(ind_A)
         B = set(ind_B)
@@ -91,12 +99,12 @@ class tpt:
             P_bar = P_bar.dot(self._P(m))
 
         # compute stationary density of P_bar
-        eigv, eig = np.linalg.eig(np.transpose(P_bar))
+        eigv, eigvc = eig(np.transpose(P_bar))
         # get index of eigenvector with eigenvalue 1
         index = np.where(np.isclose(eigv, 1))[0]
         # normalize
         stat_dens[0, :] = (
-            np.real(eig[:, index]) / np.sum(np.real(eig[:, index]))
+            np.real(eigvc[:, index]) / np.sum(np.real(eigvc[:, index]))
         ).flatten()
 
         # compute remaining densities

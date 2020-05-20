@@ -1,7 +1,7 @@
 import numpy as np
 from inspect import isfunction
-from scipy.linalg import solve
-from scipy.linalg import eig
+#from scipy.linalg import solve
+
 
 
 class tpt:
@@ -44,6 +44,14 @@ class tpt:
         assert (isfunction(P) or isfunction(P.func)), "The transition \
           matrices need to be inputted as a function mapping time to \
           the corresponding transition matrix."
+
+        assert (isinstance(P(0),np.ndarray) and not isinstance(P(0),np.matrix)), \
+            "The inputted transition matrix function should map time to\
+                an np.ndarray and not an np.matrix"
+
+        assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
+                and isinstance(ind_C, np.ndarray)),"The index sets have to be \
+            given as np.ndarrays."
 
         A = set(ind_A)
         B = set(ind_B)
