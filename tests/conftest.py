@@ -1,6 +1,15 @@
 import pytest
 
+import numpy as np
+
 def pytest_addoption(parser):
+    parser.addoption(
+        '--seed',
+        type=int,
+        dest='seed',
+        default=np.random.randint(2*32-1),
+        help='Set random seed. Default: random integer',
+    )
     parser.addoption(
         '--dim-state-space',
         type=int,
@@ -28,7 +37,11 @@ def pytest_addoption(parser):
         action='store_false',
         help='Test against the small network example. Default: False',
     )
-    
+
+@pytest.fixture
+def seed(request):
+    return request.config.getoption('seed')
+
 @pytest.fixture
 def S(request):
     return request.config.getoption('S')

@@ -8,13 +8,17 @@ import functools
 
 class TestPeriodic:
     @pytest.fixture
-    def P_random(self, S, M):
+    def P_random(self, S, M, seed):
         ''' Random periodic stationary transition matrix
         Args:
         S: int 
             dimension of the state space 
+        seed: int
+            seed
         '''
-      
+        # set seed
+        np.random.seed(seed)
+
         # create random matrix uniformly distributed over [0, 1) and normalize
         # at time point mod 0
         P0 = np.random.rand(S, S)
@@ -31,9 +35,17 @@ class TestPeriodic:
         return functools.partial(P_M, M=M) 
 
     @pytest.fixture
-    def states_random(self, S):
+    def states_random(self, S, seed):
         ''' States classification
+        Args:
+        S: int
+            dimension of the state space
+        seed: int
+            seed
         '''
+        # set seed
+        random.seed(seed)
+
         states = np.empty(S, dtype='str') 
 
         # sorted list of two elements chosen from the set of integers 

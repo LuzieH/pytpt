@@ -8,12 +8,17 @@ import functools
 
 class TestFinite:
     @pytest.fixture
-    def P_random(self, S, N):
+    def P_random(self, S, N, seed):
         ''' Random finite-time transition matrix
         Args:
         S: int 
             dimension of the state space 
+        seed: int
+            seed
         '''
+        # set seed
+        np.random.seed(seed)
+
         # create random matrix uniformly distributed over [0, 1) and normalize
         # at time point mod 0
         P0 = np.random.rand(S, S)
@@ -29,27 +34,42 @@ class TestFinite:
         return functools.partial(P_N, N=N) 
     
     @pytest.fixture
-    def init_dens_random(self, S):
+    def init_dens_random(self, S, seed):
         '''  
         Args:
         S: int 
             dimension of the state space 
+        seed: int
+            seed
         '''
+        # set seed
+        np.random.seed(seed)
+
         init_dens = np.random.rand(S)
         init_dens = init_dens / np.sum(init_dens)
         return init_dens
     
     @pytest.fixture
-    def states_random(self, S):
+    def states_random(self, S, seed):
         ''' States classification
+        Args:
+        S: int 
+            dimension of the state space 
+        seed: int
+            seed
         '''
+        # set seed
+        random.seed(seed)
+
         states = np.empty(S, dtype='str') 
+
         # sorted list of two elements chosen from the set of integers 
         # between 0 and S-1 without replacement
         i, j = sorted(random.sample(range(1, S), 2))
         states[:i] = 'A'
         states[i:j] = 'B'
         states[j:] = 'C'
+
         return states
     
     @pytest.fixture

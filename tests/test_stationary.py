@@ -1,57 +1,74 @@
 from validation import is_stochastic_matrix, is_irreducible_matrix
 
 import numpy as np
-import pytest 
-from pytpt import stationary  
+import pytest
+from pytpt import stationary
 import random
 
 class TestStationary:
     @pytest.fixture
-    def P_random(self, S):
+    def P_random(self, S, seed):
         ''' Random stationary transition matrix
         Args:
-        S: int 
-            dimension of the state space 
+        S: int
+            dimension of the state space
+        seed: int
+            seed
         '''
+        # set seed
+        np.random.seed(seed)
+
         # create random matrix uniformly distributed over [0, 1)
         P = np.random.rand(S, S)
+
         # normalize its values such that it is a stochastic matrix
         P = np.divide(P, np.sum(P, axis=1).reshape(S, 1))
+
         return P
 
     @pytest.fixture
-    def states_random(self, S):
+    def states_random(self, S, seed):
         ''' States classification
+        Args:
+        S: int
+            dimension of the state space
+        seed: int
+            seed
         '''
-        states = np.empty(S, dtype='str') 
+        # set seed
+        random.seed(seed)
+
+        states = np.empty(S, dtype='str')
+
         # sorted list of two elements chosen from the set of integers 
         # between 0 and S-1 without replacement
         i, j = sorted(random.sample(range(1, S), 2))
         states[:i] = 'A'
         states[i:j] = 'B'
         states[j:] = 'C'
+
         return states
-    
+
     @pytest.fixture
     def P_small_network(self, shared_datadir):
         ''' Transition matrix of the small network example
         '''
         small_network_construction = np.load(
             shared_datadir / 'small_network_construction.npz',
-            allow_pickle=True, 
+            allow_pickle=True,
         )
         T = small_network_construction['T']
         L = small_network_construction['L']
-        
+
         return T + L
-    
+
     @pytest.fixture
     def states_small_network(self, shared_datadir):
         ''' States classification of the small network example
         '''
         small_network_construction = np.load(
             shared_datadir / 'small_network_construction.npz',
-            allow_pickle=True, 
+            allow_pickle=True,
         )
         states = small_network_construction['states'].item()
         return states
