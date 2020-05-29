@@ -38,22 +38,22 @@ def pytest_addoption(parser):
         help='Test against the small network example. Default: False',
     )
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def seed(request):
     return request.config.getoption('seed')
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def S(request):
     return request.config.getoption('S')
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def M(request):
     return request.config.getoption('M')
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def N(request):
     return request.config.getoption('N')
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def small_network(request):
     return request.config.getoption('small_network')

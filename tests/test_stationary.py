@@ -6,7 +6,7 @@ from pytpt import stationary
 import random
 
 class TestStationary:
-    @pytest.fixture
+    @pytest.fixture(scope='class')
     def P_random(self, S, seed):
         ''' Random stationary transition matrix
         Args:
@@ -26,7 +26,7 @@ class TestStationary:
 
         return P
 
-    @pytest.fixture
+    @pytest.fixture(scope='class')
     def states_random(self, S, seed):
         ''' States classification
         Args:
