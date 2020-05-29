@@ -42,7 +42,7 @@ class tpt:
             or if None, the density will be computed automatically
         '''
 
-        assert (isinstance(P,np.ndarray) and not isinstance(P,np.matrix)), \
+        assert (isinstance(P, np.ndarray) and not isinstance(P, np.matrix)), \
             "The inputted transition matrix P should be of an np.ndarray and \
                 not an np.matrix"
                 
@@ -57,7 +57,7 @@ class tpt:
         intersection_AB = A.intersection(B)
         complement_AB = (C.difference(A)).difference(B)
         
-        assert  (len(A)>0 and len(B)>0 and len(C)>0 and \
+        assert  (len(A) > 0 and len(B) > 0 and len(C) > 0 and \
                 len(intersection_AB) == 0 and complement_AB==C),\
                 "A and B have to be non-empty and disjoint sets \
                 such that also their complement C is non-empty."
@@ -109,12 +109,15 @@ class tpt:
         zero, the corresponding transition matrix entries (row j) are
         set to 0.
         '''
-        P_back = np.zeros(np.shape(self._P))
-        for i in np.arange(self._S):
-            for j in np.arange(self._S):
-                if self._stat_dens[j] > 0:
-                    P_back[j, i] = self._P[i, j] * \
-                                   self._stat_dens[i] / self._stat_dens[j]
+        S = self._S
+        P = self._P
+
+        # get indexed where the stationary density is not null
+        stat_dens = self._stat_dens
+        idx = np.where(stat_dens != 0)[0]
+        
+        P_back = np.zeros(np.shape(P))
+        P_back[idx, :] = P.T[idx, :] * stat_dens[:] / stat_dens[idx].reshape(S, 1)
         self._P_back = P_back
 
         return self._P_back
@@ -139,7 +142,7 @@ class tpt:
         # compute forward committor on C, the transition region
         b = np.sum(P_CB, axis=1)
         
-        q_f[self._ind_C] = solve(np.eye(np.size(self._ind_C)) - P_C,b)
+        q_f[self._ind_C] = solve(np.eye(np.size(self._ind_C)) - P_C, b)
        
         # add entries to the forward committor vector on A, B
         # (i.e. q_f is 0 on A, 1 on B)
@@ -156,7 +159,7 @@ class tpt:
         # compute backward committor on C
         a = np.sum(P_back_CA, axis=1)
 
-        q_b[self._ind_C] = solve(np.eye(np.size(self._ind_C)) - P_back_C,a)      
+        q_b[self._ind_C] = solve(np.eye(np.size(self._ind_C)) - P_back_C, a)      
  
         # add entries to committor vector on A, B
         # (i.e. q_b is 1 on A, 0 on B)
