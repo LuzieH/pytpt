@@ -180,3 +180,49 @@ class TestStationary:
         assert np.isnan(eff_current).any() == False
         assert np.greater_equal(eff_current, 0).all() 
         assert np.less_equal(eff_current, 1).all()
+
+    def test_broadcasting_backward_transitions(self, tpt_stationary):
+        # compute P_back without broadcasting
+        S = tpt_stationary._S
+        P = tpt_stationary._P
+        stat_dens = tpt_stationary._stat_dens
+        P_back = np.zeros(np.shape(P))
+        for i in np.arange(S):
+            for j in np.arange(S):
+                if stat_dens[j] > 0:
+                    P_back[j, i] = P[i, j] * stat_dens[i] / stat_dens[j]
+
+        # compute P_back (with broadcasting)
+        P_back_broadcast = tpt_stationary.backward_transitions()
+
+        assert P_back_broadcast.shape == P_back.shape
+        assert np.allclose(P_back_broadcast, P_back)
+
+
+    def test_broadcasting_current(self, tpt_stationary):
+        # compute current and effective current without broadcasting 
+        S = tpt_stationary._S
+        P = tpt_stationary._P
+        stat_dens = tpt_stationary._stat_dens
+        q_f = tpt_stationary._q_f
+        q_b = tpt_stationary._q_b
+        current = np.zeros(np.shape(P))
+        eff_current = np.zeros(np.shape(P))
+        for i in np.arange(S):
+            for j in np.arange(S):
+                current[i, j] = stat_dens[i] * q_b[i] * P[i, j] * q_f[j]
+                if i + 1 > j:
+                    eff_current[i, j] = np.max(
+                        [0, current[i, j] - current[j, i]]
+                    )
+                    eff_current[j, i] = np.max(
+                        [0, current[j, i] - current[i, j]]
+                    )
+        # compute current and effective current (with broadcasting)
+        current_broadcast, eff_current_broadcast = tpt_stationary.reac_current()
+
+        assert current_broadcast.shape == current.shape
+        assert eff_current_broadcast.shape == eff_current.shape
+        assert np.allclose(current_broadcast, current)
+        assert np.allclose(eff_current_broadcast, eff_current)
+
