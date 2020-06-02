@@ -37,10 +37,6 @@ xn = np.reshape(xv, (xdim * ydim, 1))
 yn = np.reshape(yv, (xdim * ydim, 1))
 grid = np.squeeze(np.array([xn, yn]))
 
-#define AB sets
-densAB = np.zeros(dim_st)
-densAB[ind_A] = 1
-densAB[ind_B] = 1
 
 # TPT ergodic, infinite-time
 example_name = 'triplewell_stationary'

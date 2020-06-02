@@ -46,8 +46,8 @@ subtitles=[
 ]
 plot_3well_potential(
     potential=V0,
-    file_path=os.path.join(figures_path, example_name + '_' + 'potential.png'),
     title=title,
+    file_path=os.path.join(figures_path, example_name + '_' + 'potential.png'),
     subtitles=subtitles,
 )
 title = 'Triple well Gradient and Force'
@@ -59,9 +59,9 @@ subtitles=[
 plot_3well_vector_field(
     vector_field=dV0,
     vector_field_forced=dV_forced,
+    title=title,
     file_path=os.path.join(figures_path, example_name + '_' \
                            + 'vector_field.png'),
-    title=title,
     subtitles=subtitles,
 )
 
@@ -116,7 +116,7 @@ sigma=1.0
 T_m = np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
     T_m[m, :, :] = sampling.transitionmatrix_2D(lambda x, y : \
-         dV_forced(x, y, m), sigma, dt, lag, Nstep, interval, x, y, dx )
+         dV_forced(x, y, m), sigma=0.26, dt=0.02, lag=15, Nstep=10000, interval=interval, x=x, y=y, dx=dx )
 
 # defining A and B
 # define by center and radius!

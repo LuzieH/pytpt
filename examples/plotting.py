@@ -482,14 +482,14 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
-def plot_3well_potential(potential, file_path, title, subtitles=None):
+def plot_3well_potential(potential,  title, file_path=None, subtitles=None):
     '''
     Plots (and saves the plot) the triplewell potential.
     
     Args:
     potential : function of x and y
         defines the potential to be plotted in terms of x and y coordinates
-    file_path : string
+    file_path : string or None
         path to where the file should be saved eg ".../plots/image.png""
     title : string
     subtitles : string
@@ -534,10 +534,12 @@ def plot_3well_potential(potential, file_path, title, subtitles=None):
     
     # save figure
     fig.subplots_adjust(top=0.8)
-    fig.savefig(file_path, format='png', dpi=300)
+    
+    if file_path is not None:
+        fig.savefig(file_path, format='png', dpi=300)
 
 def plot_3well_vector_field(vector_field, vector_field_forced,
-                            file_path, title, subtitles=None):
+                             title, file_path = None, subtitles=None):
     '''
     Plots (and saves the plot) the vector field -grad V of the potential V, 
     as well as two time instances (m=0, 3) of the forced vector field. 
@@ -547,7 +549,7 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
         defines the vector field
     vector_field_forced : function of x, y and time
         defines the forced vector field at discrete times        
-    file_path : string
+    file_path : string or None
         path to where the file should be saved eg ".../plots/image.png""
     title : string
     subtitles : string
@@ -614,11 +616,12 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
     # save figure
     fig.subplots_adjust(top=0.8)
  
-    fig.savefig(file_path, format='png', dpi=300)
+    if file_path is not None:
+        fig.savefig(file_path, format='png', dpi=300)
 
 
 def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max, 
-               titles, file_path, background=None):
+               titles, file_path=None, background=None):
     """
     For a Markov chain on discrete 2D statespace this function plots
     in several subplots (e.g. for several time points) several densities.
@@ -643,7 +646,7 @@ def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max,
     background: ndarray of size # states
         if given, is plotted in the background and the foreground is slightly 
         transparent
-    file_path: string
+    file_path: string or None
         path to where the file should be saved eg ".../plots/image.png""
     """
     if background is None: 
@@ -683,10 +686,11 @@ def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max,
     cbar = ax.cax.colorbar(im, format=sfmt) 
     cbar = grid.cbar_axes[0].colorbar(im)
     
-    fig.savefig(file_path, format='png', dpi=100, bbox_inches='tight')
+    if file_path is not None:
+        fig.savefig(file_path, format='png', dpi=100, bbox_inches='tight')
 
 def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,datashape,
-                          extent, timeframe, size, titles, file_path):
+                          extent, timeframe, size, titles, file_path=None):
     """
     For a Markov chain on discrete 2D statespace this function plots
     in several subplots several vectorfields/effective currents. 
@@ -715,7 +719,7 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,datashape
         maximum value of the colorbar
     titles : list of strings
         titles for the different subplots
-    file_path: string
+    file_path: string or None
         path to where the file should be saved eg ".../plots/image.png""
     """
     
@@ -746,5 +750,6 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,datashape
     cbar = ax.cax.colorbar(im, format=sfmt)
     cbar = grid.cbar_axes[0].colorbar(im)
 
-    fig.savefig(file_path, format='png', dpi=100, bbox_inches='tight')
+    if file_path is not None:
+        fig.savefig(file_path, format='png', dpi=100, bbox_inches='tight')
 
