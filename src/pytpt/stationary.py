@@ -37,7 +37,7 @@ class tpt:
             set of indices of the state space that belong to the set B
         ind_C: array
             set of indices of the state space that belong to the 
-            transition region C, i.e. the set C  =  St\(A u B)        
+            transition region C, i.e. the set C  =  St-(A u B)        
         stat_dens: array
             stationary distribution of P, normalized
             or if None, the density will be computed automatically
@@ -50,8 +50,8 @@ class tpt:
         assert is_stochastic_matrix(P), "The transition matrix has to be \
             row-stochastic."        
             
-        assert is_irreducible_matrix(P), "The transition matrix has to be \
-            irreducible."
+        if not is_irreducible_matrix(P):
+            print("The transition matrix has to be irreducible.")
                 
         assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
                 and isinstance(ind_C, np.ndarray)),"The index sets have to be \

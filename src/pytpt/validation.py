@@ -7,9 +7,8 @@ def is_stochastic_matrix(A):
       'A must be a ndarray with  shape (n, n)'
 
     # check that it is row-stochastic
-    for i in np.arange(A.shape[0]):
-        if not np.isclose(np.sum(A[i, :]), 1):
-            return False
+    if not np.isclose(np.sum(A,1), np.ones(A.shape[0])).all():
+        return False
     
     return True
 

@@ -33,12 +33,12 @@ class tpt:
             set of indices of the state space that belong to the set B
         ind_C: array
             set of indices of the state space that belong to the 
-            transition region C, i.e. the set C  =  St\(A u B)        
+            transition region C, i.e. the set C  =  St-(A u B)        
         '''
 
-        assert (isfunction(P) or isfunction(P.func)), "The transition \
-          matrices need to be inputted as a function mapping time to \
-          the corresponding transition matrix."
+        assert (isfunction(P) or isfunction(P.func)), \
+            ("The transition matrices need to be inputted as a function "
+             "mapping time to the corresponding transition matrix.")
 
         assert np.isclose(P(0), P(M)).all(), "The transition matrix function \
         needs to the time modulo M to the corresponding transition matrix."
@@ -48,8 +48,8 @@ class tpt:
                 an np.ndarray and not an np.matrix"
                 
         assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
-                and isinstance(ind_C, np.ndarray)),"The index sets have to be \
-            given as np.ndarrays."
+                and isinstance(ind_C, np.ndarray)),\
+            "The index sets have to be given as np.ndarrays."
 
         A = set(ind_A)
         B = set(ind_B)
@@ -59,8 +59,8 @@ class tpt:
         
         assert  (len(A)>0 and len(B)>0 and len(C)>0 and \
                 len(intersection_AB) == 0 and complement_AB==C),\
-                "A and B have to be non-empty and disjoint sets \
-                such that also their complement C is non-empty."
+                ("A and B have to be non-empty and disjoint sets"
+               " such that also their complement C is non-empty.")
                 
         self._P = P
         self._M = M
@@ -121,15 +121,7 @@ class tpt:
         set to 0.
         '''
         P_back_m = np.zeros((self._M, self._S, self._S))
-
-        # for m in range(self._M):
-        #     # compute backward transition matrix
-        #     for i in np.arange(self._S):
-        #         for j in np.arange(self._S):
-        #             if self._stat_dens[np.mod(m, self._M), j] > 0:
-        #                 P_back_m[m, j, i] = self._P(m-1)[i, j] * \
-        #                     self._stat_dens[np.mod(m-1, self._M), i] / \
-        #                     self._stat_dens[np.mod(m, self._M), j]
+ 
         for m in range(self._M):
             # compute backward transition matrix
             idx = np.where(self._stat_dens[np.mod(m, self._M),:] != 0)[0]

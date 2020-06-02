@@ -36,7 +36,7 @@ class tpt:
             set of indices of the state space that belong to the set B
         ind_C: array
             set of indices of the state space that belong to the 
-            transition region C, i.e. the set C = St\(A u B)        
+            transition region C, i.e. the set C = St-(A u B)        
         init_dens: array
             initial density at time 0
         '''
@@ -49,8 +49,8 @@ class tpt:
                 an np.ndarray and not an np.matrix"
 
         assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
-                and isinstance(ind_C, np.ndarray)),"The index sets have to be \
-            given as np.ndarrays."
+                and isinstance(ind_C, np.ndarray)),\
+            "The index sets have to be given as np.ndarrays."
 
         A = set(ind_A)
         B = set(ind_B)
