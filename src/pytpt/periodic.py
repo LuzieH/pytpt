@@ -143,17 +143,18 @@ class tpt:
         equations.
         '''
 
-        # dimension of sets A, B, C
-        dim_A = np.size(self._ind_A)
+        # dimension of sets B, C
         dim_B = np.size(self._ind_B)
         dim_C = np.size(self._ind_C)
 
-        # forward committors q^+_0 at time 0
-        # to solve: (I-D)q^+_0 = b
+        # find forward committor q^+_0 at time 0
+        # to solve: (I-D)q^+_0 = b (see the proof of Lemma 4.6. of our paper)
 
-        # multiplied transition matrix over period with only transitions in C
+        # D: multiplied transition matrices over period with transitions only in C
+        # D = P(0)|C x... x P(M-1)|C
         D = np.diag(np.ones(dim_C))
-        b = np.zeros(dim_C)  # remaining part of the equation
+        # b: b = sum_tau^M  P(0)|C x ... x P(tau-1)|C,B x (1)
+        b = np.zeros(dim_C)  
 
         # filling D and b
         for m in np.arange(self._M):
@@ -165,7 +166,7 @@ class tpt:
         # find q_0^+ on C
         q_f = np.zeros((self._M, self._S))
         q_f[0, self._ind_C] = solve(np.eye(dim_C) - D, b)#inv_B.dot(b)
-        # on B: q^+ = 1
+        # q_0^+ on B
         q_f[:, self._ind_B] = 1
 
         # compute committors at remaining times
@@ -186,15 +187,14 @@ class tpt:
         equations.
         '''
 
-        # dimension of sets A, B, C
+        # dimension of sets A, C
         dim_A = np.size(self._ind_A)
-        dim_B = np.size(self._ind_B)
         dim_C = np.size(self._ind_C)
 
 
         # backward committor q^-_0 at time 0
         # to solve (I-D_back)q^-_0 = a
-        # multiplied bakward transition matrix over all times with only
+        # multiplied backward transition matrix over all times with only
         # transitions in C
         D_back = np.diag(np.ones(dim_C))
         a = np.zeros(dim_C)  # remaining part of the equation

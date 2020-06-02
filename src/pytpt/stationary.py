@@ -116,7 +116,6 @@ class tpt:
         zero, the corresponding transition matrix entries (row j) are
         set to 0.
         '''
-        S = self._S
         P = self._P
 
         # get indexed where the stationary density is not null
