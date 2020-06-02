@@ -15,7 +15,7 @@ git clone https://github.com/LuzieH/pytpt.git
 `
 2. Add the package to your local python library:
 ` 
-pip install -e pytpt
+pip install -e .
 ` 
  
 ## Quick Start (run examples)
