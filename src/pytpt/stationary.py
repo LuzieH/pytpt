@@ -51,7 +51,7 @@ class tpt:
             row-stochastic."        
             
         if not is_irreducible_matrix(P):
-            print("The transition matrix has to be irreducible.")
+            print("The transition matrix is not irreducible.")
                 
         assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
                 and isinstance(ind_C, np.ndarray)),"The index sets have to be \
@@ -125,21 +125,22 @@ class tpt:
         
         P_back = np.zeros(np.shape(P))
         P_back[idx, :] = P.T[idx, :] * stat_dens[:] / stat_dens[idx].reshape(np.size(idx), 1)
+        
         self._P_back = P_back
 
         return self._P_back
 
-    def committor(self):
+    def forward_committor(self):
         '''Function that computes the forward committor q_f
         (probability that the chain will next go to B rather than A)
         and backward commitor q_b (probability that the system last came
         from A rather than B).
         '''
-        # compute backward transition matrix
-        self.backward_transitions()
         
-        ### forward committor
-        
+        if self._P_back is None:
+            # compute backward transition matrix
+            self.backward_transitions()
+ 
         # forward  transition matrix from states in C to C
         P_C = self._P[np.ix_(self._ind_C, self._ind_C)]
         # amd from C to B
@@ -156,8 +157,14 @@ class tpt:
         q_f[self._ind_B] = 1
         
         self._q_f = q_f
-        
-        ### backward committor
+        return self._q_f
+    
+    def backward_committor(self):
+
+        if self._P_back is None:
+            # compute backward transition matrix
+            self.backward_transitions()
+ 
         # backward transition matrix restricted to C to C and from C to A
         P_back_C = self._P_back[np.ix_(self._ind_C, self._ind_C)]
         P_back_CA = self._P_back[np.ix_(self._ind_C, self._ind_A)]
@@ -174,7 +181,7 @@ class tpt:
 
         self._q_b = q_b
 
-        return self._q_f, self._q_b
+        return self._q_b
 
     def reac_density(self):
         '''
@@ -286,7 +293,8 @@ class tpt:
         Function that runs all methods to compute transition statistics.
         '''
         self.stationary_density()
-        self.committor()
+        self.forward_committor()
+        self.backward_committor()
         self.norm_reac_density()
         self.reac_current()
         self.transition_rate()

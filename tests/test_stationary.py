@@ -92,7 +92,8 @@ class TestStationary:
             ind_C = np.where(states == 'C')[0]
         
         tpt_stationary = stationary.tpt(P, ind_A, ind_B, ind_C)
-        tpt_stationary.committor()
+        tpt_stationary.forward_committor()
+        tpt_stationary.backward_committor()
         
         return tpt_stationary
 
