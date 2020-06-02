@@ -2,6 +2,7 @@ import numpy as np
 # https://docs.scipy.org/doc/scipy-0.15.1/reference/tutorial/linalg.html
 from scipy.linalg import solve
 from scipy.linalg import eig
+from pytpt.validation import is_stochastic_matrix, is_irreducible_matrix
 
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of
@@ -44,7 +45,13 @@ class tpt:
 
         assert (isinstance(P, np.ndarray) and not isinstance(P, np.matrix)), \
             "The inputted transition matrix P should be of an np.ndarray and \
-                not an np.matrix"
+                not an np.matrix."
+                
+        assert is_stochastic_matrix(P), "The transition matrix has to be \
+            row-stochastic."        
+            
+        assert is_irreducible_matrix(P), "The transition matrix has to be \
+            irreducible."
                 
         assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
                 and isinstance(ind_C, np.ndarray)),"The index sets have to be \

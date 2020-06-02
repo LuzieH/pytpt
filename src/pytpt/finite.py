@@ -1,8 +1,7 @@
 import numpy as np
 from inspect import isfunction
 #from scipy.linalg import solve
-
-
+ 
 
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of 

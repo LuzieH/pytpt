@@ -1,4 +1,4 @@
-from validation import is_stochastic_matrix, is_irreducible_matrix
+from pytpt.validation import is_stochastic_matrix, is_irreducible_matrix
 
 import numpy as np
 import pytest
