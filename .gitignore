@@ -21,3 +21,6 @@ examples/intro_example.py
 
 # egg info
 *.egg-info
+
+# ipython nb checkpoints 
+.ipynb_checkpoints
