@@ -1,6 +1,6 @@
 import numpy as np
 from inspect import isfunction
-#from scipy.linalg import solve
+from scipy.linalg import solve
 from scipy.linalg import eig
 
 
@@ -157,21 +157,14 @@ class tpt:
 
         # filling D and b
         for m in np.arange(self._M):
-            b = b + \
-                (D.dot(
+            b +=  (D.dot(
                     self._P(m)[np.ix_(self._ind_C, self._ind_B)]
                 )).dot(np.ones(dim_B))
             D = D.dot(self._P(m)[np.ix_(self._ind_C, self._ind_C)])
-
-        # B = I-D
-        B = np.diag(np.ones(dim_C)) - D
-
-        # invert B
-        inv_B = np.linalg.inv(B)
-
+            
         # find q_0^+ on C
         q_f = np.zeros((self._M, self._S))
-        q_f[0, self._ind_C] = inv_B.dot(b)
+        q_f[0, self._ind_C] = solve(np.eye(dim_C) - D, b)#inv_B.dot(b)
         # on B: q^+ = 1
         q_f[:, self._ind_B] = 1
 
@@ -210,22 +203,17 @@ class tpt:
         times[0] = 0
 
         for m in times:
-            a = a + \
-                (D_back.dot(
+            a += (D_back.dot(
                     self._P_back(m)[np.ix_(self._ind_C, self._ind_A)]
                 )).dot(np.ones(dim_A))
             D_back = D_back.dot(
                 self._P_back(m)[np.ix_(self._ind_C, self._ind_C)]
             )
 
-        # A = I-D_back
-        A = np.diag(np.ones(dim_C)) - D_back
-        # invert A
-        inv_A = np.linalg.inv(A)
-
+ 
         # find q_0^- on C
         q_b = np.zeros((self._M, self._S))
-        q_b[0, self._ind_C] = inv_A.dot(a)
+        q_b[0, self._ind_C] = solve(np.eye(dim_C)-D_back,a)
         q_b[:, self._ind_A] = 1
 
         # compute committor for remaining times
