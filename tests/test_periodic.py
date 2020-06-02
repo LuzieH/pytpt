@@ -105,7 +105,8 @@ class TestPeriodic:
             ind_C = np.where(states == 'C')[0]
         
         tpt_periodic = periodic.tpt(P, M, ind_A, ind_B, ind_C)
-        tpt_periodic.committor()
+        tpt_periodic.forward_committor()
+        tpt_periodic.backward_committor()
         
         return tpt_periodic
 

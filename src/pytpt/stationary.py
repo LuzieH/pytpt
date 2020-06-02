@@ -132,9 +132,7 @@ class tpt:
 
     def forward_committor(self):
         '''Function that computes the forward committor q_f
-        (probability that the chain will next go to B rather than A)
-        and backward commitor q_b (probability that the system last came
-        from A rather than B).
+        (probability that the chain will next go to B rather than A).
         '''
         
         if self._P_back is None:
@@ -160,7 +158,10 @@ class tpt:
         return self._q_f
     
     def backward_committor(self):
-
+        '''Function that computes the backward commitor q_b (probability 
+        that the system last came from A rather than B).
+        '''
+        
         if self._P_back is None:
             # compute backward transition matrix
             self.backward_transitions()

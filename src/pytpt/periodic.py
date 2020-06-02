@@ -136,11 +136,10 @@ class tpt:
 
         return P_back
 
-    def committor(self):
+    def forward_committor(self):
         '''Function that computes the forward committor q_f (probability
-        that the process will next go to B rather than A) and backward
-        committor q_b (probability that the system last came from A
-        rather than B) of the periodic system by using the stacked
+        that the process will next go to B rather than A) 
+        of the periodic system by using the stacked
         equations.
         '''
 
@@ -183,6 +182,22 @@ class tpt:
             )
 
         self._q_f = q_f
+ 
+ 
+        return self._q_f 
+    
+    def backward_committor(self):
+        '''Function that computes the backward
+        committor q_b (probability that the system last came from A
+        rather than B) of the periodic system by using the stacked
+        equations.
+        '''
+
+        # dimension of sets A, B, C
+        dim_A = np.size(self._ind_A)
+        dim_B = np.size(self._ind_B)
+        dim_C = np.size(self._ind_C)
+
 
         # backward committor q^-_0 at time 0
         # to solve (I-D_back)q^-_0 = a
@@ -221,7 +236,7 @@ class tpt:
 
         self._q_b = q_b
 
-        return self._q_f, self._q_b
+        return self._q_b
     
     def reac_density(self):
         '''Given the forward and backward committor and the density,
@@ -391,7 +406,8 @@ class tpt:
         '''
         self.stationary_density()
         self.backward_transitions()
-        self.committor()
+        self.forward_committor()
+        self.backward_committor()
         self.norm_reac_density()
         self.reac_current()
         self.transition_rate()
