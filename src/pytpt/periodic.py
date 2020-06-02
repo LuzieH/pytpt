@@ -122,14 +122,20 @@ class tpt:
         '''
         P_back_m = np.zeros((self._M, self._S, self._S))
 
+        # for m in range(self._M):
+        #     # compute backward transition matrix
+        #     for i in np.arange(self._S):
+        #         for j in np.arange(self._S):
+        #             if self._stat_dens[np.mod(m, self._M), j] > 0:
+        #                 P_back_m[m, j, i] = self._P(m-1)[i, j] * \
+        #                     self._stat_dens[np.mod(m-1, self._M), i] / \
+        #                     self._stat_dens[np.mod(m, self._M), j]
         for m in range(self._M):
             # compute backward transition matrix
-            for i in np.arange(self._S):
-                for j in np.arange(self._S):
-                    if self._stat_dens[np.mod(m, self._M), j] > 0:
-                        P_back_m[m, j, i] = self._P(m-1)[i, j] * \
-                            self._stat_dens[np.mod(m-1, self._M), i] / \
-                            self._stat_dens[np.mod(m, self._M), j]
+            idx = np.where(self._stat_dens[np.mod(m, self._M),:] != 0)[0]
+            P_back_m[m, idx,:] = self._P(m-1).T[idx,:] * \
+                            self._stat_dens[np.mod(m-1, self._M), :] / \
+                            self._stat_dens[np.mod(m, self._M), idx].reshape(np.size(idx),1)
 
         # store backward matrix in a function that assigns each time point
         # to the corresponding transition matrix

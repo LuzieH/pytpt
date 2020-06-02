@@ -124,7 +124,7 @@ class tpt:
         idx = np.where(stat_dens != 0)[0]
         
         P_back = np.zeros(np.shape(P))
-        P_back[idx, :] = P.T[idx, :] * stat_dens[:] / stat_dens[idx].reshape(S, 1)
+        P_back[idx, :] = P.T[idx, :] * stat_dens[:] / stat_dens[idx].reshape(np.size(idx), 1)
         self._P_back = P_back
 
         return self._P_back
