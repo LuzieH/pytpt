@@ -116,7 +116,7 @@ sigma=1.0
 T_m = np.zeros((M, dim_st, dim_st))
 for m in np.arange(M):
     T_m[m, :, :] = sampling.transitionmatrix_2D(lambda x, y : \
-         dV_forced(x, y, m), sigma=0.26, dt=0.02, lag=15, Nstep=10000, interval=interval, x=x, y=y, dx=dx )
+         dV_forced(x, y, m), sigma=1.0, dt=0.02, lag=15, Nstep=10000, interval=interval, x=x, y=y, dx=dx )
 
 # defining A and B
 # define by center and radius!
