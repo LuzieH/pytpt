@@ -145,9 +145,9 @@ class TestFinite:
         return tpt_finite
 
     def test_transition_matrix(self, tpt_finite):
-        S = tpt_finite._S
-        P = tpt_finite._P
-        N = tpt_finite._N
+        S = tpt_finite.S
+        P = tpt_finite.P
+        N = tpt_finite.N
         
         for n in range(N):
             assert P(n).shape == (S, S)
@@ -156,10 +156,10 @@ class TestFinite:
             assert is_irreducible_matrix(P(n))
 
     def test_density(self, tpt_finite):
-        S = tpt_finite._S
+        S = tpt_finite.S
         density = tpt_finite.density()
-        N = tpt_finite._N
-        P = tpt_finite._P
+        N = tpt_finite.N
+        P = tpt_finite.P
         
         assert density.shape == (N, S)
         assert np.isnan(density).any() == False
@@ -171,9 +171,9 @@ class TestFinite:
             
 
     def test_committors(self, tpt_finite):
-        q_f, q_b = tpt_finite._q_f, tpt_finite._q_b
-        S = tpt_finite._S
-        N = tpt_finite._N     
+        q_f, q_b = tpt_finite.q_f, tpt_finite.q_b
+        S = tpt_finite.S
+        N = tpt_finite.N     
 
         assert q_f.shape == (N,S)
         assert np.isnan(q_f).any() == False
@@ -188,8 +188,8 @@ class TestFinite:
     def test_reac_density(self, tpt_finite):
         reac_dens = tpt_finite.reac_density()
         norm_reac_dens = tpt_finite.norm_reac_density()
-        S = tpt_finite._S
-        N = tpt_finite._N  
+        S = tpt_finite.S
+        N = tpt_finite.N  
         
         assert reac_dens.shape == (N, S)
         assert np.isnan(reac_dens).any() == False
@@ -203,8 +203,8 @@ class TestFinite:
  
     def test_current(self, tpt_finite):
         [reac_current, eff_current] = tpt_finite.reac_current()
-        S = tpt_finite._S
-        N = tpt_finite._N  
+        S = tpt_finite.S
+        N = tpt_finite.N  
         
         assert reac_current.shape == (N, S, S)
         assert (np.fmin(reac_current,0)>=0).all() #np.greater_equal(reac_current, 0).all() 

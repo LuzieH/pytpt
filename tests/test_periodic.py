@@ -111,9 +111,9 @@ class TestPeriodic:
         return tpt_periodic
 
     def test_transition_matrix(self, tpt_periodic):
-        S = tpt_periodic._S
-        P = tpt_periodic._P
-        M = tpt_periodic._M
+        S = tpt_periodic.S
+        P = tpt_periodic.P
+        M = tpt_periodic.M
         
         for m in range(M):
             assert P(m).shape == (S, S)
@@ -123,9 +123,9 @@ class TestPeriodic:
             assert is_irreducible_matrix(P(m))
 
     def test_stationary_density(self, tpt_periodic):
-        S = tpt_periodic._S
+        S = tpt_periodic.S
         stationary_density = tpt_periodic.stationary_density()
-        M = tpt_periodic._M
+        M = tpt_periodic.M
         
         assert stationary_density.shape == (M,S)
         assert np.isnan(stationary_density).any() == False
@@ -133,11 +133,11 @@ class TestPeriodic:
         assert np.less_equal(stationary_density, 1).all() 
             
     def test_backward_transition_matrix(self, tpt_periodic):
-        S = tpt_periodic._S
+        S = tpt_periodic.S
         stationary_density = tpt_periodic.stationary_density()
-        P = tpt_periodic._P
+        P = tpt_periodic.P
         P_back = tpt_periodic.backward_transitions()
-        M = tpt_periodic._M        
+        M = tpt_periodic.M        
         
         for m in range(M):
             assert P_back(m).shape == (S, S)
@@ -152,9 +152,9 @@ class TestPeriodic:
                     )
 
     def test_committors(self, tpt_periodic):
-        q_f, q_b = tpt_periodic._q_f, tpt_periodic._q_b
-        S = tpt_periodic._S
-        M = tpt_periodic._M     
+        q_f, q_b = tpt_periodic.q_f, tpt_periodic.q_b
+        S = tpt_periodic.S
+        M = tpt_periodic.M     
 
         assert q_f.shape == (M,S)
         assert np.isnan(q_f).any() == False
@@ -170,8 +170,8 @@ class TestPeriodic:
         reac_dens = tpt_periodic.reac_density()
         reac_norm_factor = tpt_periodic.reac_norm_factor()
         norm_reac_dens = tpt_periodic.norm_reac_density()
-        S = tpt_periodic._S
-        M = tpt_periodic._M  
+        S = tpt_periodic.S
+        M = tpt_periodic.M  
         
         assert reac_dens.shape == (M,S)
         assert np.isnan(reac_dens).any() == False
@@ -185,8 +185,8 @@ class TestPeriodic:
    
     def test_current(self, tpt_periodic):
         reac_current, eff_current = tpt_periodic.reac_current()
-        S = tpt_periodic._S
-        M = tpt_periodic._M  
+        S = tpt_periodic.S
+        M = tpt_periodic.M  
         
         assert reac_current.shape == (M,S,S)
         assert np.isnan(reac_current).any() == False

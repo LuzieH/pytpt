@@ -46,7 +46,6 @@ def P_inhom(n):
 def main():
     '''
     '''
-
     S = len(STATES)
 
     ind_A = np.array([0])
@@ -67,7 +66,7 @@ def main():
     small.save_statistics(npz_path)
 
     #compute share along upper (1) and lower path (via 3)
-    eff_current = small._eff_current
+    eff_current = small.eff_current
     eff_out = eff_current[0, 1] + eff_current[0, 3]
     share_1 = eff_current[0, 1] / eff_out
     share_3 = eff_current[0, 3] / eff_out
@@ -99,7 +98,7 @@ def main():
     example_name = 'small_network_finite'
     N = 5  # size of finite time interval
     # initial density
-    init_dens_small_finite = small._stat_dens
+    init_dens_small_finite = small.stat_dens
     # instantiate
     small_finite = finite.tpt(
         P_hom,
@@ -125,7 +124,7 @@ def main():
 
 
     # initial density
-    init_dens_small_inhom = small._stat_dens
+    init_dens_small_inhom = small.stat_dens
     # instantiate
     small_inhom = finite.tpt(
         P_inhom,
@@ -149,7 +148,7 @@ def main():
     q_b_conv = np.zeros((N_max, S))
 
     # initial density
-    init_dens_small = small._stat_dens
+    init_dens_small = small.stat_dens
 
     for n in np.arange(1, N_max + 1):
         # extended time interval

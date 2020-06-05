@@ -63,27 +63,27 @@ class tpt:
                 "A and B have to be non-empty and disjoint sets \
                 such that also their complement C is non-empty."
                 
-        self._init_dens = init_dens
-        self._ind_A = ind_A
-        self._ind_B = ind_B
-        self._ind_C = ind_C
-        self._N = N
-        self._P = P
-        self._S = np.shape(P(0))[0]  # size of the state space
+        self.init_dens = init_dens
+        self.ind_A = ind_A
+        self.ind_B = ind_B
+        self.ind_C = ind_C
+        self.N = N
+        self.P = P
+        self.S = np.shape(P(0))[0]  # size of the state space
 
-        self._dens = None # density
-        self._q_b = None  # backward committor
-        self._q_f = None  # forward committor
-        self._reac_dens = None  # reactive density
-        self._reac_norm_factor = None  # normalization factor 
-        self._norm_reac_dens = None  # normalized reactive density
-        self._current = None  # reactive current
-        self._eff_current = None  # effective reactive current
-        self._rate = None  # rate of transitions from A to B
-        self._av_length = None  # mean transition length from A to B
+        self.dens = None # density
+        self.q_b = None  # backward committor
+        self.q_f = None  # forward committor
+        self.reac_dens = None  # reactive density
+        self.reac_norm_factor = None  # normalization factor 
+        self.norm_reac_dens = None  # normalized reactive density
+        self.current = None  # reactive current
+        self.eff_current = None  # effective reactive current
+        self.rate = None  # rate of transitions from A to B
+        self.av_length = None  # mean transition length from A to B
         # time-averaged rate of transitions from A to B
-        self._time_av_rate = None  
-        self._current_dens = None  # density of the effective current
+        self.time_av_rate = None  
+        self.current_dens = None  # density of the effective current
 
 
     def density(self):
@@ -91,17 +91,17 @@ class tpt:
         probability to be at time n in node i, the first index of the
         returned array is time n, the second is space/the node i. 
         '''
-        dens_n = np.zeros((self._N, self._S))
+        dens_n = np.zeros((self.N, self.S))
 
         # initial density
-        dens_n[0, :] = self._init_dens
+        dens_n[0, :] = self.init_dens
 
-        for n in np.arange(self._N - 1):
+        for n in np.arange(self.N - 1):
             # compute density at next time n+1 by applying the 
             # transition matrix
-            dens_n[n + 1, :] = dens_n[n, :].dot(self._P(n))
+            dens_n[n + 1, :] = dens_n[n, :].dot(self.P(n))
 
-        self._dens = dens_n
+        self.dens = dens_n
         return dens_n
 
 
@@ -112,67 +112,67 @@ class tpt:
         last came from A rather than B) for all times n in {0,...,N-1}
         '''
 
-        q_f = np.zeros((self._N, self._S))
-        q_b = np.zeros((self._N, self._S))
+        q_f = np.zeros((self.N, self.S))
+        q_b = np.zeros((self.N, self.S))
 
         # forward committor is 1 on B, 0 on A, at time N, q_f is 
         # additionally 0 on C
-        q_f[self._N - 1, self._ind_B] = 1
+        q_f[self.N - 1, self.ind_B] = 1
         # backward committor is 1 on A, 0 on B, at time 0, q_b is 
         # additionally 0 on C
-        q_b[0, self._ind_A] = 1
+        q_b[0, self.ind_A] = 1
 
         # density at time n-1
-        dens_nmin1 = self._init_dens
+        dens_nmin1 = self.init_dens
 
         # iterate through all times n, backward in time for q_f, forward 
         # in time for q_b
-        for n in range(1, self._N):
+        for n in range(1, self.N):
 
             # define the restricted transition matrices at time N-n-1
             # entries from C to C
-            P_CC = self._P(self._N - n - 1)[np.ix_(self._ind_C, self._ind_C)]
+            P_CC = self.P(self.N - n - 1)[np.ix_(self.ind_C, self.ind_C)]
             # entries from C to B
-            P_CB = self._P(self._N - n - 1)[np.ix_(self._ind_C, self._ind_B)]
+            P_CB = self.P(self.N - n - 1)[np.ix_(self.ind_C, self.ind_B)]
 
             # compute forward committor backwards in time
-            q_f[self._N -n - 1, self._ind_C] = P_CC.dot(
-                q_f[self._N-n, self._ind_C]
-            ) + P_CB.dot(np.ones(np.size(self._ind_B)))
+            q_f[self.N -n - 1, self.ind_C] = P_CC.dot(
+                q_f[self.N-n, self.ind_C]
+            ) + P_CB.dot(np.ones(np.size(self.ind_B)))
 
             # forward committor is 1 on B, 0 on A
-            q_f[self._N - n - 1, self._ind_B] = 1
+            q_f[self.N - n - 1, self.ind_B] = 1
 
             # density at time n
-            dens_n = dens_nmin1.dot(self._P(n - 1))
+            dens_n = dens_nmin1.dot(self.P(n - 1))
 
             # ensure that when dividing by the distribution and it's 0,
             # we don't divide by zero, there is no contribution, thus we 
             # can replace the inverse by zero
-            d_n_inv = dens_n[self._ind_C]
-            for i in range(np.size(self._ind_C)):
+            d_n_inv = dens_n[self.ind_C]
+            for i in range(np.size(self.ind_C)):
                 if d_n_inv[i] > 0:
                     d_n_inv[i] = 1 / d_n_inv[i]
                 # else: its just zero
 
             # define restricted transition matrices
-            P_CC = self._P(n - 1)[np.ix_(self._ind_C, self._ind_C)]
-            P_AC = self._P(n - 1)[np.ix_(self._ind_A, self._ind_C)]
+            P_CC = self.P(n - 1)[np.ix_(self.ind_C, self.ind_C)]
+            P_AC = self.P(n - 1)[np.ix_(self.ind_A, self.ind_C)]
 
             # compute backward committor forward in time
-            q_b[n, self._ind_C] = d_n_inv*(
-                dens_nmin1[self._ind_C]*q_b[n-1, self._ind_C]
-            ).dot(P_CC) + d_n_inv*dens_nmin1[self._ind_A].dot(P_AC)
+            q_b[n, self.ind_C] = d_n_inv*(
+                dens_nmin1[self.ind_C]*q_b[n-1, self.ind_C]
+            ).dot(P_CC) + d_n_inv*dens_nmin1[self.ind_A].dot(P_AC)
 
             # backward committor is 1 on A, 0 on B
-            q_b[n, self._ind_A] = 1
+            q_b[n, self.ind_A] = 1
 
             dens_nmin1 = dens_n
 
-        self._q_b = q_b
-        self._q_f = q_f
+        self.q_b = q_b
+        self.q_f = q_f
 
-        return self._q_f, self._q_b
+        return self.q_f, self.q_b
 
 
     def reac_density(self):
@@ -185,24 +185,24 @@ class tpt:
         array).
         '''
         
-        assert self._q_f is not None, "The committor functions need \
+        assert self.q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
-        reac_dens = np.zeros((self._N, self._S))
+        reac_dens = np.zeros((self.N, self.S))
 
         # density at time n
-        dens_n = self._init_dens.dot(self._P(0))
+        dens_n = self.init_dens.dot(self.P(0))
 
-        for n in range(0, self._N):
+        for n in range(0, self.N):
             reac_dens[n, :] = np.multiply(
-                self._q_b[n, :],
-                np.multiply(dens_n, self._q_f[n, :]),
+                self.q_b[n, :],
+                np.multiply(dens_n, self.q_f[n, :]),
             )
             # update density for next time point
-            dens_n = dens_n.dot(self._P(n-1))
+            dens_n = dens_n.dot(self.P(n-1))
 
-        self._reac_dens = reac_dens
-        return self._reac_dens
+        self.reac_dens = reac_dens
+        return self.reac_dens
 
 
     def reac_norm_factor(self):
@@ -214,15 +214,15 @@ class tpt:
         Note that at times n=0 and N-1, the normalization factor is 0,
         since there are no reactive trajectories yet.
         '''
-        if self._reac_dens is None:
-            self._reac_dens = self.reac_density()
+        if self.reac_dens is None:
+            self.reac_dens = self.reac_density()
 
-        reac_norm_factor = np.zeros(self._N)
-        for n in range(0, self._N):
-            reac_norm_factor[n] = np.sum(self._reac_dens[n, :])
+        reac_norm_factor = np.zeros(self.N)
+        for n in range(0, self.N):
+            reac_norm_factor[n] = np.sum(self.reac_dens[n, :])
 
-        self._reac_norm_factor = reac_norm_factor
-        return self._reac_norm_factor
+        self.reac_norm_factor = reac_norm_factor
+        return self.reac_norm_factor
 
 
     def norm_reac_density(self):
@@ -238,24 +238,24 @@ class tpt:
         normalized reactive density thus can't be computed.
         '''
 
-        if self._reac_dens is None:
-            self._reac_dens = self.reac_density()
+        if self.reac_dens is None:
+            self.reac_dens = self.reac_density()
 
-        if self._reac_norm_factor is None:
-            self._reac_norm_factor = self.reac_norm_factor()
+        if self.reac_norm_factor is None:
+            self.reac_norm_factor = self.reac_norm_factor()
 
-        norm_reac_dens = np.zeros((self._N, self._S))
-        for n in range(0, self._N):
-            if self._reac_norm_factor[n] != 0:
-                norm_reac_dens[n, :] = self._reac_dens[n, :] /\
-                                       self._reac_norm_factor[n] 
+        norm_reac_dens = np.zeros((self.N, self.S))
+        for n in range(0, self.N):
+            if self.reac_norm_factor[n] != 0:
+                norm_reac_dens[n, :] = self.reac_dens[n, :] /\
+                                       self.reac_norm_factor[n] 
             else:
                 norm_reac_dens[n] = np.nan 
 
         # obs: at time 0 and N-1, the reactive density is zero, the event "to 
         # be reactive" is not possible
-        self._norm_reac_dens = norm_reac_dens
-        return self._norm_reac_dens
+        self.norm_reac_dens = norm_reac_dens
+        return self.norm_reac_dens
 
 
     def reac_current(self):
@@ -264,35 +264,35 @@ class tpt:
         from i to j during one time step. Only defined for n=0,..,N-2
         '''
 
-        assert self._q_f is not None, "The committor functions  need \
+        assert self.q_f is not None, "The committor functions  need \
         first to be computed by using the method committor"
         
-        S = self._S
+        S = self.S
         
-        current = np.zeros((self._N, S, S))
-        eff_current = np.zeros((self._N, S, S))
+        current = np.zeros((self.N, S, S))
+        eff_current = np.zeros((self.N, S, S))
 
-        dens_n = self._init_dens
+        dens_n = self.init_dens
 
-        for n in range(self._N-1):
+        for n in range(self.N-1):
             # compute reactive current
             current[n,:,:] = dens_n.reshape(S, 1) * \
-                            self._q_b[n, :].reshape(S, 1) * \
-                                self._P(n) * self._q_f[n+1, :]
+                            self.q_b[n, :].reshape(S, 1) * \
+                                self.P(n) * self.q_f[n+1, :]
 
             # compute effective current
             eff_current[n,:,:] = np.maximum(np.zeros((S, S)),\
                                             current[n,:,:] - current[n,:,:].T)
 
-            dens_n = dens_n.dot(self._P(n))
+            dens_n = dens_n.dot(self.P(n))
 
-        current[self._N - 1] = np.nan
-        eff_current[self._N - 1] = np.nan
+        current[self.N - 1] = np.nan
+        eff_current[self.N - 1] = np.nan
 
-        self._current = current
-        self._eff_current = eff_current
+        self.current = current
+        self.eff_current = eff_current
 
-        return self._current, self._eff_current
+        return self.current, self.eff_current
 
 
     def transition_rate(self):
@@ -303,46 +303,46 @@ class tpt:
         rate array and the time averaged transition rate array
         '''
 
-        assert self._current is not None, "The reactive current first needs \
+        assert self.current is not None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
-        rate = np.zeros((self._N, 2))
+        rate = np.zeros((self.N, 2))
 
-        rate[:self._N - 1, 0] = np.sum(
-            self._current[:self._N - 1, self._ind_A, :], axis=(1, 2)
+        rate[:self.N - 1, 0] = np.sum(
+            self.current[:self.N - 1, self.ind_A, :], axis=(1, 2)
         )
-        rate[self._N - 1, 0] = np.nan
+        rate[self.N - 1, 0] = np.nan
         
         rate[1:, 1] = np.sum(
-            self._current[:self._N - 1, :, self._ind_B], axis=(1, 2)
+            self.current[:self.N - 1, :, self.ind_B], axis=(1, 2)
         )
         rate[0, 1] = np.nan
         
         # averaged rate over the time interval
         time_av_rate = np.zeros(2)
-        time_av_rate[0] = sum(rate[:self._N - 1, 0]) / (self._N)
-        time_av_rate[1] = sum(rate[1:, 1]) / (self._N)
+        time_av_rate[0] = sum(rate[:self.N - 1, 0]) / (self.N)
+        time_av_rate[1] = sum(rate[1:, 1]) / (self.N)
        
-        self._rate = rate
-        self._time_av_rate = time_av_rate
-        return self._rate, self._time_av_rate
+        self.rate = rate
+        self.time_av_rate = time_av_rate
+        return self.rate, self.time_av_rate
 
     def mean_transition_length(self):
         '''The mean transition length can be computed as the ration of
         the reac_norm_factor and the transition rate.
         '''
 
-        assert self._reac_norm_factor is not None, "The normalization \
+        assert self.reac_norm_factor is not None, "The normalization \
         factor first needs to be computed by using the method \
         reac_norm_factor"
         
-        assert self._rate is not None, "The transition rate first needs \
+        assert self.rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self._av_length = np.nansum(self._reac_norm_factor) \
-            / np.nansum(self._rate[:, 0])
+        self.av_length = np.nansum(self.reac_norm_factor) \
+            / np.nansum(self.rate[:, 0])
         
-        return self._av_length
+        return self.av_length
     
     
     def current_density(self):
@@ -350,19 +350,19 @@ class tpt:
         currents over all neighbours of the node.
         '''
 
-        assert self._current is not None, "The reactive current first needs \
+        assert self.current is not None, "The reactive current first needs \
         to be computed by using the method reac_current"
 
-        current_dens = np.zeros((self._N, self._S))
-        for n in range(self._N):
-            if np.isnan(self._eff_current[n]).any():
+        current_dens = np.zeros((self.N, self.S))
+        for n in range(self.N):
+            if np.isnan(self.eff_current[n]).any():
                 current_dens[n] = np.nan 
             else:
-                for i in self._ind_C:
-                    current_dens[n, i] = np.sum(self._eff_current[n, i, :])
+                for i in self.ind_C:
+                    current_dens[n, i] = np.sum(self.eff_current[n, i, :])
 
-        self._current_dens = current_dens
-        return self._current_dens
+        self.current_dens = current_dens
+        return self.current_dens
     
     def compute_statistics(self):
         '''
@@ -385,13 +385,13 @@ class tpt:
         '''
         np.savez(
             npz_path,
-            dens=self._dens,
-            q_f=self._q_f,
-            q_b=self._q_b,
-            reac_norm_factor=self._reac_norm_factor,
-            norm_reac_dens=self._norm_reac_dens,
-            eff_current=self._eff_current,
-            rate=self._rate,
-            time_av_rate=self._time_av_rate,
-            av_length=self._av_length,
+            dens=self.dens,
+            q_f=self.q_f,
+            q_b=self.q_b,
+            reac_norm_factor=self.reac_norm_factor,
+            norm_reac_dens=self.norm_reac_dens,
+            eff_current=self.eff_current,
+            rate=self.rate,
+            time_av_rate=self.time_av_rate,
+            av_length=self.av_length,
         )

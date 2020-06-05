@@ -70,28 +70,28 @@ class tpt:
                 such that also their complement C is non-empty."
         
         
-        self._P = P
-        self._stat_dens = stat_dens
-        self._ind_A = ind_A
-        self._ind_B = ind_B
-        self._ind_C = ind_C
-        self._S = np.shape(self._P)[0]  # size of state space
+        self.P = P
+        self.stat_dens = stat_dens
+        self.ind_A = ind_A
+        self.ind_B = ind_B
+        self.ind_C = ind_C
+        self.S = np.shape(self.P)[0]  # size of state space
 
-        self._P_back = None  # transition matrix of time-reversed process
-        self._q_b = None  # backward committor
-        self._q_f = None  # forward committor
-        self._reac_dens = None  # reactive density
-        self._reac_norm_factor = None  # normalization factor 
-        self._norm_reac_dens = None  # normalized reactive density
-        self._current = None  # reactive current
-        self._eff_current = None  # effective reactive current
-        self._rate = None  # rate of transitions from A to B
-        self._length = None  # mean transition length from A to B
-        self._current_dens = None  # density of the effective current
+        self.P_back = None  # transition matrix of time-reversed process
+        self.q_b = None  # backward committor
+        self.q_f = None  # forward committor
+        self.reac_dens = None  # reactive density
+        self.reac_norm_factor = None  # normalization factor 
+        self.norm_reac_dens = None  # normalized reactive density
+        self.current = None  # reactive current
+        self.eff_current = None  # effective reactive current
+        self.rate = None  # rate of transitions from A to B
+        self.length = None  # mean transition length from A to B
+        self.current_dens = None  # density of the effective current
 
         # compute the stationary density if its not given
-        if self._stat_dens is None:
-            self._stat_dens = self.stationary_density()
+        if self.stat_dens is None:
+            self.stat_dens = self.stationary_density()
 
     def stationary_density(self):
         '''Computes the stationary density of the transition matrix as
@@ -99,7 +99,7 @@ class tpt:
         '''
 
         # compute eigenvectors and eigenvalues of P
-        eigv, eigvc = eig(np.transpose(self._P))
+        eigv, eigvc = eig(np.transpose(self.P))
         # get index of eigenvector with eigenvalue 1 (up to small numerical 
         # error)
         index = np.where(np.isclose(eigv, 1))[0]
@@ -116,72 +116,72 @@ class tpt:
         zero, the corresponding transition matrix entries (row j) are
         set to 0.
         '''
-        P = self._P
+        P = self.P
 
         # get indexed where the stationary density is not null
-        stat_dens = self._stat_dens
+        stat_dens = self.stat_dens
         idx = np.where(stat_dens != 0)[0]
         
         P_back = np.zeros(np.shape(P))
         P_back[idx, :] = P.T[idx, :] * stat_dens[:] / stat_dens[idx].reshape(np.size(idx), 1)
         
-        self._P_back = P_back
+        self.P_back = P_back
 
-        return self._P_back
+        return self.P_back
 
     def forward_committor(self):
         '''Function that computes the forward committor q_f
         (probability that the chain will next go to B rather than A).
         '''
         
-        if self._P_back is None:
+        if self.P_back is None:
             # compute backward transition matrix
             self.backward_transitions()
  
         # forward  transition matrix from states in C to C
-        P_C = self._P[np.ix_(self._ind_C, self._ind_C)]
+        P_C = self.P[np.ix_(self.ind_C, self.ind_C)]
         # amd from C to B
-        P_CB = self._P[np.ix_(self._ind_C, self._ind_B)]
+        P_CB = self.P[np.ix_(self.ind_C, self.ind_B)]
 
-        q_f = np.zeros(self._S)
+        q_f = np.zeros(self.S)
         # compute forward committor on C, the transition region
         b = np.sum(P_CB, axis=1)
         
-        q_f[self._ind_C] = solve(np.eye(np.size(self._ind_C)) - P_C, b)
+        q_f[self.ind_C] = solve(np.eye(np.size(self.ind_C)) - P_C, b)
        
         # add entries to the forward committor vector on A, B
         # (i.e. q_f is 0 on A, 1 on B)
-        q_f[self._ind_B] = 1
+        q_f[self.ind_B] = 1
         
-        self._q_f = q_f
-        return self._q_f
+        self.q_f = q_f
+        return self.q_f
     
     def backward_committor(self):
         '''Function that computes the backward commitor q_b (probability 
         that the system last came from A rather than B).
         '''
         
-        if self._P_back is None:
+        if self.P_back is None:
             # compute backward transition matrix
             self.backward_transitions()
  
         # backward transition matrix restricted to C to C and from C to A
-        P_back_C = self._P_back[np.ix_(self._ind_C, self._ind_C)]
-        P_back_CA = self._P_back[np.ix_(self._ind_C, self._ind_A)]
+        P_back_C = self.P_back[np.ix_(self.ind_C, self.ind_C)]
+        P_back_CA = self.P_back[np.ix_(self.ind_C, self.ind_A)]
         
-        q_b = np.zeros(self._S)
+        q_b = np.zeros(self.S)
         # compute backward committor on C
         a = np.sum(P_back_CA, axis=1)
 
-        q_b[self._ind_C] = solve(np.eye(np.size(self._ind_C)) - P_back_C, a)      
+        q_b[self.ind_C] = solve(np.eye(np.size(self.ind_C)) - P_back_C, a)      
  
         # add entries to committor vector on A, B
         # (i.e. q_b is 1 on A, 0 on B)
-        q_b[self._ind_A] = 1
+        q_b[self.ind_A] = 1
 
-        self._q_b = q_b
+        self.q_b = q_b
 
-        return self._q_b
+        return self.q_b
 
     def reac_density(self):
         '''
@@ -189,13 +189,13 @@ class tpt:
         density, we can compute the density of reactive trajectories,
         i.e. the probability to be at x in St while being reactive.
         '''
-        assert self._q_f is not None, "The committor functions need \
+        assert self.q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
-        self._reac_dens = np.multiply(
-            self._q_b, np.multiply(self._stat_dens, self._q_f)
+        self.reac_dens = np.multiply(
+            self.q_b, np.multiply(self.stat_dens, self.q_f)
         )
-        return self._reac_dens
+        return self.reac_dens
 
     def reac_norm_factor(self):
         '''
@@ -204,11 +204,11 @@ class tpt:
         This is nothing but the probability to be reactive/on a 
         transition at a certain time. 
         '''
-        if self._reac_dens is None:                                                          
-            self._reac_dens = self.reac_density()                                                        
+        if self.reac_dens is None:
+            self.reac_dens = self.reac_density()
         
-        self._reac_norm_factor = np.sum(self._reac_dens)
-        return self._reac_norm_factor
+        self.reac_norm_factor = np.sum(self.reac_dens)
+        return self.reac_norm_factor
 
     def norm_reac_density(self):
         '''Given the reactive density and its normalization factor, 
@@ -216,38 +216,38 @@ class tpt:
         the probability to be at x in S, given the chain
         is reactive. 
         '''
-        if self._reac_dens is None:
-            self._reac_dens = self.reac_density()
-        if self._reac_norm_factor is None:
-            self._reac_norm_factor = self.reac_norm_factor()
+        if self.reac_dens is None:
+            self.reac_dens = self.reac_density()
+        if self.reac_norm_factor is None:
+            self.reac_norm_factor = self.reac_norm_factor()
 
-        self._norm_reac_dens = self._reac_dens / self._reac_norm_factor
-        return self._norm_reac_dens
+        self.norm_reac_dens = self.reac_dens / self.reac_norm_factor
+        return self.norm_reac_dens
 
     def reac_current(self):
         '''Computes the reactive current current[i,j] between nodes i
         and j, as the flow of reactive trajectories from i to j during
         one time step. 
         '''
-        assert self._q_f is not None, "The committor functions need \
+        assert self.q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
-        S = self._S
+        S = self.S
 
         # compute current (see numpy broadcasting rules)
-        q_b = self._q_b.reshape(S, 1)
-        stat_dens = self._stat_dens.reshape(S, 1)
-        P = self._P
-        q_f = self._q_f
+        q_b = self.q_b.reshape(S, 1)
+        stat_dens = self.stat_dens.reshape(S, 1)
+        P = self.P
+        q_f = self.q_f
         current = q_b * stat_dens * P * q_f
         
         # compute effective current
         eff_current = np.maximum(np.zeros((S, S)), current - current.T)
         
-        self._current = current
-        self._eff_current = eff_current
+        self.current = current
+        self.eff_current = eff_current
                         
-        return self._current, self._eff_current
+        return self.current, self.eff_current
 
     def transition_rate(self):
         '''The transition rate is the average flow of reactive
@@ -255,26 +255,26 @@ class tpt:
         into B
         '''
 
-        assert self._current is not None, "The reactive current first \
+        assert self.current is not None, "The reactive current first \
         needs to be computed by using the method reac_current"
 
-        self._rate = np.sum(self._current[self._ind_A, :])
-        return self._rate
+        self.rate = np.sum(self.current[self.ind_A, :])
+        return self.rate
 
     def mean_transition_length(self):
         '''The mean transition length can be computed as the ration of
         the reac_norm_factor and the transition rate.
         '''
 
-        assert self._reac_norm_factor is not None, "The normalization \
+        assert self.reac_norm_factor is not None, "The normalization \
         factor first needs to be computed by using the method \
         reac_norm_factor"
         
-        assert self._rate is not None, "The transition rate first needs \
+        assert self.rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self._length = self._reac_norm_factor / self._rate
-        return self._length
+        self.length = self.reac_norm_factor / self.rate
+        return self.length
 
     def current_density(self):
         '''
@@ -282,11 +282,11 @@ class tpt:
         over all neighbours of the node.
         '''
 
-        assert self._current is not None, "The reactive current first \
+        assert self.current is not None, "The reactive current first \
         needs to be computed by using the method reac_current"
 
-        self._current_dens = np.sum(self._eff_current, axis=1)
-        return self._current_dens
+        self.current_dens = np.sum(self.eff_current, axis=1)
+        return self.current_dens
 
     def compute_statistics(self):
         '''
@@ -310,12 +310,12 @@ class tpt:
         '''
         np.savez(
             npz_path,
-            stat_dens=self._stat_dens,
-            q_f=self._q_f,
-            q_b=self._q_b,
-            reac_norm_factor=self._reac_norm_factor,
-            norm_reac_dens=self._norm_reac_dens,
-            eff_current=self._eff_current,
-            rate=self._rate,
-            length=self._length,
+            stat_dens=self.stat_dens,
+            q_f=self.q_f,
+            q_b=self.q_b,
+            reac_norm_factor=self.reac_norm_factor,
+            norm_reac_dens=self.norm_reac_dens,
+            eff_current=self.eff_current,
+            rate=self.rate,
+            length=self.length,
         )

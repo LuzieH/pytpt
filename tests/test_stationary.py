@@ -98,8 +98,8 @@ class TestStationary:
         return tpt_stationary
 
     def test_transition_matrix(self, tpt_stationary):
-        S = tpt_stationary._S
-        P = tpt_stationary._P
+        S = tpt_stationary.S
+        P = tpt_stationary.P
 
         assert P.shape == (S, S)
         assert np.isnan(P).any() == False
@@ -107,9 +107,9 @@ class TestStationary:
         assert is_irreducible_matrix(P)
 
     def test_backward_transition_matrix(self, tpt_stationary):
-        S = tpt_stationary._S
+        S = tpt_stationary.S
         stationary_density = tpt_stationary.stationary_density()
-        P = tpt_stationary._P
+        P = tpt_stationary.P
         P_back = tpt_stationary.backward_transitions()
 
         assert P_back.shape == (S, S)
@@ -124,9 +124,9 @@ class TestStationary:
                 )
 
     def test_stationary_density(self, tpt_stationary):
-        S = tpt_stationary._S
+        S = tpt_stationary.S
         stationary_density = tpt_stationary.stationary_density()
-        P = tpt_stationary._P
+        P = tpt_stationary.P
         P_back = tpt_stationary.backward_transitions()
         
         assert stationary_density.shape == (S,)
@@ -137,8 +137,8 @@ class TestStationary:
         assert np.isclose(stationary_density.dot(P_back), stationary_density).all()
 
     def test_committors(self, tpt_stationary):
-        q_f, q_b = tpt_stationary._q_f, tpt_stationary._q_b
-        S = tpt_stationary._S
+        q_f, q_b = tpt_stationary.q_f, tpt_stationary.q_b
+        S = tpt_stationary.S
 
         assert q_f.shape == (S,)
         assert np.isnan(q_f).any() == False
@@ -154,7 +154,7 @@ class TestStationary:
         reac_dens = tpt_stationary.reac_density()
         reac_norm_factor = tpt_stationary.reac_norm_factor()
         norm_reac_dens = tpt_stationary.norm_reac_density()
-        S = tpt_stationary._S
+        S = tpt_stationary.S
 
         assert reac_dens.shape == (S,)
         assert np.isnan(reac_dens).any() == False
@@ -170,7 +170,7 @@ class TestStationary:
         
     def test_current(self, tpt_stationary):
         reac_current, eff_current = tpt_stationary.reac_current()
-        S = tpt_stationary._S
+        S = tpt_stationary.S
 
         assert reac_current.shape == (S,S)
         assert np.isnan(reac_current).any() == False
@@ -184,9 +184,9 @@ class TestStationary:
 
     def test_broadcasting_backward_transitions(self, tpt_stationary):
         # compute P_back without broadcasting
-        S = tpt_stationary._S
-        P = tpt_stationary._P
-        stat_dens = tpt_stationary._stat_dens
+        S = tpt_stationary.S
+        P = tpt_stationary.P
+        stat_dens = tpt_stationary.stat_dens
         P_back = np.zeros(np.shape(P))
         for i in np.arange(S):
             for j in np.arange(S):
@@ -202,11 +202,11 @@ class TestStationary:
 
     def test_broadcasting_current(self, tpt_stationary):
         # compute current and effective current without broadcasting 
-        S = tpt_stationary._S
-        P = tpt_stationary._P
-        stat_dens = tpt_stationary._stat_dens
-        q_f = tpt_stationary._q_f
-        q_b = tpt_stationary._q_b
+        S = tpt_stationary.S
+        P = tpt_stationary.P
+        stat_dens = tpt_stationary.stat_dens
+        q_f = tpt_stationary.q_f
+        q_b = tpt_stationary.q_b
         current = np.zeros(np.shape(P))
         eff_current = np.zeros(np.shape(P))
         for i in np.arange(S):

@@ -74,7 +74,7 @@ def Tn(n):
 N = 6 #time window
 
 # initial density
-init_dens_well3_finite = well3._stat_dens
+init_dens_well3_finite = well3.stat_dens
 # instantiate
 well3_finite = finite.tpt(
     Tn,
