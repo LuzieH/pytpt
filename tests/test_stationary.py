@@ -213,11 +213,11 @@ class TestStationary:
             for j in np.arange(S):
                 current[i, j] = stat_dens[i] * q_b[i] * P[i, j] * q_f[j]
                 if i + 1 > j:
-                    eff_current[i, j] = np.max(
-                        [0, current[i, j] - current[j, i]]
+                    eff_current[i, j] = np.maximum(
+                        0, current[i, j] - current[j, i]
                     )
-                    eff_current[j, i] = np.max(
-                        [0, current[j, i] - current[i, j]]
+                    eff_current[j, i] = np.maximum(
+                        0, current[j, i] - current[i, j]
                     )
         # compute current and effective current (with broadcasting)
         current_broadcast, eff_current_broadcast = tpt_stationary.reac_current()
@@ -226,4 +226,3 @@ class TestStationary:
         assert eff_current_broadcast.shape == eff_current.shape
         assert np.allclose(current_broadcast, current)
         assert np.allclose(eff_current_broadcast, eff_current)
-

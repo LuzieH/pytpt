@@ -124,10 +124,10 @@ class tpt:
  
         for m in range(self.M):
             # compute backward transition matrix
-            idx = np.where(self.stat_dens[np.mod(m, self.M),:] != 0)[0]
-            P_back_m[m, idx,:] = self.P(m-1).T[idx,:] * \
-                            self.stat_dens[np.mod(m-1, self.M), :] / \
-                            self.stat_dens[np.mod(m, self.M), idx].reshape(np.size(idx),1)
+            idx = np.where(self.stat_dens[np.mod(m, self.M), :] != 0)[0]
+            P_back_m[m, idx, :] = self.P(m-1).T[idx, :] \
+                                * self.stat_dens[np.mod(m - 1, self.M), :] \
+                                / self.stat_dens[np.mod(m, self.M), idx].reshape(np.size(idx), 1)
 
         # store backward matrix in a function that assigns each time point
         # to the corresponding transition matrix
@@ -307,13 +307,15 @@ class tpt:
 
         for m in range(self.M):
             # compute current
-            current[m,:,:] = self.stat_dens[m, :].reshape(S,1) * \
-                        self.q_b[m,:].reshape(S,1) * self.P(m) * \
-                        self.q_f[np.mod(m+1,self.M), :]
+            current[m,:,:] = self.stat_dens[m, :].reshape(S, 1) \
+                           * self.q_b[m, :].reshape(S, 1) * self.P(m) \
+                           * self.q_f[np.mod(m + 1, self.M), :]
 
             # compute effective current
-            eff_current[m,:,:] = np.maximum(np.zeros((S, S)),\
-                                            current[m,:,:] - current[m,:,:].T)
+            eff_current[m, :, :] = np.maximum(
+                np.zeros((S, S)),
+                current[m, :, :] - current[m, :, :].T, 
+            )
 
         self.current = current
         self.eff_current = eff_current

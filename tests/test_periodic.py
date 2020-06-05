@@ -188,13 +188,74 @@ class TestPeriodic:
         S = tpt_periodic.S
         M = tpt_periodic.M  
         
-        assert reac_current.shape == (M,S,S)
+        assert reac_current.shape == (M, S, S)
         assert np.isnan(reac_current).any() == False
         assert np.greater_equal(reac_current, 0).all() 
         assert np.less_equal(reac_current, 1).all() 
         
-        assert eff_current.shape == (M,S,S)
+        assert eff_current.shape == (M, S, S)
         assert np.isnan(eff_current).any() == False
         assert np.greater_equal(eff_current, 0).all() 
         assert np.less_equal(eff_current, 1).all()
- 
+    
+    def test_broadcasting_backward_transitions(self, tpt_periodic):
+        # compute P_back without broadcasting
+        S = tpt_periodic.S
+        M = tpt_periodic.M
+        P = tpt_periodic.P
+        stat_dens = tpt_periodic.stat_dens
+        
+        P_back_m = np.zeros((M, S, S))
+        for m in range(M):
+            for i in np.arange(S):
+                for j in np.arange(S):
+                    if stat_dens[np.mod(m, M), j] > 0:
+                        P_back_m[m, j, i] = P(m - 1)[i, j] \
+                                        * stat_dens[np.mod(m - 1, M), i] \
+                                        / stat_dens[np.mod(m, M), j]
+        def P_back(k):
+            return P_back_m[np.mod(k, M), :, :]
+
+
+        # compute P_back (with broadcasting)
+        P_back_broadcast = tpt_periodic.backward_transitions()
+        
+        for m in range(M):
+            assert P_back_broadcast(m).shape == P_back(m).shape
+            assert np.allclose(P_back_broadcast(m), P_back(m))
+
+
+    def test_broadcasting_current(self, tpt_periodic):
+        # compute current and effective current without broadcasting 
+        S = tpt_periodic.S
+        M = tpt_periodic.M
+        P = tpt_periodic.P
+        stat_dens = tpt_periodic.stat_dens
+        q_f = tpt_periodic.q_f
+        q_b = tpt_periodic.q_b
+
+        current = np.zeros((M, S, S))
+        eff_current = np.zeros((M, S, S))
+        
+        for m in range(M):
+            for i in np.arange(S):
+                for j in np.arange(S):
+                    current[m, i, j] = stat_dens[m, i] \
+                                     * q_b[m, i] \
+                                     * P(m)[i, j] \
+                                     * q_f[np.mod(m + 1, M), j]
+                    if i + 1 > j:
+                        eff_current[m, i, j] = np.maximum(
+                            0, current[m, i, j] - current[m, j, i]
+                        )
+                        eff_current[m, j, i] = np.maximum(
+                            0, current[m, j, i] - current[m, i, j]
+                        )
+
+        # compute current and effective current (with broadcasting)
+        current_broadcast, eff_current_broadcast = tpt_periodic.reac_current()
+
+        assert current_broadcast.shape == current.shape
+        assert eff_current_broadcast.shape == eff_current.shape
+        assert np.allclose(current_broadcast, current)
+        assert np.allclose(eff_current_broadcast, eff_current)
