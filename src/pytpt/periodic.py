@@ -147,37 +147,38 @@ class tpt:
         dim_B = np.size(self.ind_B)
         dim_C = np.size(self.ind_C)
 
-        # find forward committor q^+_0 at time 0
-        # to solve: (I-D)q^+_0 = b (see the proof of Lemma 4.6. of our paper)
-
-        # D: multiplied transition matrices over period with transitions only in C
-        # D = P(0)|C x... x P(M-1)|C
+        # first, find the forward committor q^+_0 at time 0
+        # we have to solve: a q^+_0 = (I-D)q^+_0 = b (see the proof of Lemma 4.6. of our paper)
+        # where D is the result of multipling the transition matrices restricted in C
+        # over one period, D = P(0)|C x... x P(M-1)|C
+        # and b = sum_tau^M  P(0)|C x ... x P(tau-1)|C,B x (1)
+        
+        # compute a=(I-D) and b
         D = np.diag(np.ones(dim_C))
-        # b: b = sum_tau^M  P(0)|C x ... x P(tau-1)|C,B x (1)
         b = np.zeros(dim_C)  
-
-        # filling D and b
         for m in np.arange(self.M):
-            b +=  (D.dot(
-                    self.P(m)[np.ix_(self.ind_C, self.ind_B)]
-                )).dot(np.ones(dim_B))
-            D = D.dot(self.P(m)[np.ix_(self.ind_C, self.ind_C)])
-            
-        # find q_0^+ on C
+            P_m_CB = self.P(m)[np.ix_(self.ind_C, self.ind_B)]
+            P_m_CC = self.P(m)[np.ix_(self.ind_C, self.ind_C)]
+            b += D.dot(P_m_CB).dot(np.ones(dim_B))
+            D = D.dot(P_m_CC)
+
+        a = np.eye(dim_C) - D
+
+        # initialize forward committor
         q_f = np.zeros((self.M, self.S))
-        q_f[0, self.ind_C] = solve(np.eye(dim_C) - D, b)#inv_B.dot(b)
-        # q_0^+ on B
+            
+        # compute q_0^+ on C
+        q_f[0, self.ind_C] = solve(a, b)
+
+        # set q_0^+ on A and B
         q_f[:, self.ind_B] = 1
 
-        # compute committors at remaining times
-        for m in np.arange(1, self.M)[::-1]:
-            q_f[m, self.ind_C] = self.P(m)[self.ind_C, :].dot(
-                q_f[np.mod(m + 1, self.M), :]
-            )
+        # second, compute forward committor at remaining times iteratively
+        for m in np.flip(np.arange(1, self.M)):
+            P_m_CS = self.P(m)[self.ind_C, :]
+            q_f[m, self.ind_C] = P_m_CS.dot(q_f[np.mod(m + 1, self.M), :])
 
         self.q_f = q_f
- 
- 
         return self.q_f 
     
     def backward_committor(self):
@@ -192,35 +193,35 @@ class tpt:
         dim_C = np.size(self.ind_C)
 
 
-        # backward committor q^-_0 at time 0
-        # to solve (I-D_back)q^-_0 = a
+        # first, find backward committor q^-_0 at time 0
+        # to solve a q^-_0 = (I-D_back)q^-_0 = a
         # multiplied backward transition matrix over all times with only
         # transitions in C
-        D_back = np.diag(np.ones(dim_C))
-        a = np.zeros(dim_C)  # remaining part of the equation
 
+        D_back = np.diag(np.ones(dim_C))
+        b = np.zeros(dim_C)
+        
+        # flip loop over the period, but start at 0
         times = np.arange(1, self.M + 1)[::-1]
         times[0] = 0
 
         for m in times:
-            a += (D_back.dot(
-                    self.P_back(m)[np.ix_(self.ind_C, self.ind_A)]
-                )).dot(np.ones(dim_A))
-            D_back = D_back.dot(
-                self.P_back(m)[np.ix_(self.ind_C, self.ind_C)]
-            )
+            P_back_m_CA = self.P_back(m)[np.ix_(self.ind_C, self.ind_A)]
+            P_back_m_CC = self.P_back(m)[np.ix_(self.ind_C, self.ind_C)]
 
+            b += D_back.dot(P_back_m_CA).dot(np.ones(dim_A))
+            D_back = D_back.dot(P_back_m_CC)
+        a = np.eye(dim_C) - D_back
  
-        # find q_0^- on C
+        # initialize q^-, compute q_0^- on C and set q_0^= on A
         q_b = np.zeros((self.M, self.S))
-        q_b[0, self.ind_C] = solve(np.eye(dim_C)-D_back,a)
+        q_b[0, self.ind_C] = solve(a, b)
         q_b[:, self.ind_A] = 1
 
-        # compute committor for remaining times
+        # second, compute committor for remaining times iteratively
         for m in np.arange(1, self.M):
-            q_b[m, self.ind_C] = self.P_back(m)[self.ind_C, :].dot(
-                q_b[m-1, :]
-            )
+            P_back_m_CS = self.P_back(m)[self.ind_C, :]
+            q_b[m, self.ind_C] = P_back_m_CS.dot(q_b[m - 1, :])
 
         self.q_b = q_b
 

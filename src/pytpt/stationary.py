@@ -137,17 +137,20 @@ class tpt:
         if self.P_back is None:
             # compute backward transition matrix
             self.backward_transitions()
+        
+        # initialize forward committor
+        q_f = np.zeros(self.S)
  
-        # forward  transition matrix from states in C to C
-        P_C = self.P[np.ix_(self.ind_C, self.ind_C)]
-        # amd from C to B
+        # forward transition matrix from states in C to C
+        P_CC = self.P[np.ix_(self.ind_C, self.ind_C)]
+        
+        # and from C to B
         P_CB = self.P[np.ix_(self.ind_C, self.ind_B)]
 
-        q_f = np.zeros(self.S)
         # compute forward committor on C, the transition region
+        a = np.eye(np.size(self.ind_C)) - P_CC
         b = np.sum(P_CB, axis=1)
-        
-        q_f[self.ind_C] = solve(np.eye(np.size(self.ind_C)) - P_C, b)
+        q_f[self.ind_C] = solve(a, b)
        
         # add entries to the forward committor vector on A, B
         # (i.e. q_f is 0 on A, 1 on B)
@@ -165,15 +168,17 @@ class tpt:
             # compute backward transition matrix
             self.backward_transitions()
  
+        # initialize backward committor
+        q_b = np.zeros(self.S)
+
         # backward transition matrix restricted to C to C and from C to A
-        P_back_C = self.P_back[np.ix_(self.ind_C, self.ind_C)]
+        P_back_CC = self.P_back[np.ix_(self.ind_C, self.ind_C)]
         P_back_CA = self.P_back[np.ix_(self.ind_C, self.ind_A)]
         
-        q_b = np.zeros(self.S)
         # compute backward committor on C
-        a = np.sum(P_back_CA, axis=1)
-
-        q_b[self.ind_C] = solve(np.eye(np.size(self.ind_C)) - P_back_C, a)      
+        a = np.eye(np.size(self.ind_C)) - P_back_CC
+        b = np.sum(P_back_CA, axis=1)
+        q_b[self.ind_C] = solve(a, b)      
  
         # add entries to committor vector on A, B
         # (i.e. q_b is 1 on A, 0 on B)
