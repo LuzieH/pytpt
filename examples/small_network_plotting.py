@@ -58,7 +58,7 @@ network_conv = np.load(
 stat_dens = network_ergodic['stat_dens']
 q_f = network_ergodic['q_f']
 q_b = network_ergodic['q_b']
-reac_norm_factor = network_ergodic['reac_norm_factor']
+reac_norm_fact = network_ergodic['reac_norm_fact']
 norm_reac_dens = network_ergodic['norm_reac_dens']
 eff_current = network_ergodic['eff_current']
 rate = network_ergodic['rate']
@@ -67,7 +67,7 @@ length = network_ergodic['length']
 stat_dens_p = network_periodic['stat_dens']
 q_f_p = network_periodic['q_f']
 q_b_p = network_periodic['q_b']
-reac_norm_factor_p = network_periodic['reac_norm_factor']
+reac_norm_fact_p = network_periodic['reac_norm_fact']
 norm_reac_dens_p = network_periodic['norm_reac_dens']
 eff_current_p = network_periodic['eff_current']
 rate_p = network_periodic['rate']
@@ -77,7 +77,7 @@ av_length_p = network_periodic['av_length']
 dens_f = network_finite['dens']
 q_f_f = network_finite['q_f']
 q_b_f = network_finite['q_b']
-reac_norm_factor_f = network_finite['reac_norm_factor']
+reac_norm_fact_f = network_finite['reac_norm_fact']
 norm_reac_dens_f = network_finite['norm_reac_dens']
 eff_current_f = network_finite['eff_current']
 rate_f = network_finite['rate']
@@ -87,7 +87,7 @@ av_length_f = network_finite['av_length']
 dens_inhom = network_inhom['dens']
 q_f_inhom = network_inhom['q_f']
 q_b_inhom = network_inhom['q_b']
-reac_norm_factor_inhom = network_inhom['reac_norm_factor']
+reac_norm_fact_inhom = network_inhom['reac_norm_fact']
 norm_reac_dens_inhom = network_inhom['norm_reac_dens']
 eff_current_inhom = network_inhom['eff_current']
 rate_inhom = network_inhom['rate']
@@ -365,7 +365,7 @@ plot_rate(
     average_rate_legend=r'$\bar{k}^{AB}_N$',
 )
 plot_reactiveness(
-    reac_norm_factor=reac_norm_factor_f,
+    reac_norm_fact=reac_norm_fact_f,
     file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete finite-time reactiveness',
 )
@@ -438,7 +438,7 @@ plot_rate(
     average_rate_legend=r'$\bar{k}^{AB}_n$',
 )
 plot_reactiveness(
-    reac_norm_factor=reac_norm_factor_inhom,
+    reac_norm_fact=reac_norm_fact_inhom,
     file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete finite-time, time-inhomogeneous reactiveness',
 )

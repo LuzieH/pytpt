@@ -370,34 +370,34 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')  
 
 
-def plot_reactiveness(reac_norm_factor, file_path, title):
+def plot_reactiveness(reac_norm_fact, file_path, title):
     """
     This function plots the probability to be reactive (given by 
-    reac_norm_factor) in time. 
+    reac_norm_fact) in time. 
     
     Args:
-    reac_norm_factor : ndarray of size (# times, 1)
-        reac_norm_factor for each time point
+    reac_norm_fact : ndarray of size (# times, 1)
+        reac_norm_fact for each time point
     file_path: string
         path to where the file should be saved eg ".../plots/image.png""
     title : string
         overall title
     """
-    timeframes = len(reac_norm_factor)
+    timeframes = len(reac_norm_fact)
 
     fig, ax = plt.subplots(1, 1, figsize=(5*timeframes, 5))
 
     plt.scatter(
         np.arange(timeframes),
-        reac_norm_factor[:],
+        reac_norm_fact[:],
         color='black',
         s=20,
         label='$\sum_{j \in C} \mu_j^{R}(n)$',
     )
 
     plt.title(title, fontsize=20)
-    min_norm_factor = np.nanmin(reac_norm_factor)
-    max_norm_factor = np.nanmax(reac_norm_factor)
+    min_norm_factor = np.nanmin(reac_norm_fact)
+    max_norm_factor = np.nanmax(reac_norm_fact)
     plt.ylim(
         min_norm_factor - (max_norm_factor - min_norm_factor)/4,
         max_norm_factor + (max_norm_factor - min_norm_factor)/4,

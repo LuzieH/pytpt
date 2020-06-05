@@ -78,7 +78,7 @@ class tpt:
         self.q_b = None  # backward committor
         self.q_f = None  # forward committor
         self.reac_dens = None  # reactive density
-        self.reac_norm_factor = None  # reactive normalization factor 
+        self.reac_norm_fact = None  # reactive normalization factor 
         self.norm_reac_dens = None  # normalized reactive density
         self.current = None  # reactive current
         self.eff_current = None  # effective reactive current
@@ -258,12 +258,12 @@ class tpt:
         if self.reac_dens is None:
             self.reac_dens = self.reac_density()
 
-        reac_norm_factor = np.zeros(self.M)
+        reac_norm_fact = np.zeros(self.M)
         for m in range(0, self.M):
-            reac_norm_factor[m] = np.sum(self.reac_dens[m, :])
+            reac_norm_fact[m] = np.sum(self.reac_dens[m, :])
 
-        self.reac_norm_factor = reac_norm_factor
-        return self.reac_norm_factor
+        self.reac_norm_fact = reac_norm_fact
+        return self.reac_norm_fact
 
     def norm_reac_density(self):
         '''Given the reactive density and its normalization factor, 
@@ -278,14 +278,14 @@ class tpt:
         if self.reac_dens is None:                                                          
             self.reac_dens = self.reac_density()                                                        
         
-        if self.reac_norm_factor is None:                                                   
-            self.reac_norm_factor = self.reac_norm_factor()                                             
+        if self.reac_norm_fact is None:                                                   
+            self.reac_norm_fact = self.reac_norm_factor()                                             
 
         norm_reac_dens = np.zeros((self.M, self.S))
         for m in range(self.M):
-            if self.reac_norm_factor[m] != 0:
+            if self.reac_norm_fact[m] != 0:
                 norm_reac_dens[m, :] = self.reac_dens[m, :] /\
-                                       self.reac_norm_factor[m]
+                                       self.reac_norm_fact[m]
             else:
                 norm_reac_dens[m, :] = np.nan
 
@@ -356,17 +356,17 @@ class tpt:
 
     def mean_transition_length(self):
         '''The mean transition length can be computed as the ration of
-        the reac_norm_factor and the transition rate.
+        the reac_norm_fact and the transition rate.
         '''
 
-        assert self.reac_norm_factor is not None, "The normalization \
+        assert self.reac_norm_fact is not None, "The normalization \
         factor first needs to be computed by using the method \
         reac_norm_factor"
         
         assert self.rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self.av_length = np.nansum(self.reac_norm_factor) / \
+        self.av_length = np.nansum(self.reac_norm_fact) / \
                 np.nansum(self.rate[:, 0])
         
         return self.av_length 
@@ -414,7 +414,7 @@ class tpt:
             stat_dens=self.stat_dens,
             q_f=self.q_f,
             q_b=self.q_b,
-            reac_norm_factor=self.reac_norm_factor,
+            reac_norm_fact=self.reac_norm_fact,
             norm_reac_dens=self.norm_reac_dens,
             eff_current=self.eff_current,
             rate=self.rate,

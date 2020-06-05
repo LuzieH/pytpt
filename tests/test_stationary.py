@@ -152,7 +152,7 @@ class TestStationary:
 
     def test_reac_density(self, tpt_stationary):
         reac_dens = tpt_stationary.reac_density()
-        reac_norm_factor = tpt_stationary.reac_norm_factor()
+        reac_norm_fact = tpt_stationary.reac_norm_factor()
         norm_reac_dens = tpt_stationary.norm_reac_density()
         S = tpt_stationary.S
 
@@ -166,7 +166,7 @@ class TestStationary:
         assert np.greater_equal(norm_reac_dens, 0).all() 
         assert np.less_equal(norm_reac_dens, 1).all()
         
-        assert np.isclose(reac_dens, reac_norm_factor * norm_reac_dens).all()
+        assert np.isclose(reac_dens, reac_norm_fact * norm_reac_dens).all()
         
     def test_current(self, tpt_stationary):
         reac_current, eff_current = tpt_stationary.reac_current()

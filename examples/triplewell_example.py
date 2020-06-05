@@ -131,7 +131,7 @@ for N_bif in N_bif_array:
     [q_f_f_bif, q_b_f_bif] = well3_finite_bif.committor()
      
     # normalized reactive density
-    reac_norm_factor_f_bif = well3_finite_bif.reac_norm_factor()
+    reac_norm_fact_f_bif = well3_finite_bif.reac_norm_factor()
     norm_reac_dens_f_bif = well3_finite_bif.norm_reac_density()
     
     # and reactive currents

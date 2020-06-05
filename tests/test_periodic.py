@@ -168,7 +168,7 @@ class TestPeriodic:
         
     def test_reac_density(self, tpt_periodic):
         reac_dens = tpt_periodic.reac_density()
-        reac_norm_factor = tpt_periodic.reac_norm_factor()
+        reac_norm_fact = tpt_periodic.reac_norm_factor()
         norm_reac_dens = tpt_periodic.norm_reac_density()
         S = tpt_periodic.S
         M = tpt_periodic.M  

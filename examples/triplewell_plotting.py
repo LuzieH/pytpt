@@ -48,7 +48,7 @@ triplewell_bif = np.load(
 stat_dens = triplewell_ergodic['stat_dens']
 q_f = triplewell_ergodic['q_f']
 q_b = triplewell_ergodic['q_b']
-reac_norm_factor = triplewell_ergodic['reac_norm_factor']
+reac_norm_fact = triplewell_ergodic['reac_norm_fact']
 norm_reac_dens = triplewell_ergodic['norm_reac_dens']
 eff_current = triplewell_ergodic['eff_current']
 rate = triplewell_ergodic['rate']
@@ -57,7 +57,7 @@ length = triplewell_ergodic['length']
 stat_dens_p = triplewell_periodic['stat_dens']
 q_f_p = triplewell_periodic['q_f']
 q_b_p = triplewell_periodic['q_b']
-reac_norm_factor_p = triplewell_periodic['reac_norm_factor']
+reac_norm_fact_p = triplewell_periodic['reac_norm_fact']
 norm_reac_dens_p = triplewell_periodic['norm_reac_dens']
 eff_current_p = triplewell_periodic['eff_current']
 rate_p = triplewell_periodic['rate']
@@ -67,7 +67,7 @@ av_length_p = triplewell_periodic['av_length']
 dens_f = triplewell_finite['dens']
 q_f_f = triplewell_finite['q_f']
 q_b_f = triplewell_finite['q_b']
-reac_norm_factor_f = triplewell_finite['reac_norm_factor']
+reac_norm_fact_f = triplewell_finite['reac_norm_fact']
 norm_reac_dens_f = triplewell_finite['norm_reac_dens']
 eff_current_f = triplewell_finite['eff_current']
 rate_f = triplewell_finite['rate']
@@ -206,7 +206,7 @@ plot_rate(
 )
  
 plot_reactiveness(
-    reac_norm_factor=reac_norm_factor_p,
+    reac_norm_fact=reac_norm_fact_p,
     file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete periodic reactiveness',
 )
@@ -269,7 +269,7 @@ plot_rate(
     average_rate_legend=r'$\bar{k}^{AB}_N$',
 )
 plot_reactiveness(
-    reac_norm_factor=reac_norm_factor_f,
+    reac_norm_fact=reac_norm_fact_f,
     file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
     title='Discrete finite-time, time-homogeneous reactiveness',
 )
