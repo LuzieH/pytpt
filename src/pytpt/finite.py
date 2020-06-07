@@ -27,7 +27,7 @@ class tpt:
                 of the state space St={1,2,...,S} 
             - if the dynamics are time-dependent: 
                 function P(n) is a transition matrix defined for 
-                n=0,...,N-1
+                n=0,...,N-2
         N: int
             size of the time interval {0,1,...,N-1}
         ind_A: array
@@ -44,7 +44,7 @@ class tpt:
             matrices need to be inputted as a function mapping time to \
             the corresponding transition matrix."
 
-        assert (isinstance(P(0),np.ndarray) and not isinstance(P(0),np.matrix)), \
+        assert (isinstance(P(0), np.ndarray) and not isinstance(P(0),np.matrix)), \
             "The inputted transition matrix function should map time to \
              an np.ndarray and not an np.matrix"
 
@@ -107,6 +107,29 @@ class tpt:
 
         self.dens = dens
         return dens
+  
+
+    def backward_transitions(self):
+        '''Computes the transition matrix backwards in time. Returns a
+        function that for each time n=1,...,N-1 assigns the backward transition
+        matrix at time n. When the stationary density in j is zero, the
+        corresponding transition matrix entries (row j) are set to 0.
+        '''
+        P_back_n = np.zeros((self.N, self.S, self.S))
+ 
+        # compute backward transition matrix at each time n
+        for n in range(1, self.N):
+            idx = np.where(self.dens[n, :] != 0)[0]
+            P_back_n[n, idx, :] = self.P(n - 1).T[idx, :] \
+                                * self.dens[n - 1, :] \
+                                / self.dens[n, idx].reshape(np.size(idx), 1)
+
+        # store backward matrix in a function that assigns each time point
+        # to the corresponding transition matrix
+        def P_back(n):
+            return P_back_n[n, :, :]
+
+        return P_back
 
 
     def committor(self):

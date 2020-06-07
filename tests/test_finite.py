@@ -146,8 +146,8 @@ class TestFinite:
 
     def test_transition_matrix(self, tpt_finite):
         S = tpt_finite.S
-        P = tpt_finite.P
         N = tpt_finite.N
+        P = tpt_finite.P
         
         for n in range(N):
             assert P(n).shape == (S, S)
@@ -157,8 +157,8 @@ class TestFinite:
 
     def test_density(self, tpt_finite):
         S = tpt_finite.S
-        density = tpt_finite.density()
         N = tpt_finite.N
+        density = tpt_finite.density()
         P = tpt_finite.P
         
         assert density.shape == (N, S)
@@ -168,7 +168,25 @@ class TestFinite:
         
         for n in range(N - 1):
             assert np.isclose(density[n, :].dot(P(n)), density[n + 1, :]).all()
-            
+    
+    def test_backward_transition_matrix(self, tpt_finite):
+        S = tpt_finite.S
+        N = tpt_finite.N        
+        density = tpt_finite.density()
+        P = tpt_finite.P
+        P_back = tpt_finite.backward_transitions()
+        
+        for n in range(1, N):
+            assert P_back(n).shape == (S, S)
+            assert np.isnan(P_back(n)).any() == False
+            assert is_stochastic_matrix(P_back(n))
+
+            for i in np.arange(S):
+                for j in np.arange(S):
+                    assert np.isclose(
+                        density[n, i] * P_back(n)[i, j],
+                        density[n-1, j] * P(n-1)[j, i],
+                    )
 
     def test_committors(self, tpt_finite):
         q_f, q_b = tpt_finite.q_f, tpt_finite.q_b
@@ -213,3 +231,29 @@ class TestFinite:
         assert eff_current.shape == (N, S, S)
         assert (np.fmin(eff_current,0)>=0).all() #np.greater_equal(eff_current, 0).all() 
         assert (np.fmin(eff_current,1)<=1).all() #np.less_equal(eff_current, 1).all()
+    
+    def test_broadcasting_backward_transitions(self, tpt_finite):
+        # compute P_back without broadcasting
+        S = tpt_finite.S
+        N = tpt_finite.N
+        P = tpt_finite.P
+        density = tpt_finite.density()
+        
+        P_back_n = np.zeros((N, S, S))
+        for n in range(1, N):
+            for i in np.arange(S):
+                for j in np.arange(S):
+                    if density[n, j] > 0:
+                        P_back_n[n, j, i] = P(n - 1)[i, j] \
+                                          * density[n - 1, i] \
+                                          / density[n, j]
+        def P_back(k):
+            return P_back_n[n, :, :]
+
+
+        # compute P_back (with broadcasting)
+        P_back_broadcast = tpt_finite.backward_transitions()
+        
+        for n in range(1, N):
+            assert P_back_broadcast(n).shape == P_back(n).shape
+            assert np.allclose(P_back_broadcast(n), P_back(n))

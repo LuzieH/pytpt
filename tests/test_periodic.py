@@ -112,32 +112,32 @@ class TestPeriodic:
 
     def test_transition_matrix(self, tpt_periodic):
         S = tpt_periodic.S
-        P = tpt_periodic.P
         M = tpt_periodic.M
+        P = tpt_periodic.P
         
         for m in range(M):
             assert P(m).shape == (S, S)
-            assert np.isclose(P(m), P(M+m)).all()
+            assert np.isclose(P(m), P(M + m)).all()
             assert np.isnan(P(m)).any() == False
             assert is_stochastic_matrix(P(m))
             assert is_irreducible_matrix(P(m))
 
     def test_stationary_density(self, tpt_periodic):
         S = tpt_periodic.S
-        stationary_density = tpt_periodic.stationary_density()
         M = tpt_periodic.M
+        stationary_density = tpt_periodic.stationary_density()
         
-        assert stationary_density.shape == (M,S)
+        assert stationary_density.shape == (M, S)
         assert np.isnan(stationary_density).any() == False
         assert np.greater_equal(stationary_density, 0).all() 
         assert np.less_equal(stationary_density, 1).all() 
             
     def test_backward_transition_matrix(self, tpt_periodic):
         S = tpt_periodic.S
+        M = tpt_periodic.M        
         stationary_density = tpt_periodic.stationary_density()
         P = tpt_periodic.P
         P_back = tpt_periodic.backward_transitions()
-        M = tpt_periodic.M        
         
         for m in range(M):
             assert P_back(m).shape == (S, S)
@@ -147,38 +147,38 @@ class TestPeriodic:
             for i in np.arange(S):
                 for j in np.arange(S):
                     assert np.isclose(
-                        stationary_density[m,i] * P_back(m)[i, j],
-                        stationary_density[m-1,j] * P(m-1)[j, i],
+                        stationary_density[m, i] * P_back(m)[i, j],
+                        stationary_density[m-1, j] * P(m-1)[j, i],
                     )
 
     def test_committors(self, tpt_periodic):
-        q_f, q_b = tpt_periodic.q_f, tpt_periodic.q_b
         S = tpt_periodic.S
         M = tpt_periodic.M     
+        q_f, q_b = tpt_periodic.q_f, tpt_periodic.q_b
 
-        assert q_f.shape == (M,S)
+        assert q_f.shape == (M, S)
         assert np.isnan(q_f).any() == False
         assert np.greater_equal(q_f, 0).all() 
         assert np.less_equal(q_f, 1).all() 
 
-        assert q_b.shape == (M,S)
+        assert q_b.shape == (M, S)
         assert np.isnan(q_b).any() == False
         assert np.greater_equal(q_b, 0).all() 
         assert np.less_equal(q_b, 1).all() 
         
     def test_reac_density(self, tpt_periodic):
+        S = tpt_periodic.S
+        M = tpt_periodic.M  
         reac_dens = tpt_periodic.reac_density()
         reac_norm_fact = tpt_periodic.reac_norm_factor()
         norm_reac_dens = tpt_periodic.norm_reac_density()
-        S = tpt_periodic.S
-        M = tpt_periodic.M  
         
-        assert reac_dens.shape == (M,S)
+        assert reac_dens.shape == (M, S)
         assert np.isnan(reac_dens).any() == False
         assert np.greater_equal(reac_dens, 0).all() 
         assert np.less_equal(reac_dens, 1).all() 
         
-        assert norm_reac_dens.shape == (M,S)
+        assert norm_reac_dens.shape == (M, S)
         assert np.greater_equal(norm_reac_dens, 0).all() 
         assert np.less_equal(norm_reac_dens, 1).all()
         
@@ -211,8 +211,8 @@ class TestPeriodic:
                 for j in np.arange(S):
                     if stat_dens[np.mod(m, M), j] > 0:
                         P_back_m[m, j, i] = P(m - 1)[i, j] \
-                                        * stat_dens[np.mod(m - 1, M), i] \
-                                        / stat_dens[np.mod(m, M), j]
+                                          * stat_dens[np.mod(m - 1, M), i] \
+                                          / stat_dens[np.mod(m, M), j]
         def P_back(k):
             return P_back_m[np.mod(k, M), :, :]
 

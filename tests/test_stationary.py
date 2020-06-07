@@ -137,8 +137,8 @@ class TestStationary:
         assert np.isclose(stationary_density.dot(P_back), stationary_density).all()
 
     def test_committors(self, tpt_stationary):
-        q_f, q_b = tpt_stationary.q_f, tpt_stationary.q_b
         S = tpt_stationary.S
+        q_f, q_b = tpt_stationary.q_f, tpt_stationary.q_b
 
         assert q_f.shape == (S,)
         assert np.isnan(q_f).any() == False
@@ -151,10 +151,10 @@ class TestStationary:
         assert np.less_equal(q_b, 1).all() 
 
     def test_reac_density(self, tpt_stationary):
+        S = tpt_stationary.S
         reac_dens = tpt_stationary.reac_density()
         reac_norm_fact = tpt_stationary.reac_norm_factor()
         norm_reac_dens = tpt_stationary.norm_reac_density()
-        S = tpt_stationary.S
 
         assert reac_dens.shape == (S,)
         assert np.isnan(reac_dens).any() == False
@@ -169,15 +169,15 @@ class TestStationary:
         assert np.isclose(reac_dens, reac_norm_fact * norm_reac_dens).all()
         
     def test_current(self, tpt_stationary):
-        reac_current, eff_current = tpt_stationary.reac_current()
         S = tpt_stationary.S
+        reac_current, eff_current = tpt_stationary.reac_current()
 
-        assert reac_current.shape == (S,S)
+        assert reac_current.shape == (S, S)
         assert np.isnan(reac_current).any() == False
         assert np.greater_equal(reac_current, 0).all() 
         assert np.less_equal(reac_current, 1).all() 
         
-        assert eff_current.shape == (S,S)
+        assert eff_current.shape == (S, S)
         assert np.isnan(eff_current).any() == False
         assert np.greater_equal(eff_current, 0).all() 
         assert np.less_equal(eff_current, 1).all()
@@ -185,8 +185,8 @@ class TestStationary:
     def test_broadcasting_backward_transitions(self, tpt_stationary):
         # compute P_back without broadcasting
         S = tpt_stationary.S
-        P = tpt_stationary.P
         stat_dens = tpt_stationary.stat_dens
+        P = tpt_stationary.P
         P_back = np.zeros(np.shape(P))
         for i in np.arange(S):
             for j in np.arange(S):
