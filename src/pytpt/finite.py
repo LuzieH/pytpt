@@ -41,15 +41,16 @@ class tpt:
             initial density at time 0
         '''
         assert (isfunction(P) or isfunction(P.func)), "The transition \
-          matrices need to be inputted as a function mapping time to \
-          the corresponding transition matrix."
+            matrices need to be inputted as a function mapping time to \
+            the corresponding transition matrix."
 
         assert (isinstance(P(0),np.ndarray) and not isinstance(P(0),np.matrix)), \
-            "The inputted transition matrix function should map time to\
-                an np.ndarray and not an np.matrix"
+            "The inputted transition matrix function should map time to \
+             an np.ndarray and not an np.matrix"
 
-        assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
-                and isinstance(ind_C, np.ndarray)),\
+        assert (isinstance(ind_A, np.ndarray) and
+                isinstance(ind_B, np.ndarray) and
+                isinstance(ind_C, np.ndarray)), \
             "The index sets have to be given as np.ndarrays."
 
         A = set(ind_A)
@@ -58,10 +59,13 @@ class tpt:
         intersection_AB = A.intersection(B)
         complement_AB = (C.difference(A)).difference(B)
         
-        assert  (len(A)>0 and len(B)>0 and len(C)>0 and \
-                len(intersection_AB) == 0 and complement_AB==C),\
-                "A and B have to be non-empty and disjoint sets \
-                such that also their complement C is non-empty."
+        assert  (len(A) > 0 and
+                 len(B) > 0 and
+                 len(C) > 0 and
+                 len(intersection_AB) == 0 and
+                 complement_AB==C), \
+            "A and B have to be non-empty and disjoint sets \
+             such that also their complement C is non-empty."
                 
         self.init_dens = init_dens
         self.ind_A = ind_A
@@ -91,18 +95,18 @@ class tpt:
         probability to be at time n in node i, the first index of the
         returned array is time n, the second is space/the node i. 
         '''
-        dens_n = np.zeros((self.N, self.S))
+        dens = np.zeros((self.N, self.S))
 
         # initial density
-        dens_n[0, :] = self.init_dens
+        dens[0, :] = self.init_dens
 
+        # compute density at time n+1 by applying the transition matrix
+        # to the density at time n
         for n in np.arange(self.N - 1):
-            # compute density at next time n+1 by applying the 
-            # transition matrix
-            dens_n[n + 1, :] = dens_n[n, :].dot(self.P(n))
+            dens[n + 1, :] = dens[n, :].dot(self.P(n))
 
-        self.dens = dens_n
-        return dens_n
+        self.dens = dens
+        return dens
 
 
     def committor(self):
@@ -115,11 +119,10 @@ class tpt:
         q_f = np.zeros((self.N, self.S))
         q_b = np.zeros((self.N, self.S))
 
-        # forward committor is 1 on B, 0 on A, at time N, q_f is 
-        # additionally 0 on C
+        # forward committor at time n=N is 1 on B and 0 on B^c
         q_f[self.N - 1, self.ind_B] = 1
-        # backward committor is 1 on A, 0 on B, at time 0, q_b is 
-        # additionally 0 on C
+
+        # backward committor at time n=0 is 1 on A and 0 on A^c  
         q_b[0, self.ind_A] = 1
 
         # density at time n-1
@@ -136,9 +139,8 @@ class tpt:
             P_CB = self.P(self.N - n - 1)[np.ix_(self.ind_C, self.ind_B)]
 
             # compute forward committor backwards in time
-            q_f[self.N -n - 1, self.ind_C] = P_CC.dot(
-                q_f[self.N-n, self.ind_C]
-            ) + P_CB.dot(np.ones(np.size(self.ind_B)))
+            q_f[self.N - n - 1, self.ind_C] = P_CC.dot(q_f[self.N - n, self.ind_C]) \
+                                            + P_CB.dot(np.ones(np.size(self.ind_B)))
 
             # forward committor is 1 on B, 0 on A
             q_f[self.N - n - 1, self.ind_B] = 1
@@ -155,14 +157,14 @@ class tpt:
                     d_n_inv[i] = 1 / d_n_inv[i]
                 # else: its just zero
 
-            # define restricted transition matrices
+            # define restricted transition matrices at time n-1
             P_CC = self.P(n - 1)[np.ix_(self.ind_C, self.ind_C)]
             P_AC = self.P(n - 1)[np.ix_(self.ind_A, self.ind_C)]
 
             # compute backward committor forward in time
-            q_b[n, self.ind_C] = d_n_inv*(
-                dens_nmin1[self.ind_C]*q_b[n-1, self.ind_C]
-            ).dot(P_CC) + d_n_inv*dens_nmin1[self.ind_A].dot(P_AC)
+            q_b[n, self.ind_C] = d_n_inv \
+                               * (dens_nmin1[self.ind_C] * q_b[n - 1, self.ind_C]).dot(P_CC) \
+                               + d_n_inv * dens_nmin1[self.ind_A].dot(P_AC)
 
             # backward committor is 1 on A, 0 on B
             q_b[n, self.ind_A] = 1
@@ -247,8 +249,8 @@ class tpt:
         norm_reac_dens = np.zeros((self.N, self.S))
         for n in range(0, self.N):
             if self.reac_norm_fact[n] != 0:
-                norm_reac_dens[n, :] = self.reac_dens[n, :] /\
-                                       self.reac_norm_fact[n] 
+                norm_reac_dens[n, :] = self.reac_dens[n, :] \
+                                     / self.reac_norm_fact[n] 
             else:
                 norm_reac_dens[n] = np.nan 
 
@@ -274,15 +276,18 @@ class tpt:
 
         dens_n = self.init_dens
 
-        for n in range(self.N-1):
+        for n in range(self.N - 1):
             # compute reactive current
-            current[n,:,:] = dens_n.reshape(S, 1) * \
-                            self.q_b[n, :].reshape(S, 1) * \
-                                self.P(n) * self.q_f[n+1, :]
+            current[n, :, :] = dens_n.reshape(S, 1) \
+                             * self.q_b[n, :].reshape(S, 1) \
+                             * self.P(n) \
+                             * self.q_f[n + 1, :]
 
             # compute effective current
-            eff_current[n,:,:] = np.maximum(np.zeros((S, S)),\
-                                            current[n,:,:] - current[n,:,:].T)
+            eff_current[n, :, :] = np.maximum(
+                np.zeros((S, S)),
+                current[n, :, :] - current[n, :, :].T,
+            )
 
             dens_n = dens_n.dot(self.P(n))
 
@@ -340,7 +345,7 @@ class tpt:
         to be computed by using the method transition_rate"
 
         self.av_length = np.nansum(self.reac_norm_fact) \
-            / np.nansum(self.rate[:, 0])
+                       / np.nansum(self.rate[:, 0])
         
         return self.av_length
     

@@ -37,18 +37,19 @@ class tpt:
         '''
 
         assert (isfunction(P) or isfunction(P.func)), \
-            ("The transition matrices need to be inputted as a function "
-             "mapping time to the corresponding transition matrix.")
+            "The transition matrices need to be inputted as a function \
+             mapping time to the corresponding transition matrix."
 
         assert np.isclose(P(0), P(M)).all(), "The transition matrix function \
-        needs to the time modulo M to the corresponding transition matrix."
+            needs to the time modulo M to the corresponding transition matrix."
         
-        assert (isinstance(P(0),np.ndarray) and not isinstance(P(0),np.matrix)), \
-            "The inputted transition matrix function should map time to\
-                an np.ndarray and not an np.matrix"
+        assert (isinstance(P(0), np.ndarray) and not isinstance(P(0), np.matrix)), \
+            "The inputted transition matrix function should map time to \
+             an np.ndarray and not an np.matrix"
                 
-        assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
-                and isinstance(ind_C, np.ndarray)),\
+        assert (isinstance(ind_A, np.ndarray) and
+                isinstance(ind_B, np.ndarray) and
+                isinstance(ind_C, np.ndarray)), \
             "The index sets have to be given as np.ndarrays."
 
         A = set(ind_A)
@@ -57,10 +58,13 @@ class tpt:
         intersection_AB = A.intersection(B)
         complement_AB = (C.difference(A)).difference(B)
         
-        assert  (len(A)>0 and len(B)>0 and len(C)>0 and \
-                len(intersection_AB) == 0 and complement_AB==C),\
-                ("A and B have to be non-empty and disjoint sets"
-               " such that also their complement C is non-empty.")
+        assert (len(A) > 0 and
+                len(B) > 0 and
+                len(C) > 0 and
+                len(intersection_AB) == 0 and
+                complement_AB == C), \
+            "A and B have to be non-empty and disjoint sets \
+             such that also their complement C is non-empty."
                 
         self.P = P
         self.M = M
@@ -285,8 +289,8 @@ class tpt:
         norm_reac_dens = np.zeros((self.M, self.S))
         for m in range(self.M):
             if self.reac_norm_fact[m] != 0:
-                norm_reac_dens[m, :] = self.reac_dens[m, :] /\
-                                       self.reac_norm_fact[m]
+                norm_reac_dens[m, :] = self.reac_dens[m, :] \
+                                     / self.reac_norm_fact[m]
             else:
                 norm_reac_dens[m, :] = np.nan
 
@@ -308,9 +312,10 @@ class tpt:
 
         for m in range(self.M):
             # compute current
-            current[m,:,:] = self.stat_dens[m, :].reshape(S, 1) \
-                           * self.q_b[m, :].reshape(S, 1) * self.P(m) \
-                           * self.q_f[np.mod(m + 1, self.M), :]
+            current[m, :, :] = self.stat_dens[m, :].reshape(S, 1) \
+                             * self.q_b[m, :].reshape(S, 1) \
+                             * self.P(m) \
+                             * self.q_f[np.mod(m + 1, self.M), :]
 
             # compute effective current
             eff_current[m, :, :] = np.maximum(
@@ -369,8 +374,8 @@ class tpt:
         assert self.rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
-        self.av_length = np.nansum(self.reac_norm_fact) / \
-                np.nansum(self.rate[:, 0])
+        self.av_length = np.nansum(self.reac_norm_fact) \
+                       / np.nansum(self.rate[:, 0])
         
         return self.av_length 
 

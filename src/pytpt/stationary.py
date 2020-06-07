@@ -64,10 +64,13 @@ class tpt:
         intersection_AB = A.intersection(B)
         complement_AB = (C.difference(A)).difference(B)
         
-        assert  (len(A) > 0 and len(B) > 0 and len(C) > 0 and \
-                len(intersection_AB) == 0 and complement_AB==C),\
-                "A and B have to be non-empty and disjoint sets \
-                such that also their complement C is non-empty."
+        assert (len(A) > 0 and
+                len(B) > 0 and
+                len(C) > 0 and
+                len(intersection_AB) == 0 and 
+                complement_AB == C), \
+            "A and B have to be non-empty and disjoint sets \
+             such that also their complement C is non-empty."
         
         
         self.P = P
