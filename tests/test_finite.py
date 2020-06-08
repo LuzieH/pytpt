@@ -257,12 +257,12 @@ class TestFinite:
         [reac_current, eff_current] = tpt_finite.reac_current()
         
         assert reac_current.shape == (N, S, S)
-        assert (np.fmin(reac_current,0)>=0).all() #np.greater_equal(reac_current, 0).all() 
-        assert (np.fmin(reac_current,1)<=1).all() #np.less_equal(reac_current, 1).all() 
+        assert (np.fmin(reac_current, 0) >= 0).all() #np.greater_equal(reac_current, 0).all() 
+        assert (np.fmin(reac_current, 1) <= 1).all() #np.less_equal(reac_current, 1).all() 
         
         assert eff_current.shape == (N, S, S)
-        assert (np.fmin(eff_current,0)>=0).all() #np.greater_equal(eff_current, 0).all() 
-        assert (np.fmin(eff_current,1)<=1).all() #np.less_equal(eff_current, 1).all()
+        assert (np.fmin(eff_current, 0) >= 0).all() #np.greater_equal(eff_current, 0).all() 
+        assert (np.fmin(eff_current, 1) <= 1).all() #np.less_equal(eff_current, 1).all()
     
     def test_broadcasting_backward_transitions(self, tpt_finite):
         # compute P_back without broadcasting
@@ -289,3 +289,41 @@ class TestFinite:
         for n in range(1, N):
             assert P_back_broadcast(n).shape == P_back(n).shape
             assert np.allclose(P_back_broadcast(n), P_back(n))
+    
+    def test_broadcasting_current(self, tpt_finite):
+        # compute current and effective current without broadcasting 
+        S = tpt_finite.S
+        N = tpt_finite.N
+        P = tpt_finite.P
+        density = tpt_finite.density()
+        tpt_finite.backward_transitions()
+        q_f = tpt_finite.forward_committor()
+        q_b = tpt_finite.backward_committor()
+
+        current = np.zeros((N, S, S))
+        eff_current = np.zeros((N, S, S))
+        
+        for n in range(N - 1):
+            for i in np.arange(S):
+                for j in np.arange(S):
+                    current[n, i, j] = density[n, i] \
+                                     * q_b[n, i] \
+                                     * P(n)[i, j] \
+                                     * q_f[n + 1, j]
+                    if i + 1 > j:
+                        eff_current[n, i, j] = np.maximum(
+                            0, current[n, i, j] - current[n, j, i]
+                        )
+                        eff_current[n, j, i] = np.maximum(
+                            0, current[n, j, i] - current[n, i, j]
+                        )
+        current[N - 1] = np.nan
+        eff_current[N - 1] = np.nan
+
+        # compute current and effective current (with broadcasting)
+        current_broadcast, eff_current_broadcast = tpt_finite.reac_current()
+
+        assert current_broadcast.shape == current.shape
+        assert eff_current_broadcast.shape == eff_current.shape
+        assert np.allclose(current_broadcast[:-1], current[:-1])
+        assert np.allclose(eff_current_broadcast[:-1], eff_current[:-1])
