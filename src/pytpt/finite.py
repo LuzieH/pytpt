@@ -76,6 +76,7 @@ class tpt:
         self.S = np.shape(P(0))[0]  # size of the state space
 
         self.dens = None # density
+        self.P_back = None # backward transition matrix
         self.q_b = None  # backward committor
         self.q_f = None  # forward committor
         self.reac_dens = None  # reactive density
@@ -129,7 +130,64 @@ class tpt:
         def P_back(n):
             return P_back_n[n, :, :]
 
+        self.P_back = P_back
+
         return P_back
+
+
+    def forward_committor(self):
+        '''Function that computes the forward committor q_f (probability
+        that the process at time n will next go to B rather than A) for
+        all time n in {0,..., N-1}
+        '''
+        q_f = np.zeros((self.N, self.S))
+        
+        # forward committor at time n=N is 1 on B and 0 on B^c
+        q_f[self.N - 1, self.ind_B] = 1
+
+        # iterate backward in time
+        for n in np.flip(np.arange(0, self.N - 1)):
+            # define the restricted transition matrices at time n
+            P_CC = self.P(n)[np.ix_(self.ind_C, self.ind_C)]
+            P_CB = self.P(n)[np.ix_(self.ind_C, self.ind_B)]
+
+            # compute forward committor in C
+            q_f[n, self.ind_C] = P_CC.dot(q_f[n + 1, self.ind_C]) \
+                               + np.sum(P_CB, axis=1)
+            
+            # forward committor is 1 on B and 0 on A
+            q_f[n, self.ind_B] = 1
+    
+        self.q_f = q_f
+        return self.q_f
+
+
+    def backward_committor(self):
+        '''Function that computes the backward committor q_b (probability
+        that the process at time n last came from A rather than B) for
+        all time n in {0,..., N-1}
+        '''
+        q_b = np.zeros((self.N, self.S))
+        
+        # backward committor at time n=0 is 1 on A and 0 on A^c  
+        q_b[0, self.ind_A] = 1
+
+        # iterate forward in time
+        for n in range(1, self.N):
+
+            # define restricted backward transition matrices at time n-1
+            P_back_CC = self.P_back(n)[np.ix_(self.ind_C, self.ind_C)]
+            P_back_CA = self.P_back(n)[np.ix_(self.ind_C, self.ind_A)]
+
+            # compute backward committor at C
+            q_b[n, self.ind_C] = P_back_CC.dot(q_b[n - 1, self.ind_C]) \
+                               + np.sum(P_back_CA, axis=1)
+            
+            # backward committor is 1 on A, 0 on B
+            q_b[n, self.ind_A] = 1
+        
+        self.q_b = q_b
+        return self.q_b
 
 
     def committor(self):

@@ -202,6 +202,20 @@ class TestFinite:
         assert np.isnan(q_b).any() == False
         assert np.greater_equal(q_b, 0).all() 
         assert np.less_equal(q_b, 1).all() 
+    
+    # temporary
+    def test_committors2(self, tpt_finite):
+        q_f, q_b = tpt_finite.q_f, tpt_finite.q_b
+
+        # commpute committors separately
+        tpt_finite.density()
+        tpt_finite.backward_transitions()
+        q_f_sep = tpt_finite.forward_committor()
+        q_b_sep = tpt_finite.backward_committor()
+
+        assert np.allclose(q_f, q_f_sep)
+        assert np.allclose(q_b, q_b_sep)
+
         
     def test_reac_density(self, tpt_finite):
         reac_dens = tpt_finite.reac_density()
