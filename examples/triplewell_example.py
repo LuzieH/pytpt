@@ -128,7 +128,7 @@ for N_bif in N_bif_array:
     )
      
     dens_f_bif = well3_finite_bif.density()
-    [q_f_f_bif, q_b_f_bif] = well3_finite_bif.committor()
+    [q_f_f_bif, q_b_f_bif] = well3_finite_bif.committors()
      
     # normalized reactive density
     reac_norm_fact_f_bif = well3_finite_bif.reac_norm_factor()

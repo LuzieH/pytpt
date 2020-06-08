@@ -140,7 +140,7 @@ class TestFinite:
             ind_C = np.where(states == 'C')[0]
         
         tpt_finite = finite.tpt(P, N, ind_A, ind_B, ind_C, init_dens)
-        tpt_finite.committor()
+        tpt_finite.committors()
         
         return tpt_finite
 

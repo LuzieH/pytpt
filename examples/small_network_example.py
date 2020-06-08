@@ -165,7 +165,7 @@ def main():
         )
         
         # compute statistics
-        [q_f_ex, q_b_ex] = small_finite_ex.committor()
+        [q_f_ex, q_b_ex] = small_finite_ex.committors()
         q_f_conv[n-1, :] = q_f_ex[n, :]
         q_b_conv[n-1, :] = q_b_ex[n, :]
 

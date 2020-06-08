@@ -190,7 +190,7 @@ class tpt:
         return self.q_b
 
 
-    def committor(self):
+    def committors(self):
         '''Function that computes the forward committor q_f (probability
         that the particle at time n will next go to B rather than A) and
         backward commitor q_b (probability that the system at time n
@@ -455,7 +455,7 @@ class tpt:
         Function that runs all methods to compute transition statistics.
         '''
         self.density()
-        self.committor()
+        self.committors()
         self.norm_reac_density()
         self.reac_current()
         self.transition_rate()
