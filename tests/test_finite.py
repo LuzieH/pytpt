@@ -187,7 +187,7 @@ class TestFinite:
                         density[n-1, j] * P(n-1)[j, i],
                     )
 
-    def test_separate_committors(self, tpt_finite):
+    def test_committors(self, tpt_finite):
         S = tpt_finite.S
         N = tpt_finite.N     
         tpt_finite.density()
@@ -205,55 +205,34 @@ class TestFinite:
         assert np.greater_equal(q_b, 0).all() 
         assert np.less_equal(q_b, 1).all() 
     
-    def test_together_committors(self, tpt_finite):
-        S = tpt_finite.S
-        N = tpt_finite.N     
-        q_f, q_b = tpt_finite.committors()
-        
-        assert q_f.shape == (N, S)
-        assert np.isnan(q_f).any() == False
-        assert np.greater_equal(q_f, 0).all() 
-        assert np.less_equal(q_f, 1).all() 
-
-        assert q_b.shape == (N, S)
-        assert np.isnan(q_b).any() == False
-        assert np.greater_equal(q_b, 0).all() 
-        assert np.less_equal(q_b, 1).all() 
-
-    def test_compare_committors(self, tpt_finite):
-        # commpute committors separately
-        tpt_finite.density()
-        tpt_finite.backward_transitions()
-        q_f_sep = tpt_finite.forward_committor()
-        q_b_sep = tpt_finite.backward_committor()
-        
-        # commpute committors together 
-        q_f, q_b = tpt_finite.committors()
-
-        assert np.allclose(q_f, q_f_sep)
-        assert np.allclose(q_b, q_b_sep)
-        
+    
     def test_reac_density(self, tpt_finite):
         S = tpt_finite.S
         N = tpt_finite.N  
-        tpt_finite.committors()
+        tpt_finite.density()
+        tpt_finite.backward_transitions()
+        tpt_finite.forward_committor()
+        tpt_finite.backward_committor()
         reac_dens = tpt_finite.reac_density()
         norm_reac_dens = tpt_finite.norm_reac_density()
         
         assert reac_dens.shape == (N, S)
         assert np.isnan(reac_dens).any() == False
-        assert (np.fmin(reac_dens,0)>=0).all() #np.greater_equal(reac_dens, 0).all() 
-        assert (np.fmin(reac_dens,1)<=1).all() #np.less_equal(reac_dens, 1).all() 
+        assert (np.fmin(reac_dens, 0) >= 0).all() #np.greater_equal(reac_dens, 0).all() 
+        assert (np.fmin(reac_dens, 1) <= 1).all() #np.less_equal(reac_dens, 1).all() 
         
         assert norm_reac_dens.shape == (N, S)
-        assert (np.fmin(norm_reac_dens,0)>=0).all() #np.greater_equal(norm_reac_dens, 0).all() 
-        assert (np.fmin(norm_reac_dens,1)<=1).all() #np.less_equal(norm_reac_dens, 1).all()
+        assert (np.fmin(norm_reac_dens, 0) >= 0).all() #np.greater_equal(norm_reac_dens, 0).all() 
+        assert (np.fmin(norm_reac_dens, 1) <= 1).all() #np.less_equal(norm_reac_dens, 1).all()
         
  
     def test_current(self, tpt_finite):
         S = tpt_finite.S
         N = tpt_finite.N  
-        tpt_finite.committors()
+        tpt_finite.density()
+        tpt_finite.backward_transitions()
+        tpt_finite.forward_committor()
+        tpt_finite.backward_committor()
         [reac_current, eff_current] = tpt_finite.reac_current()
         
         assert reac_current.shape == (N, S, S)

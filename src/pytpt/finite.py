@@ -190,74 +190,6 @@ class tpt:
         return self.q_b
 
 
-    def committors(self):
-        '''Function that computes the forward committor q_f (probability
-        that the particle at time n will next go to B rather than A) and
-        backward commitor q_b (probability that the system at time n
-        last came from A rather than B) for all times n in {0,...,N-1}
-        '''
-
-        q_f = np.zeros((self.N, self.S))
-        q_b = np.zeros((self.N, self.S))
-
-        # forward committor at time n=N is 1 on B and 0 on B^c
-        q_f[self.N - 1, self.ind_B] = 1
-
-        # backward committor at time n=0 is 1 on A and 0 on A^c  
-        q_b[0, self.ind_A] = 1
-
-        # density at time n-1
-        dens_nmin1 = self.init_dens
-
-        # iterate through all times n, backward in time for q_f, forward 
-        # in time for q_b
-        for n in range(1, self.N):
-
-            # define the restricted transition matrices at time N-n-1
-            # entries from C to C
-            P_CC = self.P(self.N - n - 1)[np.ix_(self.ind_C, self.ind_C)]
-            # entries from C to B
-            P_CB = self.P(self.N - n - 1)[np.ix_(self.ind_C, self.ind_B)]
-
-            # compute forward committor backwards in time
-            q_f[self.N - n - 1, self.ind_C] = P_CC.dot(q_f[self.N - n, self.ind_C]) \
-                                            + P_CB.dot(np.ones(np.size(self.ind_B)))
-
-            # forward committor is 1 on B, 0 on A
-            q_f[self.N - n - 1, self.ind_B] = 1
-
-            # density at time n
-            dens_n = dens_nmin1.dot(self.P(n - 1))
-
-            # ensure that when dividing by the distribution and it's 0,
-            # we don't divide by zero, there is no contribution, thus we 
-            # can replace the inverse by zero
-            d_n_inv = dens_n[self.ind_C]
-            for i in range(np.size(self.ind_C)):
-                if d_n_inv[i] > 0:
-                    d_n_inv[i] = 1 / d_n_inv[i]
-                # else: its just zero
-
-            # define restricted transition matrices at time n-1
-            P_CC = self.P(n - 1)[np.ix_(self.ind_C, self.ind_C)]
-            P_AC = self.P(n - 1)[np.ix_(self.ind_A, self.ind_C)]
-
-            # compute backward committor forward in time
-            q_b[n, self.ind_C] = d_n_inv \
-                               * (dens_nmin1[self.ind_C] * q_b[n - 1, self.ind_C]).dot(P_CC) \
-                               + d_n_inv * dens_nmin1[self.ind_A].dot(P_AC)
-
-            # backward committor is 1 on A, 0 on B
-            q_b[n, self.ind_A] = 1
-
-            dens_nmin1 = dens_n
-
-        self.q_b = q_b
-        self.q_f = q_f
-
-        return self.q_f, self.q_b
-
-
     def reac_density(self):
         '''Given the forward and backward committor and the density,
         we can compute the density of reactive trajectories,
@@ -455,7 +387,9 @@ class tpt:
         Function that runs all methods to compute transition statistics.
         '''
         self.density()
-        self.committors()
+        self.backward_transitions()
+        self.forward_committor()
+        self.backward_committor()
         self.norm_reac_density()
         self.reac_current()
         self.transition_rate()

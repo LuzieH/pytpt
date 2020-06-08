@@ -196,7 +196,6 @@ class tpt:
         dim_A = np.size(self.ind_A)
         dim_C = np.size(self.ind_C)
 
-
         # first, find backward committor q^-_0 at time 0
         # to solve a q^-_0 = (I-D_back)q^-_0 = a
         # multiplied backward transition matrix over all times with only
