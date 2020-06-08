@@ -140,7 +140,6 @@ class TestFinite:
             ind_C = np.where(states == 'C')[0]
         
         tpt_finite = finite.tpt(P, N, ind_A, ind_B, ind_C, init_dens)
-        tpt_finite.committors()
         
         return tpt_finite
 
@@ -188,40 +187,58 @@ class TestFinite:
                         density[n-1, j] * P(n-1)[j, i],
                     )
 
-    def test_committors(self, tpt_finite):
-        q_f, q_b = tpt_finite.q_f, tpt_finite.q_b
+    def test_separate_committors(self, tpt_finite):
         S = tpt_finite.S
         N = tpt_finite.N     
+        tpt_finite.density()
+        tpt_finite.backward_transitions()
+        q_f = tpt_finite.forward_committor()
+        q_b = tpt_finite.backward_committor()
 
-        assert q_f.shape == (N,S)
+        assert q_f.shape == (N, S)
         assert np.isnan(q_f).any() == False
         assert np.greater_equal(q_f, 0).all() 
         assert np.less_equal(q_f, 1).all() 
 
-        assert q_b.shape == (N,S)
+        assert q_b.shape == (N, S)
         assert np.isnan(q_b).any() == False
         assert np.greater_equal(q_b, 0).all() 
         assert np.less_equal(q_b, 1).all() 
     
-    # temporary
-    def test_committors2(self, tpt_finite):
-        q_f, q_b = tpt_finite.q_f, tpt_finite.q_b
+    def test_together_committors(self, tpt_finite):
+        S = tpt_finite.S
+        N = tpt_finite.N     
+        q_f, q_b = tpt_finite.committors()
+        
+        assert q_f.shape == (N, S)
+        assert np.isnan(q_f).any() == False
+        assert np.greater_equal(q_f, 0).all() 
+        assert np.less_equal(q_f, 1).all() 
 
+        assert q_b.shape == (N, S)
+        assert np.isnan(q_b).any() == False
+        assert np.greater_equal(q_b, 0).all() 
+        assert np.less_equal(q_b, 1).all() 
+
+    def test_compare_committors(self, tpt_finite):
         # commpute committors separately
         tpt_finite.density()
         tpt_finite.backward_transitions()
         q_f_sep = tpt_finite.forward_committor()
         q_b_sep = tpt_finite.backward_committor()
+        
+        # commpute committors together 
+        q_f, q_b = tpt_finite.committors()
 
         assert np.allclose(q_f, q_f_sep)
         assert np.allclose(q_b, q_b_sep)
-
         
     def test_reac_density(self, tpt_finite):
-        reac_dens = tpt_finite.reac_density()
-        norm_reac_dens = tpt_finite.norm_reac_density()
         S = tpt_finite.S
         N = tpt_finite.N  
+        tpt_finite.committors()
+        reac_dens = tpt_finite.reac_density()
+        norm_reac_dens = tpt_finite.norm_reac_density()
         
         assert reac_dens.shape == (N, S)
         assert np.isnan(reac_dens).any() == False
@@ -234,9 +251,10 @@ class TestFinite:
         
  
     def test_current(self, tpt_finite):
-        [reac_current, eff_current] = tpt_finite.reac_current()
         S = tpt_finite.S
         N = tpt_finite.N  
+        tpt_finite.committors()
+        [reac_current, eff_current] = tpt_finite.reac_current()
         
         assert reac_current.shape == (N, S, S)
         assert (np.fmin(reac_current,0)>=0).all() #np.greater_equal(reac_current, 0).all() 
