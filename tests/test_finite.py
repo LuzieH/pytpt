@@ -268,6 +268,34 @@ class TestFinite:
         for n in range(1, N):
             assert P_back_broadcast(n).shape == P_back(n).shape
             assert np.allclose(P_back_broadcast(n), P_back(n))
+
+    def test_broadcasting_reac_density(self, tpt_finite):
+        S = tpt_finite.S
+        N = tpt_finite.N  
+        tpt_finite.density()
+        tpt_finite.backward_transitions()
+        tpt_finite.forward_committor()
+        tpt_finite.backward_committor()
+        reac_dens = tpt_finite.reac_density()
+        reac_norm_fact_broadcasting = tpt_finite.reac_norm_factor()
+        norm_reac_dens_broadcasting = tpt_finite.norm_reac_density()
+
+        # compute reac_norm_fact and norm_reac dens without broadcasting
+        reac_norm_fact = np.zeros(N)
+        norm_reac_dens = np.zeros((N, S))
+        for n in range(0, N):
+            reac_norm_fact[n] = np.sum(reac_dens[n, :])
+            if reac_norm_fact[n] != 0:
+                norm_reac_dens[n, :] = reac_dens[n, :] / reac_norm_fact[n] 
+            else:
+                norm_reac_dens[n] = np.nan 
+
+        assert np.allclose(reac_norm_fact_broadcasting, reac_norm_fact)
+        for n in range(0, N):
+            idx = np.where(reac_norm_fact != 0)[0]
+            assert np.allclose(norm_reac_dens_broadcasting[idx], norm_reac_dens[idx])
+            
+
     
     def test_broadcasting_current(self, tpt_finite):
         # compute current and effective current without broadcasting 

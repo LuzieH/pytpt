@@ -227,11 +227,7 @@ class tpt:
         if self.reac_dens is None:
             self.reac_dens = self.reac_density()
 
-        reac_norm_fact = np.zeros(self.N)
-        for n in range(0, self.N):
-            reac_norm_fact[n] = np.sum(self.reac_dens[n, :])
-
-        self.reac_norm_fact = reac_norm_fact
+        self.reac_norm_fact = np.sum(self.reac_dens, axis=1)
         return self.reac_norm_fact
 
 
@@ -253,17 +249,21 @@ class tpt:
 
         if self.reac_norm_fact is None:
             self.reac_norm_fact = self.reac_norm_factor()
-
+        
         norm_reac_dens = np.zeros((self.N, self.S))
-        for n in range(0, self.N):
-            if self.reac_norm_fact[n] != 0:
-                norm_reac_dens[n, :] = self.reac_dens[n, :] \
-                                     / self.reac_norm_fact[n] 
-            else:
-                norm_reac_dens[n] = np.nan 
+        
+        # at the time where reac_norm_fact is not null
+        idx = np.where(self.reac_norm_fact != 0)[0]
+        norm_reac_dens[idx, :] = self.reac_dens[idx, :] \
+                                / self.reac_norm_fact[idx].reshape(np.size(idx), 1)
+        
+        # otherwise 
+        idx = np.where(self.reac_norm_fact == 0)[0]
+        norm_reac_dens[idx, :] = np.nan
 
         # obs: at time 0 and N-1, the reactive density is zero, the event "to 
         # be reactive" is not possible
+
         self.norm_reac_dens = norm_reac_dens
         return self.norm_reac_dens
 
