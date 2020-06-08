@@ -205,16 +205,11 @@ class tpt:
 
         reac_dens = np.zeros((self.N, self.S))
 
-        # density at time n
-        dens_n = self.init_dens.dot(self.P(0))
-
         for n in range(0, self.N):
             reac_dens[n, :] = np.multiply(
                 self.q_b[n, :],
-                np.multiply(dens_n, self.q_f[n, :]),
+                np.multiply(self.dens[n], self.q_f[n, :]),
             )
-            # update density for next time point
-            dens_n = dens_n.dot(self.P(n-1))
 
         self.reac_dens = reac_dens
         return self.reac_dens
@@ -287,11 +282,9 @@ class tpt:
         current = np.zeros((self.N, S, S))
         eff_current = np.zeros((self.N, S, S))
 
-        dens_n = self.init_dens
-
         for n in range(self.N - 1):
             # compute reactive current
-            current[n, :, :] = dens_n.reshape(S, 1) \
+            current[n, :, :] = self.dens[n].reshape(S, 1) \
                              * self.q_b[n, :].reshape(S, 1) \
                              * self.P(n) \
                              * self.q_f[n + 1, :]
@@ -301,9 +294,8 @@ class tpt:
                 np.zeros((S, S)),
                 current[n, :, :] - current[n, :, :].T,
             )
-
-            dens_n = dens_n.dot(self.P(n))
-
+        
+        # reactive and effective current not defined at time N-1
         current[self.N - 1] = np.nan
         eff_current[self.N - 1] = np.nan
 
