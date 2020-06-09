@@ -7,10 +7,10 @@ from scipy.linalg import eig
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of
     Markov chain models with periodic forcing.
-    
-    based on: 
-    Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020). 
-    Extending Transition Path Theory: Periodically-Driven and Finite-Time 
+
+    based on:
+    Helfmann, L., Ribera Borrell, E., Schütte, C., & Koltai, P. (2020).
+    Extending Transition Path Theory: Periodically-Driven and Finite-Time
     Dynamics. arXiv preprint arXiv:2002.07474.
     '''
 
@@ -20,10 +20,10 @@ class tpt:
         statistics should be computed.
 
         Args:
-        P:  function mapping time modulo (0,1,...,M-1) to the 
-            corresponding transition matrix (row-stochastic)  
-            of size S x S, S is the size of the state space 
-            St = {1,2,...,S}), moreover the product of transition 
+        P:  function mapping time modulo (0,1,...,M-1) to the
+            corresponding transition matrix (row-stochastic)
+            of size S x S, S is the size of the state space
+            St = {1,2,...,S}), moreover the product of transition
             matrices should be irreducible
         M: int
             size of the period
@@ -32,8 +32,8 @@ class tpt:
         ind_B: array
             set of indices of the state space that belong to the set B
         ind_C: array
-            set of indices of the state space that belong to the 
-            transition region C, i.e. the set C  =  St-(A u B)        
+            set of indices of the state space that belong to the
+            transition region C, i.e. the set C  =  St-(A u B)
         '''
 
         assert (isfunction(P) or isfunction(P.func)), \
@@ -42,11 +42,11 @@ class tpt:
 
         assert np.isclose(P(0), P(M)).all(), "The transition matrix function \
             needs to the time modulo M to the corresponding transition matrix."
-        
+
         assert (isinstance(P(0), np.ndarray) and not isinstance(P(0), np.matrix)), \
             "The inputted transition matrix function should map time to \
              an np.ndarray and not an np.matrix"
-                
+
         assert (isinstance(ind_A, np.ndarray) and
                 isinstance(ind_B, np.ndarray) and
                 isinstance(ind_C, np.ndarray)), \
@@ -57,7 +57,7 @@ class tpt:
         C = set(ind_C)
         intersection_AB = A.intersection(B)
         complement_AB = (C.difference(A)).difference(B)
-        
+
         assert (len(A) > 0 and
                 len(B) > 0 and
                 len(C) > 0 and
@@ -65,7 +65,7 @@ class tpt:
                 complement_AB == C), \
             "A and B have to be non-empty and disjoint sets \
              such that also their complement C is non-empty."
-                
+
         self.P = P
         self.M = M
         self.ind_A = ind_A
@@ -82,7 +82,7 @@ class tpt:
         self.q_b = None  # backward committor
         self.q_f = None  # forward committor
         self.reac_dens = None  # reactive density
-        self.reac_norm_fact = None  # reactive normalization factor 
+        self.reac_norm_fact = None  # reactive normalization factor
         self.norm_reac_dens = None  # normalized reactive density
         self.current = None  # reactive current
         self.eff_current = None  # effective reactive current
@@ -125,7 +125,7 @@ class tpt:
         set to 0.
         '''
         P_back_m = np.zeros((self.M, self.S, self.S))
- 
+
         for m in range(self.M):
             # compute backward transition matrix
             idx = np.where(self.stat_dens[np.mod(m, self.M), :] != 0)[0]
@@ -142,7 +142,7 @@ class tpt:
 
     def forward_committor(self):
         '''Function that computes the forward committor q_f (probability
-        that the process will next go to B rather than A) 
+        that the process will next go to B rather than A)
         of the periodic system by using the stacked
         equations.
         '''
@@ -156,10 +156,10 @@ class tpt:
         # where D is the result of multipling the transition matrices restricted in C
         # over one period, D = P(0)|C x... x P(M-1)|C
         # and b = sum_tau^M  P(0)|C x ... x P(tau-1)|C,B x (1)
-        
+
         # compute a=(I-D) and b
         D = np.diag(np.ones(dim_C))
-        b = np.zeros(dim_C)  
+        b = np.zeros(dim_C)
         for m in np.arange(self.M):
             P_m_CB = self.P(m)[np.ix_(self.ind_C, self.ind_B)]
             P_m_CC = self.P(m)[np.ix_(self.ind_C, self.ind_C)]
@@ -170,7 +170,7 @@ class tpt:
 
         # initialize forward committor
         q_f = np.zeros((self.M, self.S))
-            
+
         # compute q_0^+ on C
         q_f[0, self.ind_C] = solve(a, b)
 
@@ -183,8 +183,8 @@ class tpt:
             q_f[m, self.ind_C] = P_m_CS.dot(q_f[np.mod(m + 1, self.M), :])
 
         self.q_f = q_f
-        return self.q_f 
-    
+        return self.q_f
+
     def backward_committor(self):
         '''Function that computes the backward
         committor q_b (probability that the system last came from A
@@ -203,7 +203,7 @@ class tpt:
 
         D_back = np.diag(np.ones(dim_C))
         b = np.zeros(dim_C)
-        
+
         # flip loop over the period, but start at 0
         times = np.arange(1, self.M + 1)[::-1]
         times[0] = 0
@@ -215,7 +215,7 @@ class tpt:
             b += D_back.dot(P_back_m_CA).dot(np.ones(dim_A))
             D_back = D_back.dot(P_back_m_CC)
         a = np.eye(dim_C) - D_back
- 
+
         # initialize q^-, compute q_0^- on C and set q_0^= on A
         q_b = np.zeros((self.M, self.S))
         q_b[0, self.ind_C] = solve(a, b)
@@ -229,17 +229,17 @@ class tpt:
         self.q_b = q_b
 
         return self.q_b
-    
+
     def reac_density(self):
         '''Given the forward and backward committor and the density,
         we can compute the density of reactive trajectories,
-        i.e. the probability to be in a state in S at time m while 
-        being reactive. 
+        i.e. the probability to be in a state in S at time m while
+        being reactive.
         The function returns an array of the reactive
         density for each time (with time as the first index of the
         array).
         '''
-        
+
         assert self.q_f is not None, "The committor functions need \
         first to be computed by using the method committor"
 
@@ -251,13 +251,13 @@ class tpt:
             )
         self.reac_dens = reac_dens
         return self.reac_dens
-    
+
     def reac_norm_factor(self):
         '''
-        This function returns the normalization factor of the reactive 
+        This function returns the normalization factor of the reactive
         density, i.e. for each time m it returns the sum over S of
         the reactive density at that time. This is nothing but the
-        probability to be reactive/on a transition at time m. 
+        probability to be reactive/on a transition at time m.
         '''
         if self.reac_dens is None:
             self.reac_dens = self.reac_density()
@@ -270,20 +270,20 @@ class tpt:
         return self.reac_norm_fact
 
     def norm_reac_density(self):
-        '''Given the reactive density and its normalization factor, 
-        this function returns the normalized reactive density, i.e. 
+        '''Given the reactive density and its normalization factor,
+        this function returns the normalized reactive density, i.e.
         the probability to be at x in S at time m, given the chain
-        is reactive. 
+        is reactive.
         The function returns an array of the reactive
         density for each time (with time as the first index of the
         array).
         '''
-        
-        if self.reac_dens is None:                                                          
-            self.reac_dens = self.reac_density()                                                        
-        
-        if self.reac_norm_fact is None:                                                   
-            self.reac_norm_fact = self.reac_norm_factor()                                             
+
+        if self.reac_dens is None:
+            self.reac_dens = self.reac_density()
+
+        if self.reac_norm_fact is None:
+            self.reac_norm_fact = self.reac_norm_factor()
 
         norm_reac_dens = np.zeros((self.M, self.S))
         for m in range(self.M):
@@ -299,13 +299,13 @@ class tpt:
     def reac_current(self):
         '''Computes the reactive current current[i,j] between nodes i
         and j, as the flow of reactive trajectories from i to j during
-        one time step. 
+        one time step.
         '''
         assert self.q_f is not None, "The committor functions  need \
         first to be computed by using the method committor"
-        
+
         S = self.S
-        
+
         current = np.zeros((self.M, S, S))
         eff_current = np.zeros((self.M, S, S))
 
@@ -319,7 +319,7 @@ class tpt:
             # compute effective current
             eff_current[m, :, :] = np.maximum(
                 np.zeros((S, S)),
-                current[m, :, :] - current[m, :, :].T, 
+                current[m, :, :] - current[m, :, :].T,
             )
 
         self.current = current
@@ -332,7 +332,7 @@ class tpt:
         trajectories out of A at time m (first row) or into B at time m
         (second row). The time-averaged transition rate is the averaged
         transition rate (out of A and into B) over {0, ..., M-1}. This
-        method returns a tuple with the transition rate array and the 
+        method returns a tuple with the transition rate array and the
         time averaged transition rate array
         '''
 
@@ -355,10 +355,10 @@ class tpt:
         time_av_rate = np.zeros(2)
         time_av_rate[0] = sum(rate[:, 0]) / (self.M) # out of A
         time_av_rate[1] = sum(rate[:, 1]) / (self.M) # into B
-        
-        self.rate = rate 
+
+        self.rate = rate
         self.time_av_rate = time_av_rate
-        
+
         return self.rate, self.time_av_rate
 
     def mean_transition_length(self):
@@ -369,14 +369,14 @@ class tpt:
         assert self.reac_norm_fact is not None, "The normalization \
         factor first needs to be computed by using the method \
         reac_norm_factor"
-        
+
         assert self.rate is not None, "The transition rate first needs \
         to be computed by using the method transition_rate"
 
         self.av_length = np.nansum(self.reac_norm_fact) \
                        / np.nansum(self.rate[:, 0])
-        
-        return self.av_length 
+
+        return self.av_length
 
     def current_density(self):
         '''The current density in a node is the sum of effective
@@ -394,7 +394,7 @@ class tpt:
             self.current_dens = current_dens
 
         return self.current_dens
-    
+
     def compute_statistics(self):
         '''
         Function that runs all methods to compute transition statistics.
@@ -410,11 +410,11 @@ class tpt:
 
     def save_statistics(self, npz_path):
         '''
-        Method that saves all the computed transition statistics, 
-        the not computed statistics are saved as None. 
-        
+        Method that saves all the computed transition statistics,
+        the not computed statistics are saved as None.
+
         Args:
-            
+
         '''
         np.savez(
             npz_path,
