@@ -40,7 +40,7 @@ class TestStationary:
 
         states = np.empty(S, dtype='str')
 
-        # sorted list of two elements chosen from the set of integers 
+        # sorted list of two elements chosen from the set of integers
         # between 0 and S-1 without replacement
         i, j = sorted(random.sample(range(1, S), 2))
         states[:i] = 'A'
@@ -76,7 +76,7 @@ class TestStationary:
     @pytest.fixture
     def tpt_stationary(self, states_random, P_random, states_small_network,
                       P_small_network, small_network):
-        ''' initialize the tpt object 
+        ''' initialize the tpt object
         '''
         if small_network:
             states = states_small_network
@@ -90,11 +90,11 @@ class TestStationary:
             ind_A = np.where(states == 'A')[0]
             ind_B = np.where(states == 'B')[0]
             ind_C = np.where(states == 'C')[0]
-        
+
         tpt_stationary = stationary.tpt(P, ind_A, ind_B, ind_C)
         tpt_stationary.forward_committor()
         tpt_stationary.backward_committor()
-        
+
         return tpt_stationary
 
     def test_transition_matrix(self, tpt_stationary):
@@ -128,12 +128,12 @@ class TestStationary:
         stationary_density = tpt_stationary.stationary_density()
         P = tpt_stationary.P
         P_back = tpt_stationary.backward_transitions()
-        
+
         assert stationary_density.shape == (S,)
         assert np.isnan(stationary_density).any() == False
-        assert np.greater_equal(stationary_density, 0).all() 
-        assert np.less_equal(stationary_density, 1).all() 
-        assert np.isclose(stationary_density.dot(P), stationary_density).all() 
+        assert np.greater_equal(stationary_density, 0).all()
+        assert np.less_equal(stationary_density, 1).all()
+        assert np.isclose(stationary_density.dot(P), stationary_density).all()
         assert np.isclose(stationary_density.dot(P_back), stationary_density).all()
 
     def test_committors(self, tpt_stationary):
@@ -142,13 +142,13 @@ class TestStationary:
 
         assert q_f.shape == (S,)
         assert np.isnan(q_f).any() == False
-        assert np.greater_equal(q_f, 0).all() 
-        assert np.less_equal(q_f, 1).all() 
+        assert np.greater_equal(q_f, 0).all()
+        assert np.less_equal(q_f, 1).all()
 
         assert q_b.shape == (S,)
         assert np.isnan(q_b).any() == False
-        assert np.greater_equal(q_b, 0).all() 
-        assert np.less_equal(q_b, 1).all() 
+        assert np.greater_equal(q_b, 0).all()
+        assert np.less_equal(q_b, 1).all()
 
     def test_reac_density(self, tpt_stationary):
         S = tpt_stationary.S
@@ -158,28 +158,28 @@ class TestStationary:
 
         assert reac_dens.shape == (S,)
         assert np.isnan(reac_dens).any() == False
-        assert np.greater_equal(reac_dens, 0).all() 
-        assert np.less_equal(reac_dens, 1).all() 
-        
+        assert np.greater_equal(reac_dens, 0).all()
+        assert np.less_equal(reac_dens, 1).all()
+
         assert norm_reac_dens.shape == (S,)
         assert np.isnan(norm_reac_dens).any() == False
-        assert np.greater_equal(norm_reac_dens, 0).all() 
+        assert np.greater_equal(norm_reac_dens, 0).all()
         assert np.less_equal(norm_reac_dens, 1).all()
-        
+
         assert np.isclose(reac_dens, reac_norm_fact * norm_reac_dens).all()
-        
+
     def test_current(self, tpt_stationary):
         S = tpt_stationary.S
         reac_current, eff_current = tpt_stationary.reac_current()
 
         assert reac_current.shape == (S, S)
         assert np.isnan(reac_current).any() == False
-        assert np.greater_equal(reac_current, 0).all() 
-        assert np.less_equal(reac_current, 1).all() 
-        
+        assert np.greater_equal(reac_current, 0).all()
+        assert np.less_equal(reac_current, 1).all()
+
         assert eff_current.shape == (S, S)
         assert np.isnan(eff_current).any() == False
-        assert np.greater_equal(eff_current, 0).all() 
+        assert np.greater_equal(eff_current, 0).all()
         assert np.less_equal(eff_current, 1).all()
 
     def test_broadcasting_backward_transitions(self, tpt_stationary):
@@ -201,7 +201,7 @@ class TestStationary:
 
 
     def test_broadcasting_current(self, tpt_stationary):
-        # compute current and effective current without broadcasting 
+        # compute current and effective current without broadcasting
         S = tpt_stationary.S
         P = tpt_stationary.P
         stat_dens = tpt_stationary.stat_dens
