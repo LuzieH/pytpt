@@ -1,13 +1,13 @@
-from pytpt import stationary  
-from pytpt import periodic  
-from pytpt import finite  
-  
+from pytpt import stationary
+from pytpt import periodic
+from pytpt import finite
+
 import functools
 import numpy as np
- 
+
 import os.path
- 
-# define directories path to save the data and figures 
+
+# define directories path to save the data and figures
 MY_PATH = os.path.abspath(os.path.dirname(__file__))
 DATA_PATH = os.path.join(MY_PATH, 'data')
 
@@ -20,27 +20,27 @@ STATES = NETWORK_CONSTRUCTION['states'].item()
 T = NETWORK_CONSTRUCTION['T']
 L = NETWORK_CONSTRUCTION['L']
 K = NETWORK_CONSTRUCTION['K']
-    
+
 def P_p(k, M):
     ''' This method returns a transition matrix at time k over a period M
     '''
-    # use as transition matrix T + wL, where w varies from 1..0..-1...0 
+    # use as transition matrix T + wL, where w varies from 1..0..-1...0
     # L is a zero-rowsum matrix, T is a transition matrix
     # varies the transition matrices periodically, by weighting the added
     # matrix L with weights 1..0..-1.. over one period
     return T + np.cos(k * 2. * np.pi / M) * L
-    
+
 def P_hom(n):
     ''' This method returns a time-homogeneous transition matrix.
     '''
     return T + L
-    
+
 def P_inhom(n):
-    ''' This mthod returns a time-inhomogeneous transition matrix. 
+    ''' This mthod returns a time-inhomogeneous transition matrix.
     '''
     if np.mod(n, 2) == 0:
         return T + L + K
-    else: 
+    else:
         return T + L - K
 
 def main():
@@ -118,7 +118,7 @@ def main():
     # TPT in finite time, time-inhomogeneous transition probabilities
     example_name = 'small_network_inhom'
     # size of time interval
-    N_inhom = 5 
+    N_inhom = 5
 
     # transition matrix at time n
 
@@ -163,7 +163,7 @@ def main():
             ind_C,
             init_dens_small,
         )
-        
+
         # compute statistics
         small_finite_ex.density()
         small_finite_ex.backward_transitions()

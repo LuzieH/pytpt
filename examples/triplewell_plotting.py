@@ -3,11 +3,11 @@ from plotting import plot_3well, \
                      plot_rate, \
                      plot_reactiveness
 import numpy as np
- 
+
 
 import os.path
 
-# define directories path to save the data and figures 
+# define directories path to save the data and figures
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
 figures_path = os.path.join(my_path, 'figures')
@@ -27,7 +27,7 @@ T_m = triplewell_construction['T_m']
 # T_small_noise = triplewell_construction['T_small_noise']
 
 
-# load triple well statistics data 
+# load triple well statistics data
 example_name = 'triplewell_stationary'
 triplewell_ergodic = np.load(
     os.path.join(data_path, example_name + '.npz')
@@ -139,12 +139,12 @@ colors = np.zeros(dim_st)
 for i in np.arange(dim_st):
     for j in np.arange(dim_st):
         if np.linalg.norm(np.array([xn[j] - xn[i], yn[j] - yn[i]])) > 0:
-            eff_vectors[i,0] += eff_current[i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
-            eff_vectors[i,1] += eff_current[i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
+            eff_vectors[i,0] += eff_current[i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]])))
+            eff_vectors[i,1] += eff_current[i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]])))
     colors[i] = np.linalg.norm(eff_vectors[i,:])
     if colors[i] > 0:
-        eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i] 
-            
+        eff_vectors_unit[i,:] = eff_vectors[i,:]/colors[i]
+
 file_path = os.path.join(figures_path, example_name + '_' + 'eff.png')
 plot_3well_effcurrent(np.array([eff_vectors_unit]), np.array([colors]), xn, yn, densAB, (xdim, ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), 1, (3*1, 3), ['$f^+$'],  file_path=file_path)
 
@@ -177,7 +177,7 @@ data = norm_reac_dens_p
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 file_path = os.path.join(figures_path, example_name + '_' + 'reac_dens.png')
-plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), v_min, v_max,np.array(['$\hat{\mu}^{AB}_0$','$\hat{\mu}^{AB}_1$','$\hat{\mu}^{AB}_2$','$\hat{\mu}^{AB}_3$','$\hat{\mu}^{AB}_4$','$\hat{\mu}^{AB}_5$']),  file_path=file_path, background=densAB) 
+plot_3well(data, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), v_min, v_max,np.array(['$\hat{\mu}^{AB}_0$','$\hat{\mu}^{AB}_1$','$\hat{\mu}^{AB}_2$','$\hat{\mu}^{AB}_3$','$\hat{\mu}^{AB}_4$','$\hat{\mu}^{AB}_5$']),  file_path=file_path, background=densAB)
 
 # calculation the effective vector for each state
 eff_vectors_p = np.zeros((M, dim_st, 2))
@@ -187,24 +187,24 @@ for m in np.arange(M):
     for i in np.arange(dim_st):
         for j in np.arange(dim_st):
             if np.linalg.norm(np.array([xn[j] - xn[i], yn[j] - yn[i]])) > 0:
-                eff_vectors_p[m,i,0] += eff_current_p[m,i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
-                eff_vectors_p[m,i,1] += eff_current_p[m,i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
+                eff_vectors_p[m,i,0] += eff_current_p[m,i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]])))
+                eff_vectors_p[m,i,1] += eff_current_p[m,i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]])))
         colors_p[m,i] = np.linalg.norm(eff_vectors_p[m,i,:])
         if colors_p[m,i]>0:
             eff_vectors_unit_p[m,i,:] = eff_vectors_p[m,i,:]/colors_p[m,i]
- 
+
 file_path = os.path.join(figures_path, example_name + '_' + 'eff.png')
-plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), subtitles_m('$f^+_{}$', M),  file_path=file_path) 
+plot_3well_effcurrent(eff_vectors_unit_p, colors_p, xn, yn, densAB, (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), M, (3*M,3), subtitles_m('$f^+_{}$', M),  file_path=file_path)
 
 plot_rate(
     rate=rate_p,
-    time_av_rate=time_av_rate_p,                                                               
+    time_av_rate=time_av_rate_p,
     file_path=os.path.join(figures_path, example_name + '_' + 'rates.png'),
     title='',
     xlabel = 'm',
     average_rate_legend=r'$ \bar{k}^{AB}_M $',
 )
- 
+
 plot_reactiveness(
     reac_norm_fact=reac_norm_fact_p,
     file_path=os.path.join(figures_path, example_name + '_' + 'reactiveness.png'),
@@ -238,7 +238,7 @@ data = norm_reac_dens_f
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)
 file_path = os.path.join(figures_path, example_name + '_' + 'dens.png')
-plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N-2, (3*(N-2),3), v_min, v_max, np.array(['$\hat{\mu}^{AB}(1)$','$\hat{\mu}^{AB}(2)$','$\hat{\mu}^{AB}(3)$','$\hat{\mu}^{AB}(4)$']),  file_path=file_path, background=densAB) 
+plot_3well(data[1:N-1,:], (xdim,ydim), (interval[0,0], interval[0,1], interval[1,0], interval[1,1]), N-2, (3*(N-2),3), v_min, v_max, np.array(['$\hat{\mu}^{AB}(1)$','$\hat{\mu}^{AB}(2)$','$\hat{\mu}^{AB}(3)$','$\hat{\mu}^{AB}(4)$']),  file_path=file_path, background=densAB)
 
 # calculation the effective vector for each state
 eff_vectors_f = np.zeros((N,dim_st, 2))
@@ -250,19 +250,19 @@ for n in np.arange(N):
             # if np.isnan(eff_current_f[n,i,j])==False:
 
             if np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))>0:
-                eff_vectors_f[n,i,0] += eff_current_f[n,i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
-                eff_vectors_f[n,i,1] += eff_current_f[n,i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]]))) 
+                eff_vectors_f[n,i,0] += eff_current_f[n,i,j] *  (xn[j] - xn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]])))
+                eff_vectors_f[n,i,1] += eff_current_f[n,i,j] *  (yn[j] - yn[i])  *(1/np.linalg.norm(np.array([xn[j] - xn[i],yn[j] - yn[i]])))
         colors_f[n,i] = np.linalg.norm(eff_vectors_f[n,i,:])
         if colors_f[n,i]>0:
             eff_vectors_unit_f[n,i,:] = eff_vectors_f[n,i,:]/colors_f[n,i]
-            
+
 
 file_path = os.path.join(figures_path, example_name + '_' + 'eff.png')
 plot_3well_effcurrent(eff_vectors_unit_f[:N-1,:,:], colors_f[:N-1,:], xn, yn, densAB,(xdim,ydim), (interval[0,0],interval[0,1],interval[1,0],interval[1,1]), N-1, (3*(N-1),3), subtitles_m('$f^+({})$',N-1),  file_path=file_path)
 
 plot_rate(
     rate=rate_f,
-    time_av_rate=time_av_rate_f,                                                               
+    time_av_rate=time_av_rate_f,
     file_path=os.path.join(figures_path, example_name + '_' + 'rates.png'),
     title='Discrete finite-time, time-homogeneous rates',
     xlabel = 'n',
@@ -284,7 +284,7 @@ subtitles_bif_eff = []
 for N_bif in N_bif_array:
     subtitles_bif_dens.append('$\hat{\mu}^{AB}$('+str(int(N_bif/2))+'), $N=$'+str(N_bif))
     subtitles_bif_eff.append('$f^+$('+str(int(N_bif/2))+'), $N=$'+str(N_bif))
- 
+
 data = norm_reac_dens_f_bif_all
 v_min = np.nanmin(data)
 v_max = np.nanmax(data)

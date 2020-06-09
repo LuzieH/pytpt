@@ -33,10 +33,10 @@ def plot_colorbar_only(file_path):
     )
     # remove ticks and values
     cb.set_ticks([])
-    
-    # ticks size and label size 
+
+    # ticks size and label size
     # cb1.ax.tick_params(length=4, width=0.5, labelsize=8)
-    
+
     fig.subplots_adjust(hspace=0.1)
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
@@ -46,13 +46,13 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max,
     """
     For a Markov chain on a network of nodes this function plots
     in several subplots several densities (e.g. for different
-    times in a period/time interval), the values of the densities 
-    are indicated by the node colors. 
-    
+    times in a period/time interval), the values of the densities
+    are indicated by the node colors.
+
     Args:
     data : ndarray of size (# subplots/time instances, # nodes of network)
         array of densities for each subplot
-    graphs : list 
+    graphs : list
         list of networkx graphs for the different subplots/time instances
     pos : dict
         positions of node for each state
@@ -69,12 +69,12 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max,
     file_path: string
         path to where the file should be saved eg ".../plots/image.png""
     """
-    
+
     num_plots = len(graphs)
     width_plot = 2
     height_plot = 2
     size = (width_plot*num_plots, height_plot)
-    
+
     fig, ax = plt.subplots(1, num_plots, sharex='col',
                            sharey='row', figsize=size)
     if num_plots == 1:
@@ -85,10 +85,10 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max,
                 vmin=v_min, vmax=v_max, alpha=0.8, font_size=12)
         if subtitles is not None:
             ax[i].set_title(subtitles[i], fontsize=14)
-    
+
     if title is not None:
         fig.suptitle(title)
-    
+
     fig.subplots_adjust(
         top=0.8,
         hspace=0.1,
@@ -96,17 +96,17 @@ def plot_network_density(data, graphs, pos, labels, v_min, v_max,
 
     fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
-    
+
 def plot_network_effective_current(eff_current, pos, labels, v_min, v_max,
                                    file_path, title=None, subtitles=None):
     """
     For a Markov chain on a network of nodes this function plots
-    in several subplots several currents, the value of the current between 
+    in several subplots several currents, the value of the current between
     two nodes is indicated by color and thickness of the edge.
-    
+
     Args:
     eff_current : ndarray of size (# subplots, # nodes,  # nodes)
-        array of currents between states/nodes for each subplot/time instance 
+        array of currents between states/nodes for each subplot/time instance
     pos : dict
         positions of node for each state
     labels : dict
@@ -122,7 +122,7 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, v_max,
     title : string
         overall title
     """
-    
+
     num_plots = len(eff_current)
     width_plot = 2
     height_plot = 2
@@ -139,7 +139,7 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, v_max,
             # graph
             A_eff = (eff_current[n, :, :] > 0)*1
             G_eff = nx.DiGraph(A_eff)
-            
+
             nx.draw_networkx_nodes(
                 G_eff,
                 pos,
@@ -167,14 +167,14 @@ def plot_network_effective_current(eff_current, pos, labels, v_min, v_max,
                 edge_cmap=plt.cm.Greys,
                 arrowsize=10,
             )
-            
+
             # labels
             nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
             ax[n].set_axis_off()
 
             if subtitles is not None:
                 ax[n].set_title(subtitles[n])
-    
+
     if title is not None:
         fig.suptitle(title)
     fig.subplots_adjust(top=0.8)
@@ -186,10 +186,10 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
                                      v_max, file_path, title=None, subtitles=None):
     """
     For a Markov chain on a network of nodes this function plots
-    in several subplots several currents, the value of the current between 
-    two nodes is indicated by color and thickness of the edge, also the 
+    in several subplots several currents, the value of the current between
+    two nodes is indicated by color and thickness of the edge, also the
     outrate of A and inrate into B are shown in the corresponding nodes.
-    
+
     Args:
     eff_current : ndarray of size (# subplots x # nodes # nodes)
         array of currents for each subplot (e.g. different time instances)
@@ -211,7 +211,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
     title : string
         overall title
     """
-    
+
     num_plots = len(eff_current)
     width_plot = 2
     height_plot = 2
@@ -223,7 +223,7 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
         ax = [ax]
 
     for n in range(num_plots):
-        if not np.isnan(eff_current[n]).any(): 
+        if not np.isnan(eff_current[n]).any():
 
             A_eff = (eff_current[n, :, :] > 0)*1
             G_eff = nx.DiGraph(A_eff)
@@ -273,14 +273,14 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
                 arrowsize=10,
                 alpha=0.8,
             )
-            
+
             # labels
             nx.draw_networkx_labels(G_eff, pos, labels=labels, ax=ax[n])
             ax[n].set_axis_off()
 
             if subtitles is not None:
                 ax[n].set_title(subtitles[n], fontsize=14)
-    
+
     if title is not None:
         fig.suptitle(title)
     fig.subplots_adjust(
@@ -292,10 +292,10 @@ def plot_network_effcurrent_and_rate(eff_current, shifted_rate, pos, labels, v_m
 
 
 def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}$',
-              time_av_rate=None):                                          
+              time_av_rate=None):
     """
-    This function plots/saves the out-of-A and into-B rate in time. 
-    
+    This function plots/saves the out-of-A and into-B rate in time.
+
     Args:
     rate : ndarray of size (# times, 2)
         out and in rate for each time point (during a period or finite
@@ -308,12 +308,12 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
         label of x axis
     average_rate_legend : string
     time_av_rate : float
-        time-averaged rate 
+        time-averaged rate
     """
     ncol = 2
     timeframes = len(rate)
     fig, ax = plt.subplots(1, 1, figsize=(4*timeframes, 3))
-    
+
     plt.scatter(
         x=np.arange(timeframes),
         y=rate[:, 0],
@@ -340,7 +340,7 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
             color='black',
             #s=20,
             linestyles='dashed',
-            label=average_rate_legend, 
+            label=average_rate_legend,
         )
 
     # add title and legend
@@ -362,19 +362,19 @@ def plot_rate(rate, file_path, title, xlabel, average_rate_legend='$\hat{k}^{AB}
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
     plt.legend(ncol=ncol, fontsize=20)
-    
+
     # Hide the right and top spines
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
-    
-    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')  
+
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
 def plot_reactiveness(reac_norm_fact, file_path, title):
     """
-    This function plots the probability to be reactive (given by 
-    reac_norm_fact) in time. 
-    
+    This function plots the probability to be reactive (given by
+    reac_norm_fact) in time.
+
     Args:
     reac_norm_fact : ndarray of size (# times, 1)
         reac_norm_fact for each time point
@@ -406,42 +406,42 @@ def plot_reactiveness(reac_norm_fact, file_path, title):
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
     plt.legend(fontsize=20)
-    
+
     # Hide the right and top spines
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
-    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight') 
+    fig.savefig(file_path, format='png', dpi=300, bbox_inches='tight')
 
 
 def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title):
     '''
-    Plots (and saves the plot) the convergence of the forward and 
-    backward committor for a finite-time, stationary system to the forward 
-    and backward committor of an infinite-time, stationary system, 
+    Plots (and saves the plot) the convergence of the forward and
+    backward committor for a finite-time, stationary system to the forward
+    and backward committor of an infinite-time, stationary system,
     when the time interval becomes very large.
-    
+
     Args:
     q_f : ndarray of the size (# states)
         forward committor of the inf-time, stationary system
     q_f_conv : ndarray of the size (# of time interval lenghts, # states)
-        forward committor at a middle time point of the finite-time interval 
+        forward committor at a middle time point of the finite-time interval
         for different time-interval lengths
     q_b : ndarray of the size (# states)
         backward committor of the inf-time, stationary system
     q_b_conv : ndarray of the size (# of time interval lenghts, # states)
-        backward committor at a middle time point of the finite-time interval 
+        backward committor at a middle time point of the finite-time interval
         for different time-interval lengths
     scale_type : 'linear', 'log', 'symlog' or 'logit'
         y axis scaling
     file_path : string
         path to where the file should be saved eg ".../plots/image.png""
     title : string
-        
+
     '''
     assert scale_type in ['linear', 'log', 'symlog', 'logit']
 
-    # compute errors 
+    # compute errors
     q_f_conv_error = np.linalg.norm(q_f_conv - q_f, ord=2, axis=1)
     q_b_conv_error = np.linalg.norm(q_b_conv - q_b, ord=2, axis=1)
 
@@ -485,7 +485,7 @@ def plot_convergence(q_f, q_f_conv, q_b, q_b_conv, scale_type, file_path, title)
 def plot_3well_potential(potential,  title, file_path=None, subtitles=None):
     '''
     Plots (and saves the plot) the triplewell potential.
-    
+
     Args:
     potential : function of x and y
         defines the potential to be plotted in terms of x and y coordinates
@@ -493,18 +493,18 @@ def plot_3well_potential(potential,  title, file_path=None, subtitles=None):
         path to where the file should be saved eg ".../plots/image.png""
     title : string
     subtitles : string
-        
+
     '''
     delta = 0.01
     x = np.arange(-2.0, 2.0 + delta, delta)
     y = np.arange(-1.0, 2.0 + delta, delta)
     X, Y = np.meshgrid(x, y)
-    
+
     # compute potential on the grid
-    potential = potential(X, Y) 
-   
+    potential = potential(X, Y)
+
     number_of_plots = 1
-    size = (4*number_of_plots, 3) 
+    size = (4*number_of_plots, 3)
     fig = plt.figure(figsize=size)
 
     grid = AxesGrid(
@@ -515,7 +515,7 @@ def plot_3well_potential(potential,  title, file_path=None, subtitles=None):
         cbar_mode='single',
         cbar_location='right',
         cbar_pad=0.1,
-    )    
+    )
 
     for i in range(number_of_plots):
         im = grid[i].imshow(
@@ -527,49 +527,49 @@ def plot_3well_potential(potential,  title, file_path=None, subtitles=None):
             extent=[-2, 2, -1, 2],
         )
         grid[i].title.set_text(subtitles[i])
-    
+
     # add color bar
     cbar_pot = grid[i].cax.colorbar(im)
     cbar_pot = grid.cbar_axes[0].colorbar(im)
-    
+
     # save figure
     fig.subplots_adjust(top=0.8)
-    
+
     if file_path is not None:
         fig.savefig(file_path, format='png', dpi=300)
 
 def plot_3well_vector_field(vector_field, vector_field_forced,
                              title, file_path = None, subtitles=None):
     '''
-    Plots (and saves the plot) the vector field -grad V of the potential V, 
-    as well as two time instances (m=0, 3) of the forced vector field. 
-    
+    Plots (and saves the plot) the vector field -grad V of the potential V,
+    as well as two time instances (m=0, 3) of the forced vector field.
+
     Args:
     vector_field : function of x and y
         defines the vector field
     vector_field_forced : function of x, y and time
-        defines the forced vector field at discrete times        
+        defines the forced vector field at discrete times
     file_path : string or None
         path to where the file should be saved eg ".../plots/image.png""
     title : string
     subtitles : string
-        
-    '''    
-    #create mesh grid 
+
+    '''
+    #create mesh grid
     delta = 0.20
     x = np.arange(-2.0, 2.0 + delta, delta)
     y = np.arange(-1.0, 2.0 + delta, delta)
     X, Y = np.meshgrid(x, y)
-    
+
     # compute gradient/forced gradient on the grid
-    U, V = vector_field(X, Y) 
-    U_forced_0, V_forced_0 = vector_field_forced(X, Y, 0) 
-    U_forced_3, V_forced_3 = vector_field_forced(X, Y, 3) 
+    U, V = vector_field(X, Y)
+    U_forced_0, V_forced_0 = vector_field_forced(X, Y, 0)
+    U_forced_3, V_forced_3 = vector_field_forced(X, Y, 3)
 
     norm = np.linalg.norm(np.array([U, V]), axis=0)
     norm_forced_0 = np.linalg.norm(np.array([U_forced_0, V_forced_0]), axis=0)
     norm_forced_3 = np.linalg.norm(np.array([U_forced_3, V_forced_3]), axis=0)
-    
+
     U_norm = U/norm
     U_forced_0_norm = U_forced_0/norm_forced_0
     U_forced_3_norm = U_forced_3/norm_forced_3
@@ -581,10 +581,10 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
     Vs = [V_norm, V_forced_0_norm, V_forced_3_norm]
     norms = [norm, norm_forced_0, norm_forced_3]
 
-    number_of_plots = 3 
-    size = (4*number_of_plots, 3) 
+    number_of_plots = 3
+    size = (4*number_of_plots, 3)
     fig = plt.figure(figsize=size)
-    
+
     # create grid
     grid = AxesGrid(
         fig,
@@ -594,7 +594,7 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
         cbar_mode='single',
         cbar_location='right',
         cbar_pad=0.1,
-    )    
+    )
 
     for i in range(number_of_plots):
         im = grid[i].quiver(
@@ -605,27 +605,27 @@ def plot_3well_vector_field(vector_field, vector_field_forced,
             norms[i],
             cmap=TRIPLEWELL_CMAP,
             width=0.02,
-            scale=25, 
-        )             
+            scale=25,
+        )
         grid[i].title.set_text(subtitles[i])
-    
+
     # add color bar
     cbar_pot = grid[i].cax.colorbar(im)
     cbar_pot = grid.cbar_axes[0].colorbar(im)
 
     # save figure
     fig.subplots_adjust(top=0.8)
- 
+
     if file_path is not None:
         fig.savefig(file_path, format='png', dpi=300)
 
 
-def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max, 
+def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max,
                titles, file_path=None, background=None):
     """
     For a Markov chain on discrete 2D statespace this function plots
     in several subplots (e.g. for several time points) several densities.
-    
+
     Args:
     data : ndarray of size (# subplots, # states)
         array of densities for each subplot/time point
@@ -644,14 +644,14 @@ def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max,
     titles : list of strings
         titles for the different subplots
     background: ndarray of size # states
-        if given, is plotted in the background and the foreground is slightly 
+        if given, is plotted in the background and the foreground is slightly
         transparent
     file_path: string or None
         path to where the file should be saved eg ".../plots/image.png""
     """
-    if background is None: 
+    if background is None:
         background = np.ones(datashape[0]*datashape[1])
-        
+
     fig = plt.figure(figsize=size)
 
     grid = AxesGrid(fig, 111,
@@ -661,9 +661,9 @@ def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max,
                 cbar_location='right',
                 cbar_pad=0.1
                 )
-    
+
     i=0
-    for ax in grid: 
+    for ax in grid:
         if np.isnan(data[i,:]).all()==False: #if not all values are nan
             ax.imshow(background.reshape(datashape), cmap='Greys', alpha=1, \
                      origin='lower', extent=extent)
@@ -676,16 +676,16 @@ def plot_3well(data, datashape, extent, timeframe, size, v_min, v_max,
                 alpha=0.9,
                 extent=extent,
             )
- 
-            ax.set_title(titles[i])  
+
+            ax.set_title(titles[i])
         i = i + 1
- 
+
     fig.subplots_adjust(top=0.8)
-    sfmt=ScalarFormatter(useMathText=True) 
+    sfmt=ScalarFormatter(useMathText=True)
     sfmt.set_powerlimits((0, 0))
-    cbar = ax.cax.colorbar(im, format=sfmt) 
+    cbar = ax.cax.colorbar(im, format=sfmt)
     cbar = grid.cbar_axes[0].colorbar(im)
-    
+
     if file_path is not None:
         fig.savefig(file_path, format='png', dpi=100, bbox_inches='tight')
 
@@ -693,11 +693,11 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,datashape
                           extent, timeframe, size, titles, file_path=None):
     """
     For a Markov chain on discrete 2D statespace this function plots
-    in several subplots several vectorfields/effective currents. 
-    
+    in several subplots several vectorfields/effective currents.
+
     Args:
     eff_vectors_unit : ndarray of size (# subplots, # states, 2)
-        array of normalized 2D vectors (effective currents) attached to 
+        array of normalized 2D vectors (effective currents) attached to
         each state and given for each subplot
     colors: ndarray of size (#subplots, # states)
         the length of the not normalized vectors
@@ -706,8 +706,8 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,datashape
     yn: ndarray
         y values of all state centers
     background: ndarray of size # states
-        if given, is plotted in the background and the foreground is slightly 
-        transparent    
+        if given, is plotted in the background and the foreground is slightly
+        transparent
     datashape : (xdim, ydim)
         dimension (int) of statespace in x and y direction
     extent : (x_min, x_max, y_min, y_max)
@@ -722,7 +722,7 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,datashape
     file_path: string or None
         path to where the file should be saved eg ".../plots/image.png""
     """
-    
+
     fig = plt.figure(figsize=size)
     grid = AxesGrid(fig, 111,
                 nrows_ncols=(1, timeframe),
@@ -730,22 +730,22 @@ def plot_3well_effcurrent(eff_vectors_unit, colors, xn, yn, background,datashape
                 cbar_mode='single',
                 cbar_location='right',
                 cbar_pad=0.1
-                )    
-    
+                )
+
     i=0
     for ax in grid:
         #if not all values are nan
-        if np.isnan(eff_vectors_unit[i,:,:]).all()==False: 
+        if np.isnan(eff_vectors_unit[i,:,:]).all()==False:
             ax.imshow(background.reshape(datashape), alpha=1, vmin=0, vmax=3,\
                       cmap='Greys', origin='lower', extent=extent)
             im = ax.quiver(xn,yn,list(eff_vectors_unit[i,:,0]),\
                            list(eff_vectors_unit[i,:,1]),colors[i],\
-                           cmap=TRIPLEWELL_CMAP, width=0.02, scale=25)             
-            ax.set_title(titles[i])  
+                           cmap=TRIPLEWELL_CMAP, width=0.02, scale=25)
+            ax.set_title(titles[i])
         i = i + 1
- 
+
     fig.subplots_adjust(top=0.8)
-    sfmt=ScalarFormatter(useMathText=True) 
+    sfmt=ScalarFormatter(useMathText=True)
     sfmt.set_powerlimits((0, 0))
     cbar = ax.cax.colorbar(im, format=sfmt)
     cbar = grid.cbar_axes[0].colorbar(im)

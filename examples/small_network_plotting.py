@@ -15,7 +15,7 @@ import networkx as nx
 
 import os
 
-# define directories path to save the data and figures 
+# define directories path to save the data and figures
 my_path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(my_path, 'data')
 figures_path = os.path.join(my_path, 'figures')
@@ -33,7 +33,7 @@ L = network_construction['L']
 K = network_construction['K']
 P = T + L
 
-# load small network statistics data 
+# load small network statistics data
 example_name = 'small_network_stationary'
 network_ergodic = np.load(
     os.path.join(data_path, example_name + '.npz')
@@ -234,7 +234,7 @@ plot_effcurrent_and_rate(
 example_name = 'small_network_periodic'
 M = 6
 P_p = functools.partial(P_p, M=M)
-graphs_p = [nx.Graph(P_p(m)) for m in np.arange(M)] 
+graphs_p = [nx.Graph(P_p(m)) for m in np.arange(M)]
 shifted_rate_p = np.zeros((M, 2))
 shifted_rate_p[:, 0] = rate_p[:, 0]
 shifted_rate_p[:M-1, 1] = rate_p[1:, 1]
@@ -301,7 +301,7 @@ plot_rate(
 # plotting results for finite-time, time-homogeneous case
 example_name = 'small_network_finite'
 N = 5
-graphs_f = [nx.Graph(P_hom(n)) for n in np.arange(N)] 
+graphs_f = [nx.Graph(P_hom(n)) for n in np.arange(N)]
 shifted_rate_f = np.zeros((N-1, 2))
 shifted_rate_f[:, 0] = rate_f[:N-1, 0]
 shifted_rate_f[:, 1] = rate_f[1:, 1]
@@ -374,7 +374,7 @@ plot_reactiveness(
 # plotting results for finite-time, time-inhomogeneous case
 example_name = 'small_network_inhom'
 N_inhom = 5
-graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)] 
+graphs_inhom = [nx.Graph(P_inhom(n)) for n in np.arange(N_inhom)]
 shifted_rate_inhom = np.zeros((N_inhom-1, 2))
 shifted_rate_inhom[:, 0] = rate_inhom[:N_inhom-1, 0]
 shifted_rate_inhom[:, 1] = rate_inhom[1:, 1]

@@ -1,4 +1,4 @@
-import sampling 
+import sampling
 from plotting import plot_3well_potential, plot_3well_vector_field
 
 import numpy as np
@@ -33,8 +33,8 @@ dV0 = lambda x, y: np.array([dV_param_x(x, y, 3), dV_param_y(x, y, 3)])
 # triple well in 2D gradient dV plus circular forcing
 M = 6 # length of period
 
-# forcing is the vector field sin(t)*f[(-y,x)], where 
-# f applies some convolution, such that 
+# forcing is the vector field sin(t)*f[(-y,x)], where
+# f applies some convolution, such that
 factor_forced = 1.4
 dV_forced = lambda x, y, m: np.array([dV_param_x(x, y, 3), dV_param_y(x, y, 3)]) \
                 + factor_forced*np.cos(m*2.*np.pi/M)* np.array([-y, x])
@@ -42,7 +42,7 @@ dV_forced = lambda x, y, m: np.array([dV_param_x(x, y, 3), dV_param_y(x, y, 3)])
 # plot potential and gradient
 title = 'Triple well Potential'
 subtitles=[
-    r'$V(x, y)$', 
+    r'$V(x, y)$',
 ]
 plot_3well_potential(
     potential=V0,
@@ -52,9 +52,9 @@ plot_3well_potential(
 )
 title = 'Triple well Gradient and Force'
 subtitles=[
-    r'$-\nabla V(x, y)$', 
-    r'$-\nabla V(x, y) + F(0, x, y)$', 
-    r'$-\nabla V(x, y) + F(3, x, y)$', 
+    r'$-\nabla V(x, y)$',
+    r'$-\nabla V(x, y) + F(0, x, y)$',
+    r'$-\nabla V(x, y) + F(3, x, y)$',
 ]
 plot_3well_vector_field(
     vector_field=dV0,
@@ -67,13 +67,13 @@ plot_3well_vector_field(
 
 #count matrix (triple well, no extra forcing)
 interval = np.array([[-2, 2], [-1.2, 2.2]]) #size of state space
- 
+
 # discretization of state space into dx cells for transition matrix
-dx_power = 1 
+dx_power = 1
 dx = 2. / (10**dx_power)
 
 # box centers in x and y direction
-x = np.arange(interval[0, 0], interval[0, 1] + dx, dx) 
+x = np.arange(interval[0, 0], interval[0, 1] + dx, dx)
 y = np.arange(interval[1, 0], interval[1, 1] + dx, dx)
 xv, yv = np.meshgrid(x, y)
 
@@ -95,7 +95,7 @@ T = sampling.transitionmatrix_2D(
     interval=interval,
     x=x,
     y=y,
-    dx=dx, 
+    dx=dx,
 )
 
 # row stochastic transition matrix
@@ -108,7 +108,7 @@ T_small_noise = sampling.transitionmatrix_2D(
     interval=interval,
     x=x,
     y=y,
-    dx=dx, 
+    dx=dx,
 )
 
 sigma=1.0
@@ -120,22 +120,22 @@ for m in np.arange(M):
 
 # defining A and B
 # define by center and radius!
-A_center = np.array([-1, 0])  
+A_center = np.array([-1, 0])
 B_center = np.array([1, 0])
-radius_setAB = 0.425  
+radius_setAB = 0.425
 
 def set_A_triplewell(x, A_center, radius_setAB):
     if np.linalg.norm(x-A_center) <= radius_setAB:
         return 1
     else:
         return 0
-    
+
 def set_B_triplewell(x, B_center, radius_setAB):
     if np.linalg.norm(x-B_center) <= radius_setAB:
         return 1
     else:
         return 0
-    
+
 def set_C_triplewell(x, A_center, B_center, radius_setAB):
     if (set_A_triplewell(x,A_center, radius_setAB) == 0 and
         set_B_triplewell(x,B_center, radius_setAB) == 0):
@@ -165,8 +165,8 @@ ind_A = np.argwhere(
             set_A_triplewell(grid[:, i], A_center, radius_setAB)
             for i in np.arange(np.shape(xn)[0])])==1
         ).flatten()
- 
- 
+
+
 # save construction
 npz_path = os.path.join(data_path, example_name + '_' + 'construction.npz')
 np.savez(
