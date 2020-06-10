@@ -1,4 +1,4 @@
-﻿# PyTPT
+# PyTPT
 
 Implementation of Transition Path Theory for:
 - stationary Markov chains (pytpt/stationary.py),
