@@ -49,9 +49,12 @@ class tpt:
 
         assert is_stochastic_matrix(P), "The transition matrix has to be \
             row-stochastic."
+            
+        self.S = np.shape(P)[0]  # size of state space
 
-        if not is_irreducible_matrix(P):
-            print("The transition matrix is not irreducible.")
+        if self.S<200:
+            if not is_irreducible_matrix(P):
+                print("The transition matrix is not irreducible.")
 
         assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
                 and isinstance(ind_C, np.ndarray)),"The index sets have to be \
@@ -78,7 +81,7 @@ class tpt:
         self.ind_A = ind_A
         self.ind_B = ind_B
         self.ind_C = ind_C
-        self.S = np.shape(self.P)[0]  # size of state space
+
 
         self.P_back = None  # transition matrix of time-reversed process
         self.q_b = None  # backward committor
