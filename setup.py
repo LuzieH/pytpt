@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pytpt",
-    version="0.0.1",
+    version="0.0.2",
     author="Luzie Helfmann and Enric Ribera Borrell",
     author_email="luzie.helfmann@fu-berlin.de",
     description="Implementation of Transition Path Theory for stationary, periodically varying, and finite-time Markov chains.",
