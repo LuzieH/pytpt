@@ -24,3 +24,7 @@ examples/intro_example.py
 
 # ipython nb checkpoints 
 .ipynb_checkpoints
+
+# dist and build
+dist/
+build/
