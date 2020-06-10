@@ -52,7 +52,7 @@ class tpt:
             
         self.S = np.shape(P)[0]  # size of state space
 
-        if self.S<200:
+        if self.S<100: # becomes slow for large state spaces
             if not is_irreducible_matrix(P):
                 print("The transition matrix is not irreducible.")
 
