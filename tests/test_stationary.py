@@ -92,8 +92,6 @@ class TestStationary:
             ind_C = np.where(states == 'C')[0]
 
         tpt_stationary = stationary.tpt(P, ind_A, ind_B, ind_C)
-        tpt_stationary.forward_committor()
-        tpt_stationary.backward_committor()
 
         return tpt_stationary
 
@@ -138,7 +136,8 @@ class TestStationary:
 
     def test_committors(self, tpt_stationary):
         S = tpt_stationary.S
-        q_f, q_b = tpt_stationary.q_f, tpt_stationary.q_b
+        q_f = tpt_stationary.forward_committor()
+        q_b = tpt_stationary.backward_committor()
 
         assert q_f.shape == (S,)
         assert np.isnan(q_f).any() == False
@@ -152,6 +151,8 @@ class TestStationary:
 
     def test_reac_density(self, tpt_stationary):
         S = tpt_stationary.S
+        tpt_stationary.forward_committor()
+        tpt_stationary.backward_committor()
         reac_dens = tpt_stationary.reac_density()
         reac_norm_fact = tpt_stationary.reac_norm_factor()
         norm_reac_dens = tpt_stationary.norm_reac_density()
@@ -170,6 +171,8 @@ class TestStationary:
 
     def test_current(self, tpt_stationary):
         S = tpt_stationary.S
+        tpt_stationary.forward_committor()
+        tpt_stationary.backward_committor()
         reac_current, eff_current = tpt_stationary.reac_current()
 
         assert reac_current.shape == (S, S)
@@ -205,8 +208,8 @@ class TestStationary:
         S = tpt_stationary.S
         P = tpt_stationary.P
         stat_dens = tpt_stationary.stat_dens
-        q_f = tpt_stationary.q_f
-        q_b = tpt_stationary.q_b
+        q_f = tpt_stationary.forward_committor()
+        q_b = tpt_stationary.backward_committor()
         current = np.zeros(np.shape(P))
         eff_current = np.zeros(np.shape(P))
         for i in np.arange(S):

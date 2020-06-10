@@ -105,8 +105,6 @@ class TestPeriodic:
             ind_C = np.where(states == 'C')[0]
 
         tpt_periodic = periodic.tpt(P, M, ind_A, ind_B, ind_C)
-        tpt_periodic.forward_committor()
-        tpt_periodic.backward_committor()
 
         return tpt_periodic
 
@@ -154,7 +152,8 @@ class TestPeriodic:
     def test_committors(self, tpt_periodic):
         S = tpt_periodic.S
         M = tpt_periodic.M
-        q_f, q_b = tpt_periodic.q_f, tpt_periodic.q_b
+        q_f = tpt_periodic.forward_committor()
+        q_b = tpt_periodic.backward_committor()
 
         assert q_f.shape == (M, S)
         assert np.isnan(q_f).any() == False
@@ -169,6 +168,8 @@ class TestPeriodic:
     def test_reac_density(self, tpt_periodic):
         S = tpt_periodic.S
         M = tpt_periodic.M
+        tpt_periodic.forward_committor()
+        tpt_periodic.backward_committor()
         reac_dens = tpt_periodic.reac_density()
         reac_norm_fact = tpt_periodic.reac_norm_factor()
         norm_reac_dens = tpt_periodic.norm_reac_density()
@@ -184,6 +185,8 @@ class TestPeriodic:
 
 
     def test_current(self, tpt_periodic):
+        tpt_periodic.forward_committor()
+        tpt_periodic.backward_committor()
         reac_current, eff_current = tpt_periodic.reac_current()
         S = tpt_periodic.S
         M = tpt_periodic.M
@@ -231,8 +234,8 @@ class TestPeriodic:
         M = tpt_periodic.M
         P = tpt_periodic.P
         stat_dens = tpt_periodic.stat_dens
-        q_f = tpt_periodic.q_f
-        q_b = tpt_periodic.q_b
+        q_f = tpt_periodic.forward_committor()
+        q_b = tpt_periodic.backward_committor()
 
         current = np.zeros((M, S, S))
         eff_current = np.zeros((M, S, S))
