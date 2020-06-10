@@ -15,8 +15,8 @@ def pytest_addoption(parser):
         '--dim-state-space',
         type=int,
         dest='S',
-        default=100,
-        help='Set dimension of the state space. Default: 100',
+        default=10,
+        help='Set dimension of the state space. Default: 10',
     )
     parser.addoption(
         '-M',
@@ -31,8 +31,8 @@ def pytest_addoption(parser):
         '--interval-length',
         type=int,
         dest='N',
-        default=3,
-        help='Set length of finite-time interval. Default: 3',
+        default=5,
+        help='Set length of finite-time interval. Default: 5',
     )
     parser.addoption(
         '--small-network',
