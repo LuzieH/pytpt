@@ -407,6 +407,7 @@ class tpt:
         self.reac_current()
         self.transition_rate()
         self.mean_transition_length()
+        self.current_density()
 
     def save_statistics(self, npz_path):
         '''
@@ -427,4 +428,5 @@ class tpt:
             rate=self.rate,
             time_av_rate=self.time_av_rate,
             av_length=self.av_length,
+            current_dens = self.current_dens
         )
