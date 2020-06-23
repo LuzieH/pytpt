@@ -10,4 +10,7 @@ Helfmann, L., Ribera Borrell, E., Schuette, C., & Koltai, P. (2020). Extending T
 
 ## PyTPT Package Installation
 Install the package using `pip install pytpt`. 
+
+## Examples
+In ``examples/TPT_3well_notebook.ipynb`` we show how to use the package for studying transitions in an triple well energy landscape.
  
