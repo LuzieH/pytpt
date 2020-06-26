@@ -106,10 +106,10 @@ class TestStationary:
 
     def test_backward_transition_matrix(self, tpt_stationary):
         S = tpt_stationary.S
-        stationary_density = tpt_stationary.stationary_density()
         P = tpt_stationary.P
         P_back = tpt_stationary.backward_transitions()
-
+        stationary_density = tpt_stationary.stationary_density()
+        
         assert P_back.shape == (S, S)
         assert np.isnan(P_back).any() == False
         assert is_stochastic_matrix(P_back)
@@ -188,9 +188,9 @@ class TestStationary:
     def test_broadcasting_backward_transitions(self, tpt_stationary):
         # compute P_back without broadcasting
         S = tpt_stationary.S
-        stat_dens = tpt_stationary.stat_dens
         P = tpt_stationary.P
         P_back = np.zeros(np.shape(P))
+        stat_dens = tpt_stationary.stationary_density()
         for i in np.arange(S):
             for j in np.arange(S):
                 if stat_dens[j] > 0:
@@ -207,9 +207,9 @@ class TestStationary:
         # compute current and effective current without broadcasting
         S = tpt_stationary.S
         P = tpt_stationary.P
-        stat_dens = tpt_stationary.stat_dens
         q_f = tpt_stationary.forward_committor()
         q_b = tpt_stationary.backward_committor()
+        stat_dens = tpt_stationary.stat_dens
         current = np.zeros(np.shape(P))
         eff_current = np.zeros(np.shape(P))
         for i in np.arange(S):

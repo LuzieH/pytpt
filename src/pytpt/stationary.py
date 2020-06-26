@@ -49,7 +49,7 @@ class tpt:
 
         assert is_stochastic_matrix(P), "The transition matrix has to be \
             row-stochastic."
-            
+
         self.S = np.shape(P)[0]  # size of state space
 
         if self.S<100: # becomes slow for large state spaces
@@ -95,9 +95,6 @@ class tpt:
         self.length = None  # mean transition length from A to B
         self.current_dens = None  # density of the effective current
 
-        # compute the stationary density if its not given
-        if self.stat_dens is None:
-            self.stat_dens = self.stationary_density()
 
     def stationary_density(self):
         '''Computes the stationary density of the transition matrix as
@@ -114,6 +111,8 @@ class tpt:
             np.real(eigvc[:, index]) / np.sum(np.real(eigvc[:, index]))
         ).flatten()
 
+        self.stat_dens = stat_dens
+
         return stat_dens
 
     def backward_transitions(self):
@@ -122,6 +121,9 @@ class tpt:
         zero, the corresponding transition matrix entries (row j) are
         set to 0.
         '''
+        # compute the stationary density if its not given
+        if self.stat_dens is None:
+            self.stationary_density()
         P = self.P
 
         # get indexed where the stationary density is not null
@@ -139,10 +141,6 @@ class tpt:
         '''Function that computes the forward committor q_f
         (probability that the chain will next go to B rather than A).
         '''
-
-        if self.P_back is None:
-            # compute backward transition matrix
-            self.backward_transitions()
 
         # initialize forward committor
         q_f = np.zeros(self.S)
@@ -200,8 +198,11 @@ class tpt:
         density, we can compute the density of reactive trajectories,
         i.e. the probability to be at x in St while being reactive.
         '''
-        assert self.q_f is not None, "The committor functions need \
-        first to be computed by using the method committor"
+        assert self.q_f is not None, "The forward committor function need \
+        first to be computed by using the method forward_committor"
+
+        assert self.q_b is not None, "The backward committor function need \
+        first to be computed by using the method backward_committor"
 
         self.reac_dens = np.multiply(
             self.q_b, np.multiply(self.stat_dens, self.q_f)
