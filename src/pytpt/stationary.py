@@ -4,6 +4,7 @@ from scipy.linalg import solve
 from scipy.linalg import eig
 from pytpt.validation import is_stochastic_matrix, is_irreducible_matrix
 
+
 class tpt:
     '''Calculates committor probabilities and A->B transition statistics of
     discrete-time Markov chain models in stationarity.
@@ -22,7 +23,7 @@ class tpt:
     '''
 
 
-    def __init__(self, P,  ind_A, ind_B,  ind_C, stat_dens=None):
+    def __init__(self, P, ind_A, ind_B, ind_C, stat_dens=None):
         '''Initialize an instance by defining the transition matrix P and
         the subsets A and B (of the statespace) between which the
         transition statistics should be computed.
@@ -47,19 +48,18 @@ class tpt:
             "The inputted transition matrix P should be of an np.ndarray and \
                 not an np.matrix."
 
-        assert is_stochastic_matrix(P), "The transition matrix has to be \
-            row-stochastic."
+        if not is_stochastic_matrix(P):
+            print("The transition matrix is not row-stochastic.")
 
         self.S = np.shape(P)[0]  # size of state space
 
-        if self.S<100: # becomes slow for large state spaces
+        if self.S < 100:  # becomes slow for large state spaces
             if not is_irreducible_matrix(P):
                 print("The transition matrix is not irreducible.")
 
-        assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)\
-                and isinstance(ind_C, np.ndarray)),"The index sets have to be \
+        assert (isinstance(ind_A, np.ndarray) and isinstance(ind_B, np.ndarray)
+                and isinstance(ind_C, np.ndarray)), "The index sets have to be \
             given as np.ndarrays."
-
 
         A = set(ind_A)
         B = set(ind_B)
@@ -75,13 +75,11 @@ class tpt:
             "A and B have to be non-empty and disjoint sets \
              such that also their complement C is non-empty."
 
-
         self.P = P
         self.stat_dens = stat_dens
         self.ind_A = ind_A
         self.ind_B = ind_B
         self.ind_C = ind_C
-
 
         self.P_back = None  # transition matrix of time-reversed process
         self.q_b = None  # backward committor
